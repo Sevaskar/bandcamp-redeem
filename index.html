@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bandcamp Code Redemption</title>
+</head>
+<body>
+    <h1>Redeem Your Code</h1>
+    <p>Select a title below to claim your Bandcamp code.</p>
+
+    <!-- Button for Vilicus -->
+    <button onclick="redeem('Vilicus')">Redeem Vilicus</button>
+    <p id="Vilicus-message"></p>
+
+    <!-- Button for Treppenwitz -->
+    <button onclick="redeem('Treppenwitz')">Redeem Treppenwitz</button>
+    <p id="Treppenwitz-message"></p>
+
+    <script>
+        function redeem(title) {
+            let username = prompt("Enter your Bandcamp username:");
+            if (username) {
+                fetch(`YOUR_GOOGLE_SCRIPT_URL?title=${title}&user=${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(title + "-message").innerText = "Your code: " + data.code;
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
