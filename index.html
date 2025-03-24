@@ -81,6 +81,12 @@
                 const data = await response.json();
                 const releaseContainer = document.getElementById('release-container');
 
+                // Check if data is fetched correctly
+                if (!data.releases || data.releases.length === 0) {
+                    console.error('No releases found in the response');
+                    return;
+                }
+
                 // Loop through releases and create dynamic content
                 data.releases.forEach(release => {
                     const releaseDiv = document.createElement('div');
@@ -89,7 +95,7 @@
                         <h3>${release.name}</h3>
                         <iframe src="${release.embedUrl}" seamless></iframe>
                         <button class="button" onclick="redeemCode('${release.code}', '${release.name}')">Redeem Code</button>
-                        <div class="code-available">Available codes: ${release.availableCodes}</div>
+                        <div class="code-available" id="code-${release.code}">Available codes: ${release.availableCodes}</div>
                     `;
                     releaseContainer.appendChild(releaseDiv);
                 });
@@ -100,7 +106,16 @@
 
         function redeemCode(code, releaseName) {
             alert(`Code ${code} redeemed for ${releaseName}`);
-            // Implement code redemption logic here
+            // You can add your code redemption logic here
+            // This example just reduces the number of available codes by 1
+            const availableCodesElement = document.getElementById(`code-${code}`);
+            let availableCodes = parseInt(availableCodesElement.innerText.split(' ')[2]);
+            if (availableCodes > 0) {
+                availableCodes--;
+                availableCodesElement.innerText = `Available codes: ${availableCodes}`;
+            } else {
+                alert('No more codes available for this release!');
+            }
         }
 
         fetchReleaseData();
