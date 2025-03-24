@@ -71,19 +71,20 @@
     </div>
 
     <script>
-        // URL of the Google Apps Script Web App
         const url = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev';
 
-        // Fetch data from the Web App
         async function fetchReleaseData() {
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 const releaseContainer = document.getElementById('release-container');
 
-                // Check if data is fetched correctly
+                // Clear loading state if present
+                releaseContainer.innerHTML = '';
+
+                // Ensure there are releases to display
                 if (!data.releases || data.releases.length === 0) {
-                    console.error('No releases found in the response');
+                    releaseContainer.innerHTML = '<p>No releases found!</p>';
                     return;
                 }
 
@@ -106,8 +107,7 @@
 
         function redeemCode(code, releaseName) {
             alert(`Code ${code} redeemed for ${releaseName}`);
-            // You can add your code redemption logic here
-            // This example just reduces the number of available codes by 1
+            // Decrease the available codes by 1
             const availableCodesElement = document.getElementById(`code-${code}`);
             let availableCodes = parseInt(availableCodesElement.innerText.split(' ')[2]);
             if (availableCodes > 0) {
