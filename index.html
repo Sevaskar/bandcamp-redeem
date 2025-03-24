@@ -1,154 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sevaskar Music Redemption</title>
-  <style>
-    body {
-      background-color: black;
-      color: red;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    h1 {
-      margin-top: 30px;
-      font-size: 2.5em;
-    }
-    .player-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 50px;
-    }
-    .player {
-      margin: 10px;
-    }
-    .release-button {
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 10px;
-      margin: 20px;
-      font-size: 1.2em;
-      cursor: pointer;
-      width: 250px;
-    }
-    .release-button:hover {
-      background-color: darkred;
-    }
-    #status {
-      margin-top: 20px;
-      font-size: 1.5em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Redemption</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: Arial, sans-serif;
+        }
+        .release-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+        .release {
+            margin: 20px;
+            text-align: center;
+        }
+        iframe {
+            border: none;
+            width: 350px;
+            height: 522px;
+        }
+        button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
-  <h1>Sevaskar Music Code Redemption</h1>
-  
-  <div class="player-container">
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 621px;" src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('pandemonium')">Redeem Pandemonium</button>
-    </div>
 
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('boombox')">Redeem Boombox</button>
-    </div>
+<h1>Available Codes Below</h1>
+<div id="status">Loading...</div>
 
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/prophet-for-profit-remix">Prophet for Profit Remix by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('prophet_for_profit_remix')">Redeem Prophet for Profit Remix</button>
-    </div>
+<div class="release-container" id="releases">
+    <!-- Releases and embedded players will be populated here -->
+</div>
 
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 442px;" src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/track/vilicus">Vilicus by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('vilicus')">Redeem Vilicus</button>
-    </div>
+<script>
+    // Web app URL
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbz3thNnshDQkcoTg6bqa4VIdj9VfBXB9frUkO_g-zMvkzcsciyRFSOqdxxWo0JnaSpP/exec";
 
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/hiraeth">Hiraeth by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('hiraeth')">Redeem Hiraeth</button>
-    </div>
-
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/apoplectic">Apoplectic by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('apoplectic')">Redeem Apoplectic</button>
-    </div>
-
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/machiavellian">Machiavellian by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('machiavellian')">Redeem Machiavellian</button>
-    </div>
-
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 720px;" src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/origins-of-belief">Origins of Belief by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('origins_of_belief')">Redeem Origins of Belief</button>
-    </div>
-
-    <div class="player">
-      <iframe style="border: 0; width: 350px; height: 786px;" src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/20">2.0 by Sevaskar</a>
-      </iframe>
-      <button class="release-button" onclick="redeemCode('20')">Redeem 2.0</button>
-    </div>
-  </div>
-
-  <div id="status"></div>
-
-  <script>
-    // Web App URL to handle the redemption logic
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev';
-
-    // Function to handle the code redemption
-    function redeemCode(code) {
-      const email = prompt('Please enter your email to redeem this code:');
-      if (!email) {
-        document.getElementById('status').innerText = 'Email is required!';
-        return;
-      }
-
-      const params = {
-        method: 'POST',
-        contentType: 'application/x-www-form-urlencoded',
-        payload: {
-          'code': code,
-          'email': email
+    // Track data for the embedded players
+    const releasesData = [
+        {
+            name: "Pandemonium",
+            albumId: "2458287885",
+            playerHeight: 621
+        },
+        {
+            name: "Boombox",
+            albumId: "4130268599",
+            playerHeight: 522
+        },
+        {
+            name: "Prophet for Profit Remix",
+            albumId: "3303775705",
+            playerHeight: 522
+        },
+        {
+            name: "Vilicus",
+            trackId: "2254569586",
+            playerHeight: 442
+        },
+        {
+            name: "Hiraeth",
+            albumId: "2580754490",
+            playerHeight: 522
+        },
+        {
+            name: "Apoplectic",
+            albumId: "3391838132",
+            playerHeight: 522
+        },
+        {
+            name: "Machiavellian",
+            albumId: "4104591744",
+            playerHeight: 522
+        },
+        {
+            name: "Origins of Belief",
+            albumId: "2582855009",
+            playerHeight: 720
+        },
+        {
+            name: "2.0",
+            albumId: "2886633887",
+            playerHeight: 786
         }
-      };
+    ];
 
-      // Send the redemption request to the Web App
-      fetch(webAppUrl, params)
+    // Fetch available codes from the web app
+    fetch(webAppUrl)
         .then(response => response.json())
         .then(data => {
-          if (data.status === 'success') {
-            document.getElementById('status').innerText = `Successfully redeemed ${code} code!`;
-          } else {
-            document.getElementById('status').innerText = data.message;
-          }
+            document.getElementById("status").innerText = ""; // Clear loading message
+            const releasesContainer = document.getElementById("releases");
+
+            // For each release, check if there are available codes
+            releasesData.forEach(release => {
+                const releaseName = release.name;
+                const availableRelease = data.find(item => item.releaseName === releaseName);
+
+                if (availableRelease) {
+                    const releaseDiv = document.createElement("div");
+                    releaseDiv.classList.add("release");
+
+                    // Create the embedded player iframe
+                    const iframe = document.createElement("iframe");
+                    iframe.src = `https://bandcamp.com/EmbeddedPlayer/album=${release.albumId || release.trackId}/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/`;
+
+                    // Add the link with the release name
+                    const link = document.createElement("a");
+                    link.href = `https://sevaskar.bandcamp.com/album/${releaseName.toLowerCase().replace(/\s+/g, '-')}`;
+                    link.textContent = `${releaseName} by Sevaskar`;
+
+                    // Create the redemption button
+                    const button = document.createElement("button");
+                    button.textContent = availableRelease.remainingCodes > 0 ? `Redeem Code (${availableRelease.remainingCodes} left)` : "No Codes Available";
+                    button.disabled = availableRelease.remainingCodes <= 0;
+                    button.addEventListener("click", function() {
+                        // Handle code redemption logic (you can trigger another API call here)
+                        alert(`Redeeming code for ${releaseName}`);
+                    });
+
+                    // Append the iframe, link, and button to the release div
+                    releaseDiv.appendChild(iframe);
+                    releaseDiv.appendChild(link);
+                    releaseDiv.appendChild(button);
+
+                    // Append the release div to the container
+                    releasesContainer.appendChild(releaseDiv);
+                }
+            });
         })
         .catch(error => {
-          console.error('Error:', error);
-          document.getElementById('status').innerText = 'An error occurred, please try again later.';
+            console.error('Error:', error);
+            document.getElementById("status").innerText = 'Failed to load available codes.';
         });
-    }
-  </script>
+</script>
+
 </body>
 </html>
