@@ -1,34 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bandcamp Code Redemption</title>
 </head>
 <body>
-    <h1>Redeem Your Code</h1>
-    <p>Select a title below to claim your Bandcamp code.</p>
+    <h1>Redeem Your Bandcamp Codes</h1>
 
-    <!-- Button for Vilicus -->
-    <button onclick="redeem('Vilicus')">Redeem Vilicus</button>
-    <p id="Vilicus-message"></p>
-    <!-- Button for Hiraeth -->
-    <button onclick="redeemCode('Hiraeth')">Redeem Hiraeth</button>
-    <!-- Button for 2.0 -->
-    <button onclick="redeemCode('2.0')">Redeem 2.0</button>
-    <!-- Button for Pandemonium -->
-    <button onclick="redeemCode('Pandemonium')">Redeem Pandemonium</button>
+    <div>
+        <h2>Pandemonium</h2>
+        <iframe style="border: 0; width: 350px; height: 621px;" src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless><a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a></iframe>
+        <br>
+        <button onclick="redeemCode('Pandemonium')">Redeem Code</button>
+        <p id="Pandemonium-status"></p>
+    </div>
 
-<p id="message"></p>
+    <div>
+        <h2>Boombox</h2>
+        <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless><a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a></iframe>
+        <br>
+        <button onclick="redeemCode('Boombox')">Redeem Code</button>
+        <p id="Boombox-status"></p>
+    </div>
 
-<script>
-  function redeemCode(title) {
-      var user = prompt("Enter your Bandcamp username:");
-      if (!user) return;
+    <script>
+        function redeemCode(title) {
+            var user = prompt("Enter your username:");
+            var url = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?user=" + user + "&title=" + title;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(title + "-status").innerHTML = "Code successfully redeemed!";
+                    } else {
+                        document.getElementById(title + "-status").innerHTML = data.message;
+                    }
+                })
+                .catch(error => console.log(error));
+        }
+    </script>
+</body>
+</html>
 
-      fetch(`YOUR_GOOGLE_APPS_SCRIPT_URL?user=${user}&title=${title}`)
-      .then(response => response.json())
-      .then(data => {
-          document.getElementById("message").innerText = data.message || "Code Redeemed: " + data.code;
-      })
       .catch(error => console.error("Error:", error));
   }
 </script>
