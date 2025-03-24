@@ -1,169 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Available Codes Below</title>
-  <style>
-    body {
-      background-color: black;
-      color: red;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      padding: 20px;
-    }
-    .release {
-      background-color: #333;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      color: red;
-    }
-    .release iframe {
-      width: 100%;
-      height: 300px;
-      border: none;
-    }
-    .release button {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .release button:disabled {
-      background-color: grey;
-    }
-    .release p {
-      margin-top: 10px;
-    }
-    h1 {
-      text-align: center;
-      color: red;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Music Codes</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-top: 30px;
+        }
+
+        .release-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 releases per row */
+            gap: 30px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .release {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .release iframe {
+            width: 100%;
+            height: 350px;
+            border: 0;
+        }
+
+        .button {
+            margin-top: 10px;
+            background-color: red;
+            color: white;
+            padding: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #cc0000;
+        }
+
+        .code-available {
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Available Codes Below</h1>
+    <h1>Available Codes Below</h1>
 
-<div class="container">
-  <!-- Pandemonium -->
-  <div class="release" id="pandemonium">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a>
-    </iframe>
-    <button id="pandemonium-button">Redeem Code</button>
-    <p id="pandemonium-codes">Available Codes: Loading...</p>
-  </div>
+    <div class="release-container" id="release-container">
+        <!-- Releases will be dynamically inserted here -->
+    </div>
 
-  <!-- Boombox -->
-  <div class="release" id="boombox">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a>
-    </iframe>
-    <button id="boombox-button">Redeem Code</button>
-    <p id="boombox-codes">Available Codes: Loading...</p>
-  </div>
+    <script>
+        // URL of the Google Apps Script Web App
+        const url = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev';
 
-  <!-- Prophet for Profit Remix -->
-  <div class="release" id="prophet-for-profit-remix">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/prophet-for-profit-remix">Prophet for Profit Remix by Sevaskar</a>
-    </iframe>
-    <button id="prophet-for-profit-remix-button">Redeem Code</button>
-    <p id="prophet-for-profit-remix-codes">Available Codes: Loading...</p>
-  </div>
+        // Fetch data from the Web App
+        async function fetchReleaseData() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const releaseContainer = document.getElementById('release-container');
 
-  <!-- Vilicus -->
-  <div class="release" id="vilicus">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/track/vilicus">Vilicus by Sevaskar</a>
-    </iframe>
-    <button id="vilicus-button">Redeem Code</button>
-    <p id="vilicus-codes">Available Codes: Loading...</p>
-  </div>
+                // Loop through releases and create dynamic content
+                data.releases.forEach(release => {
+                    const releaseDiv = document.createElement('div');
+                    releaseDiv.classList.add('release');
+                    releaseDiv.innerHTML = `
+                        <h3>${release.name}</h3>
+                        <iframe src="${release.embedUrl}" seamless></iframe>
+                        <button class="button" onclick="redeemCode('${release.code}', '${release.name}')">Redeem Code</button>
+                        <div class="code-available">Available codes: ${release.availableCodes}</div>
+                    `;
+                    releaseContainer.appendChild(releaseDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching release data:', error);
+            }
+        }
 
-  <!-- Hiraeth -->
-  <div class="release" id="hiraeth">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/hiraeth">Hiraeth by Sevaskar</a>
-    </iframe>
-    <button id="hiraeth-button">Redeem Code</button>
-    <p id="hiraeth-codes">Available Codes: Loading...</p>
-  </div>
+        function redeemCode(code, releaseName) {
+            alert(`Code ${code} redeemed for ${releaseName}`);
+            // Implement code redemption logic here
+        }
 
-  <!-- Apoplectic -->
-  <div class="release" id="apoplectic">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/apoplectic">Apoplectic by Sevaskar</a>
-    </iframe>
-    <button id="apoplectic-button">Redeem Code</button>
-    <p id="apoplectic-codes">Available Codes: Loading...</p>
-  </div>
+        fetchReleaseData();
+    </script>
 
-  <!-- Machiavellian -->
-  <div class="release" id="machiavellian">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/machiavellian">Machiavellian by Sevaskar</a>
-    </iframe>
-    <button id="machiavellian-button">Redeem Code</button>
-    <p id="machiavellian-codes">Available Codes: Loading...</p>
-  </div>
+</body>
+</html>
 
-  <!-- Origins of Belief -->
-  <div class="release" id="origins-of-belief">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/origins-of-belief">Origins of Belief by Sevaskar</a>
-    </iframe>
-    <button id="origins-of-belief-button">Redeem Code</button>
-    <p id="origins-of-belief-codes">Available Codes: Loading...</p>
-  </div>
 
-  <!-- 2.0 -->
-  <div class="release" id="2.0">
-    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
-      <a href="https://sevaskar.bandcamp.com/album/20">2.0 by Sevaskar</a>
-    </iframe>
-    <button id="2.0-button">Redeem Code</button>
-    <p id="2.0-codes">Available Codes: Loading...</p>
-  </div>
-</div>
-
-<script>
-  // Define your Web App URL (replace with the actual URL from Apps Script)
-  const webAppUrl = 'https://script.google.com/macros/s/AKfycbxFIXZB8KOS9B4EK05atfpt8rR-pEGpbzQBfiGewS-0RQftQXfTgmb27y6zNGPtq6uo/exec'; 
-
-  // Fetch the available codes from Google Sheets
-  function fetchCodes() {
-    // Use fetch() to make the call to the Web App URL
-    fetch(webAppUrl + '?action=getAvailableCodes')
-      .then(response => response.json())
-      .then(codes => {
-        // Update the available codes for each release
-        document.getElementById("pandemonium-codes").textContent = `Available Codes: ${codes["Pandemonium"]}`;
-        document.getElementById("boombox-codes").textContent = `Available Codes: ${codes["Boombox"]}`;
-        document.getElementById("prophet-for-profit-remix-codes").textContent = `Available Codes: ${codes["Prophet for Profit Remix"]}`;
-        document.getElementById("vilicus-codes").textContent = `Available Codes: ${codes["Vilicus"]}`;
-        document.getElementById("hiraeth-codes").textContent = `Available Codes: ${codes["Hiraeth"]}`;
-        document.getElementById("apoplectic-codes").textContent = `Available Codes: ${codes["Apoplectic"]}`;
-        document.getElementById("machiavellian-codes").textContent = `Available Codes: ${codes["Machiavellian"]}`;
-        document.getElementById("origins-of-belief-codes").textContent = `Available Codes: ${codes["Origins of Belief"]}`;
-        document.getElementById("2.0-codes").textContent = `Available Codes: ${codes["2.0"]}`;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-
-  // Call the fetchCodes function when the page loads
-  window.onload = function() {
-    fetchCodes();
-  }
-</script>
