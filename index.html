@@ -55,11 +55,6 @@
         .button:hover {
             background-color: #cc0000;
         }
-
-        .code-available {
-            margin-top: 10px;
-            font-size: 1.1em;
-        }
     </style>
 </head>
 <body>
@@ -71,7 +66,7 @@
     </div>
 
     <script>
-        const url = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev';
+        const url = 'https://script.google.com/macros/s/AKfycbz3ewjMYremoxgWkV4K0hXprchdUIowSUp8416DidefitP1te0aVnmVCpANBcrQb2zG/exec';
 
         async function fetchReleaseData() {
             try {
@@ -96,7 +91,6 @@
                         <h3>${release.name}</h3>
                         <iframe src="${release.embedUrl}" seamless></iframe>
                         <button class="button" onclick="redeemCode('${release.code}', '${release.name}')">Redeem Code</button>
-                        <div class="code-available" id="code-${release.code}">Available codes: ${release.availableCodes}</div>
                     `;
                     releaseContainer.appendChild(releaseDiv);
                 });
@@ -105,16 +99,19 @@
             }
         }
 
-        function redeemCode(code, releaseName) {
-            alert(`Code ${code} redeemed for ${releaseName}`);
-            // Decrease the available codes by 1
-            const availableCodesElement = document.getElementById(`code-${code}`);
-            let availableCodes = parseInt(availableCodesElement.innerText.split(' ')[2]);
-            if (availableCodes > 0) {
-                availableCodes--;
-                availableCodesElement.innerText = `Available codes: ${availableCodes}`;
-            } else {
-                alert('No more codes available for this release!');
+        async function redeemCode(code, releaseName) {
+            const userEmail = prompt("Please enter your email address:");
+
+            try {
+                const response = await fetch(`${url}?code=${code}&email=${encodeURIComponent(userEmail)}`);
+                const data = await response.json();
+                if (data.status === 'success') {
+                    alert(`${data.message}`);
+                } else {
+                    alert(`${data.message}`);
+                }
+            } catch (error) {
+                alert('Error during redemption. Please try again.');
             }
         }
 
