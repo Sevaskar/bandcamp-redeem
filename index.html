@@ -87,7 +87,9 @@
 
   <script>
     function redeemCode(album) {
-      alert("Your request for " + album + " has been received. Check your email for the redemption code.");
+      var codeUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev?code=' + album;
+      alert("Your request for " + album + " has been received. You will soon receive a redemption code at your provided email address.");
+      window.location.href = codeUrl;
     }
   </script>
 </body>
