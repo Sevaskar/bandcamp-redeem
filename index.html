@@ -27,7 +27,7 @@
     <script>
         function redeemCode(title) {
             var user = prompt("Enter your username:");
-            var url = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?user=" + user + "&title=" + title;
+            var url = "https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev" + user + "&title=" + title;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
