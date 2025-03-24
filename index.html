@@ -20,7 +20,6 @@
         }
 
         .player {
-            width: 100%;
             text-align: center;
         }
 
@@ -45,12 +44,14 @@
             margin-left: auto;
             margin-right: auto; /* Centers the buttons */
             box-sizing: border-box; /* Ensures padding is included in the button's size */
+            min-width: 280px; /* Ensures minimum button width */
         }
 
         button:disabled {
             background-color: gray;
         }
 
+        /* Mobile/Tablet Adjustments */
         @media (max-width: 768px) {
             .player-container {
                 grid-template-columns: repeat(2, 1fr); /* 2 players per row on tablets */
