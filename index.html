@@ -1,119 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Album Redemption</title>
-    <style>
-      body {
-        background-color: #000000;
-        color: red;
-        font-family: Arial, sans-serif;
-        text-align: center;
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .player-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-      }
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: red;
+      text-align: center;
+    }
+    .banner {
+      background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
+      background-size: cover;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+    .player-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .player {
+      margin: 10px;
+      text-align: center;
+    }
+    .redeem-button {
+      background-color: red;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .redeem-button:hover {
+      background-color: darkred;
+    }
+    @media (max-width: 767px) {
       .player {
-        width: 30%;
-        text-align: center;
-      }
-
-      .button {
-        background-color: red;
-        color: white;
-        padding: 15px 32px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-        display: inline-block;
-        margin-top: 10px;
-      }
-
-      .button:hover {
-        background-color: darkred;
-      }
-
-      img.banner {
         width: 100%;
-        margin-bottom: 20px;
+        margin: 10px 0;
       }
-    </style>
-  </head>
-  <body>
-    <!-- Banner Image -->
-    <img src="https://f4.bcbits.com/img/0037956683_100.png" alt="Banner" class="banner">
-
-    <!-- Redemption Code Title -->
-    <h1>Redeem Your Code Below</h1>
-
-    <!-- Container for Players and Buttons -->
-    <div class="container">
-      <!-- First Row of Players -->
-      <div class="player-row">
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1234567890/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE1')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2345678901/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE2')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3456789012/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE3')">Redeem Code</button>
-        </div>
-      </div>
-
-      <!-- Second Row of Players -->
-      <div class="player-row">
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4567890123/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE4')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=5678901234/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE5')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=6789012345/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE6')">Redeem Code</button>
-        </div>
-      </div>
-
-      <!-- Third Row of Players (if applicable) -->
-      <div class="player-row">
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=7890123456/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE7')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=8901234567/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE8')">Redeem Code</button>
-        </div>
-        <div class="player">
-          <iframe src="https://bandcamp.com/EmbeddedPlayer/album=9012345678/size=large/bgcol=000000/linkcol=FF0000/artwork=small/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
-          <button class="button" onclick="redeemCode('CODE9')">Redeem Code</button>
-        </div>
-      </div>
+    }
+  </style>
+</head>
+<body>
+  <div class="banner"></div>
+  <div class="player-container">
+    <!-- Player 1 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album1')">Request Code</button>
     </div>
 
-    <script>
-      function redeemCode(code) {
-        // Call the Google Apps Script redeemCode function
-        google.script.run.withSuccessHandler(function(response) {
-          alert(response.message);
-        }).redeemCode(code);
-      }
-    </script>
-  </body>
+    <!-- Player 2 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album2')">Request Code</button>
+    </div>
+
+    <!-- Player 3 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album3')">Request Code</button>
+    </div>
+
+    <!-- Player 4 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album4')">Request Code</button>
+    </div>
+
+    <!-- Player 5 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=5" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album5')">Request Code</button>
+    </div>
+
+    <!-- Player 6 -->
+    <div class="player">
+      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=6" width="350" height="470" frameborder="0"></iframe>
+      <button class="redeem-button" onclick="redeemCode('album6')">Request Code</button>
+    </div>
+  </div>
+
+  <script>
+    function redeemCode(album) {
+      alert("Your request for " + album + " has been received. Check your email for the redemption code.");
+    }
+  </script>
+</body>
 </html>
