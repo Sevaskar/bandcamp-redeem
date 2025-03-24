@@ -1,49 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bandcamp Code Redemption</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Codes Below</title>
+  <style>
+    body {
+      background-color: black;
+      color: red;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+    .release {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: red;
+    }
+    .release iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+    }
+    .release button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .release button:disabled {
+      background-color: grey;
+    }
+    .release p {
+      margin-top: 10px;
+    }
+    h1 {
+      text-align: center;
+      color: red;
+    }
+  </style>
 </head>
 <body>
-    <h1>Available Codes</h1>
 
-    <div>
-        <h2>Pandemonium</h2>
-        <iframe style="border: 0; width: 350px; height: 621px;" src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless><a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a></iframe>
-        <br>
-        <button onclick="redeemCode('Pandemonium')">Redeem Code</button>
-        <p id="Pandemonium-status"></p>
-    </div>
+<h1>Available Codes Below</h1>
 
-    <div>
-        <h2>Boombox</h2>
-        <iframe style="border: 0; width: 350px; height: 522px;" src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless><a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a></iframe>
-        <br>
-        <button onclick="redeemCode('Boombox')">Redeem Code</button>
-        <p id="Boombox-status"></p>
-    </div>
+<div class="container">
+  <!-- Pandemonium -->
+  <div class="release" id="pandemonium">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a>
+    </iframe>
+    <button id="pandemonium-button">Redeem Code</button>
+    <p id="pandemonium-codes">Available Codes: Loading...</p>
+  </div>
 
-    <script>
-        function redeemCode(title) {
-            var user = prompt("Enter your username:");
-            var url = "https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev" + user + "&title=" + title;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(title + "-status").innerHTML = "Code successfully redeemed!";
-                    } else {
-                        document.getElementById(title + "-status").innerHTML = data.message;
-                    }
-                })
-                .catch(error => console.log(error));
-        }
-    </script>
-</body>
-</html>
+  <!-- Boombox -->
+  <div class="release" id="boombox">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a>
+    </iframe>
+    <button id="boombox-button">Redeem Code</button>
+    <p id="boombox-codes">Available Codes: Loading...</p>
+  </div>
 
-      .catch(error => console.error("Error:", error));
+  <!-- Prophet for Profit Remix -->
+  <div class="release" id="prophet-for-profit-remix">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/prophet-for-profit-remix">Prophet for Profit Remix by Sevaskar</a>
+    </iframe>
+    <button id="prophet-for-profit-remix-button">Redeem Code</button>
+    <p id="prophet-for-profit-remix-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- Vilicus -->
+  <div class="release" id="vilicus">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/track/vilicus">Vilicus by Sevaskar</a>
+    </iframe>
+    <button id="vilicus-button">Redeem Code</button>
+    <p id="vilicus-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- Hiraeth -->
+  <div class="release" id="hiraeth">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/hiraeth">Hiraeth by Sevaskar</a>
+    </iframe>
+    <button id="hiraeth-button">Redeem Code</button>
+    <p id="hiraeth-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- Apoplectic -->
+  <div class="release" id="apoplectic">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/apoplectic">Apoplectic by Sevaskar</a>
+    </iframe>
+    <button id="apoplectic-button">Redeem Code</button>
+    <p id="apoplectic-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- Machiavellian -->
+  <div class="release" id="machiavellian">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/machiavellian">Machiavellian by Sevaskar</a>
+    </iframe>
+    <button id="machiavellian-button">Redeem Code</button>
+    <p id="machiavellian-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- Origins of Belief -->
+  <div class="release" id="origins-of-belief">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/origins-of-belief">Origins of Belief by Sevaskar</a>
+    </iframe>
+    <button id="origins-of-belief-button">Redeem Code</button>
+    <p id="origins-of-belief-codes">Available Codes: Loading...</p>
+  </div>
+
+  <!-- 2.0 -->
+  <div class="release" id="2.0">
+    <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/transparent=true/" seamless>
+      <a href="https://sevaskar.bandcamp.com/album/20">2.0 by Sevaskar</a>
+    </iframe>
+    <button id="2.0-button">Redeem Code</button>
+    <p id="2.0-codes">Available Codes: Loading...</p>
+  </div>
+</div>
+
+<script>
+  // Define your Web App URL (replace with the actual URL from Apps Script)
+  const webAppUrl = 'https://script.google.com/macros/s/AKfycbxFIXZB8KOS9B4EK05atfpt8rR-pEGpbzQBfiGewS-0RQftQXfTgmb27y6zNGPtq6uo/exec'; 
+
+  // Fetch the available codes from Google Sheets
+  function fetchCodes() {
+    // Use fetch() to make the call to the Web App URL
+    fetch(webAppUrl + '?action=getAvailableCodes')
+      .then(response => response.json())
+      .then(codes => {
+        // Update the available codes for each release
+        document.getElementById("pandemonium-codes").textContent = `Available Codes: ${codes["Pandemonium"]}`;
+        document.getElementById("boombox-codes").textContent = `Available Codes: ${codes["Boombox"]}`;
+        document.getElementById("prophet-for-profit-remix-codes").textContent = `Available Codes: ${codes["Prophet for Profit Remix"]}`;
+        document.getElementById("vilicus-codes").textContent = `Available Codes: ${codes["Vilicus"]}`;
+        document.getElementById("hiraeth-codes").textContent = `Available Codes: ${codes["Hiraeth"]}`;
+        document.getElementById("apoplectic-codes").textContent = `Available Codes: ${codes["Apoplectic"]}`;
+        document.getElementById("machiavellian-codes").textContent = `Available Codes: ${codes["Machiavellian"]}`;
+        document.getElementById("origins-of-belief-codes").textContent = `Available Codes: ${codes["Origins of Belief"]}`;
+        document.getElementById("2.0-codes").textContent = `Available Codes: ${codes["2.0"]}`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  // Call the fetchCodes function when the page loads
+  window.onload = function() {
+    fetchCodes();
   }
 </script>
-
