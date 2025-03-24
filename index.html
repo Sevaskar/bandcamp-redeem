@@ -12,13 +12,14 @@
             text-align: center;
         }
 
+        /* Banner image style */
         .banner {
             width: 100%;
-            max-width: 100%; /* Ensures it scales to fit */
             height: auto;
             margin-bottom: 20px;
         }
 
+        /* Player layout style */
         .player-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 players per row */
@@ -40,20 +41,17 @@
             background-color: red;
             color: white;
             border: none;
-            font-size: 16px; /* Adjusted font size */
+            font-size: 16px;
             cursor: pointer;
-            padding: 15px; /* Adjust padding for uniformity */
+            padding: 15px;
             width: 100%; /* Ensures buttons are the same width as the iframe */
-            max-width: 280px; /* Limits the button width to match the iframe */
+            max-width: 280px;
             margin-top: 10px;
-            height: 50px; /* Consistent height for all buttons */
+            height: 50px;
             display: block;
             margin-left: auto;
-            margin-right: auto; /* Centers the buttons */
-            box-sizing: border-box; /* Ensures padding is included in the button's size */
-            min-width: 280px; /* Ensures minimum button width */
-            word-wrap: break-word; /* Ensures text wraps within the button */
-            white-space: normal; /* Allows the text to wrap properly */
+            margin-right: auto;
+            box-sizing: border-box;
         }
 
         button:disabled {
@@ -63,13 +61,13 @@
         /* Mobile/Tablet Adjustments */
         @media (max-width: 768px) {
             .player-container {
-                grid-template-columns: repeat(2, 1fr); /* 2 players per row on tablets */
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 480px) {
             .player-container {
-                grid-template-columns: 1fr; /* 1 player per row on mobile */
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -78,6 +76,7 @@
     <!-- Banner Image -->
     <img class="banner" src="https://f4.bcbits.com/img/0037956683_100.png" alt="Album Banner">
 
+    <!-- Player containers with buttons -->
     <div class="player-container">
         <!-- Player 1 -->
         <div class="player">
