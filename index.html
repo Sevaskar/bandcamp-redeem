@@ -1,99 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Request Code</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: black;
-      color: red;
-      text-align: center;
-      margin: 0;
-    }
-    .banner {
-      background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
-      background-size: cover;
-      height: 150px;
-      margin-bottom: 20px;
-    }
-    .player-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .player {
-      margin: 10px;
-      text-align: center;
-      width: 30%;
-    }
-    .redeem-button {
-      background-color: red;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
-    }
-    .redeem-button:hover {
-      background-color: darkred;
-    }
-    @media (max-width: 767px) {
-      .player {
-        width: 100%;
-        margin: 10px 0;
+<html>
+  <head>
+    <style>
+      body {
+        background-color: black;
+        color: red;
+        font-family: Arial, sans-serif;
+        text-align: center;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="banner"></div>
-  <div class="player-container">
-    <!-- Player 1 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album1')">Request Code</button>
-    </div>
 
-    <!-- Player 2 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=2" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album2')">Request Code</button>
-    </div>
+      #banner {
+        margin-top: 10px;
+        max-width: 100%;
+      }
 
-    <!-- Player 3 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album3')">Request Code</button>
-    </div>
+      .player-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
 
-    <!-- Player 4 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=4" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album4')">Request Code</button>
-    </div>
+      .player {
+        width: 30%;
+        margin-bottom: 20px;
+      }
 
-    <!-- Player 5 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=5" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album5')">Request Code</button>
-    </div>
+      button {
+        background-color: red;
+        color: white;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+      }
 
-    <!-- Player 6 -->
-    <div class="player">
-      <iframe src="https://bandcamp.com/EmbeddedPlayer/album=6" width="350" height="470" frameborder="0"></iframe>
-      <button class="redeem-button" onclick="requestCode('album6')">Request Code</button>
-    </div>
-  </div>
+      button:hover {
+        background-color: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="banner" src="https://f4.bcbits.com/img/0037956683_100.png" alt="Banner">
 
-  <script>
-    function requestCode(album) {
-      var codeUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev' + album;
-      alert("Your request for " + album + " has been received. You will soon receive a redemption code at your provided email address.");
-      window.location.href = codeUrl;
-    }
-  </script>
-</body>
+    <div class="player-row">
+      <!-- First Player -->
+      <div class="player">
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/v=2/track=1234567890/size=large/bgcol=000000/linkcol=FFFFFF/tracklist=false/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
+        <button onclick="requestCode('user@example.com', 'Vilicus')">Request Code</button>
+      </div>
+      <!-- Second Player -->
+      <div class="player">
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/v=2/track=0987654321/size=large/bgcol=000000/linkcol=FFFFFF/tracklist=false/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
+        <button onclick="requestCode('user@example.com', 'Hiraeth')">Request Code</button>
+      </div>
+      <!-- Third Player -->
+      <div class="player">
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/v=2/track=1122334455/size=large/bgcol=000000/linkcol=FFFFFF/tracklist=false/transparent=true/" width="100%" height="120" frameborder="0"></iframe>
+        <button onclick="requestCode('user@example.com', '2.0')">Request Code</button>
+      </div>
+    </div>
+    
+    <script>
+      function requestCode(email, release) {
+        google.script.run.withSuccessHandler(function(response) {
+          alert(response.message);
+        }).requestCode(email, release);
+      }
+    </script>
+  </body>
 </html>
