@@ -12,6 +12,13 @@
             text-align: center;
         }
 
+        .banner {
+            width: 100%;
+            max-width: 100%; /* Ensures it scales to fit */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
         .player-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 players per row */
@@ -68,7 +75,9 @@
     </style>
 </head>
 <body>
-    <h1>Available Codes Below</h1>
+    <!-- Banner Image -->
+    <img class="banner" src="https://f4.bcbits.com/img/0037956683_100.png" alt="Album Banner">
+
     <div class="player-container">
         <!-- Player 1 -->
         <div class="player">
