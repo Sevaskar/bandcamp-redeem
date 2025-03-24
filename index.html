@@ -34,10 +34,14 @@
             background-color: red;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 0;
             font-size: 18px;
             cursor: pointer;
             margin-top: 10px;
+            width: 100%; /* Ensures buttons are the same width as the iframe */
+            max-width: 280px; /* Limits the button width to match the iframe */
+            margin-left: auto;
+            margin-right: auto; /* Centers the buttons */
         }
 
         button:disabled {
