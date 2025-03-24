@@ -114,8 +114,10 @@
   <div id="status"></div>
 
   <script>
+    // Web App URL to handle the redemption logic
     const webAppUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev';
 
+    // Function to handle the code redemption
     function redeemCode(code) {
       const email = prompt('Please enter your email to redeem this code:');
       if (!email) {
@@ -132,6 +134,7 @@
         }
       };
 
+      // Send the redemption request to the Web App
       fetch(webAppUrl, params)
         .then(response => response.json())
         .then(data => {
