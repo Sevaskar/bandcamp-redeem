@@ -10,26 +10,26 @@
     <!-- Button for Vilicus -->
     <button onclick="redeem('Vilicus')">Redeem Vilicus</button>
     <p id="Vilicus-message"></p>
+    <!-- Button for Hiraeth -->
+    <button onclick="redeemCode('Hiraeth')">Redeem Hiraeth</button>
+    <!-- Button for 2.0 -->
+    <button onclick="redeemCode('2.0')">Redeem 2.0</button>
+    <!-- Button for Pandemonium -->
+    <button onclick="redeemCode('Pandemonium')">Redeem Pandemonium</button>
 
-    <!-- Button for Treppenwitz -->
-    <button onclick="redeem('Treppenwitz')">Redeem Treppenwitz</button>
-    <p id="Treppenwitz-message"></p>
+<p id="message"></p>
 
-    <script>
-        function redeem(title) {
-            let username = prompt("Enter your Bandcamp username:");
-            if (username) {
-                fetch(`YOUR_GOOGLE_SCRIPT_URL?title=${title}&user=${username}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(title + "-message").innerText = "Your code: " + data.code;
-                    } else {
-                        alert(data.message);
-                    }
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+<script>
+  function redeemCode(title) {
+      var user = prompt("Enter your Bandcamp username:");
+      if (!user) return;
+
+      fetch(`YOUR_GOOGLE_APPS_SCRIPT_URL?user=${user}&title=${title}`)
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById("message").innerText = data.message || "Code Redeemed: " + data.code;
+      })
+      .catch(error => console.error("Error:", error));
+  }
+</script>
+
