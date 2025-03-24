@@ -10,6 +10,7 @@
       background-color: black;
       color: red;
       text-align: center;
+      margin: 0;
     }
     .banner {
       background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
@@ -89,7 +90,7 @@
 
   <script>
     function requestCode(album) {
-      var codeUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev?album=' + album;
+      var codeUrl = 'https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev' + album;
       alert("Your request for " + album + " has been received. You will soon receive a redemption code at your provided email address.");
       window.location.href = codeUrl;
     }
