@@ -10,7 +10,7 @@ async function redeemCode() {
     let username = urlInput.split("/").pop(); // Extract username from URL
 
     // Send request to Google Apps Script to check redemption
-    let response = await fetch(`https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev/exec?username=${username}`);
+    let response = await fetch(`https://script.google.com/macros/s/AKfycbzvJdB-q43AFtmY-8IJtVVHDXfWxNcfNluNxsmC102pa_6xvWfYK2Vm-ie4kCDgtgt-/exec/dev/exec?username=${username}`);
     let result = await response.json();
 
     if (result.status === "already_redeemed") {
