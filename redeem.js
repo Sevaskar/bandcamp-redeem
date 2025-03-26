@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        fetch("https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/devL", {
+        fetch("https://script.google.com/macros/s/AKfycbzUIrfvmeNh-oYTxEkwdrrNto2Yxx1eLkb6TBVNzZFgFRzBPQEHfwMEIQymNyD6SDQb/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userUrl: userUrl })
