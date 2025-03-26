@@ -46,41 +46,42 @@
       }
     }
   </style>
-  <style>
-  .player-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
+ <style>
+    .album-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px; /* Adds space between albums */
+        margin-top: 20px; /* Adds space between banner and albums */
+    }
 
-  .player-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 350px;
-  }
+    .album {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 350px;
+        margin-bottom: 20px; /* Space between rows */
+    }
 
-  .redeem-btn {
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    padding: 10px 15px;
-    margin-top: 10px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    width: 100%;
-    text-decoration: none;
-    border-radius: 5px;
-  }
+    .bandcamp-player {
+        width: 100%;
+    }
 
-  .redeem-btn:hover {
-    background-color: darkred;
-  }
+    .redeem-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: red;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px; /* Space between the player and button */
+    }
 </style>
+
 <head>
     <style>
         .redeem-button {
