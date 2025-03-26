@@ -46,6 +46,42 @@
       }
     }
   </style>
+  <style>
+  .player-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .player-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+  }
+
+  .redeem-btn {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .redeem-btn:hover {
+    background-color: darkred;
+  }
+</style>
+
 </head>
   <style>
   .player-container {
@@ -68,57 +104,72 @@
   <center><img src="https://f4.bcbits.com/img/0037956683_100.png" alt="alternative_text" width="image_width" height="image_height"> </center></body>
   
     <!-- Embedded Bandcamp Players with Redeem Buttons -->
-  <div class="player-container">
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/pandemonium-2">Pandemonium by Sevaskar</a>
-      <a class="redeem-button" href="#" onclick="redeemCode('Pandemonium')">Redeem Code</a>
-  </div>
-    </iframe>
+ <div class="player-container">
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/boombox">Boombox by Sevaskar</a>
-      <a class="redeem-button" href="#" onclick="redeemCode('Pandemonium')">Redeem Code</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Pandemonium">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/prophet-for-profit-remix">Prophet for Profit Remix by Sevaskar</a>
-      <a class="redeem-button" href="#" onclick="redeemCode('Pandemonium')">Redeem Code</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Boombox">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/track/vilicus">Vilicus by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Prophet+for+Profit+Remix">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/hiraeth">Hiraeth by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Vilicus">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/machiavellian">Machiavellian by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Hiraeth">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/20">2.0 by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Machiavellian">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/origins-of-belief">Origins of Belief by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=2.0">Redeem Code</a>
+    </div>
 
-    <iframe style="border: 0; width: 350px; height: 470px;" 
-        src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-        <a href="https://sevaskar.bandcamp.com/album/apoplectic">Apoplectic by Sevaskar</a>
-    </iframe>
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Origins+of+Belief">Redeem Code</a>
+    </div>
+
+    <div class="player-box">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+            src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+        </iframe>
+        <a class="redeem-btn" href="redeem.html?album=Apoplectic">Redeem Code</a>
+    </div>
+
 </div>
-
  
     <!-- Footer with Social Links -->
     <div class="footer">
