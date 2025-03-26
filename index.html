@@ -84,7 +84,25 @@
 
 </head>
   <head>
-    <style>
+
+</head>
+  <style>
+  .player-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers the players */
+    gap: 20px; /* Adds spacing between players */
+    max-width: 1200px; /* Prevents the layout from stretching too wide */
+    margin: auto; /* Centers the container */
+  }
+
+  .player-container iframe {
+    width: 350px;
+    height: 470px;
+    flex-grow: 1; /* Allows responsiveness */
+  }
+</style>
+
         .redeem-button {
             margin-top: 10px;
             background-color: #0f91ff;
@@ -108,25 +126,6 @@
             text-align: center;
         }
     </style>
-</head>
-
-  <style>
-  .player-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centers the players */
-    gap: 20px; /* Adds spacing between players */
-    max-width: 1200px; /* Prevents the layout from stretching too wide */
-    margin: auto; /* Centers the container */
-  }
-
-  .player-container iframe {
-    width: 350px;
-    height: 470px;
-    flex-grow: 1; /* Allows responsiveness */
-  }
-</style>
-
 <body>
   <center><img src="https://f4.bcbits.com/img/0037956683_100.png" alt="alternative_text" width="image_width" height="image_height"> </center></body>
   
