@@ -200,25 +200,7 @@
         </iframe>
         <a class="redeem-btn" href="redeem.html?album=Apoplectic">Redeem Code</a>
     </div>
- <script>
-        function redeemCode(albumName) {
-            const url = "https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev"; // Replace with your Web App URL
 
-            // Call the Google Apps Script to redeem a code for the selected album
-            fetch(`${url}?album=${albumName}`, { method: "GET" })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Code redeemed successfully!");
-                    } else {
-                        alert("Sorry, no codes left or you've already redeemed a code for this album.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("An error occurred. Please try again later.");
-                });
-        }
     </script>
    <footer style="margin-top: 100px; padding: 20px; text-align: center; display: block;">
     <a href="https://sevaskar.bandcamp.com/" target="_blank" style="color: red; font-weight: bold; margin-right: 15px;">Bandcamp</a>
