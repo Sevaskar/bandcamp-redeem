@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Code</title>
+    <script defer src="redeem.js"></script>
+    <style>
+        body {
+            text-align: center;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+        }
+        button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Enter Your Bandcamp Username</h2>
+    <input type="text" id="bandcamp-url" placeholder="e.g. https://bandcamp.com/yourname">
+    <button onclick="redeemCode()">Submit</button>
+
+    <p id="message"></p>
+<script src="redeem.js"></script>
+
+</body>
+</html>
