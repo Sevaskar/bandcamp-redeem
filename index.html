@@ -10,18 +10,22 @@
       background-color: black;
       color: red;
       text-align: center;
+      margin: 0;
+      padding: 0;
     }
     .banner {
       background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
-      background-size: cover;
+      background-size: contain;
       width: 100%;
-      height: 150px;
+      height: 200px;
+      margin-bottom: 20px;
     }
     .player-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
+      padding: 20px;
     }
     .player-box {
       display: flex;
@@ -48,6 +52,12 @@
     .redeem-btn:hover {
       background-color: darkred;
     }
+    .footer {
+      margin-top: 30px;
+      padding: 10px;
+      background-color: #222;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -68,59 +78,45 @@
       </iframe>
       <button class="redeem-btn" data-album="Boombox">Redeem Code</button>
     </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Prophet for Profit Remix">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Vilicus">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Hiraeth">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Machiavellian">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="2.0">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Origins of Belief">Redeem Code</button>
-    </div>
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-btn" data-album="Apoplectic">Redeem Code</button>
-    </div>
-
   </div>
 
-  <script src="redeem.js"></script>
+  <div class="footer">
+    &copy; 2025 Sevaskar. All rights reserved.
+  </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".redeem-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let userUrl = prompt("Enter your Bandcamp URL:");
+                if (!userUrl) {
+                    alert("Bandcamp URL is required to redeem a code.");
+                    return;
+                }
+
+                let album = this.getAttribute("data-album");
+
+                fetch("https://script.google.com/macros/s/AKfycbzUIrfvmeNh-oYTxEkwdrrNto2Yxx1eLkb6TBVNzZFgFRzBPQEHfwMEIQymNyD6SDQb/exec", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userUrl: userUrl, album: album })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.open(`https://sevaskar.bandcamp.com/yum?code=${data.code}`, "_blank");
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Something went wrong. Try again.");
+                });
+            });
+        });
+    });
+  </script>
 </body>
 </html>
+
