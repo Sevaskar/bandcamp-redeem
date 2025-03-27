@@ -241,6 +241,13 @@
   </script>
 </body>
 </html>
+const formData = new FormData();
+formData.append("bandcampURL", document.querySelector("#bandcampInput").value);
+
+fetch("https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev", {
+  method: "POST",
+  body: formData
+})
 
 </body>
 </html>
