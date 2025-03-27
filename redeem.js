@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            let response = await fetch("https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev", {
+            let response = await fetch("https://script.google.com/macros/s/AKfycbw1bW2fq5JnNz0RiH8-u3-_OQqZb8KBNSVipR9lfHLbhvh9ONgmOfmsrFFuj5YivflT/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ bandcampURL: bandcampURL })
