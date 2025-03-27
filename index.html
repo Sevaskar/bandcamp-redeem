@@ -218,27 +218,43 @@
       };
 
       // Call Google Apps Script with a POST request
-      document.getElementById("redeemButton").addEventListener("click", function() {
-    const bandcampURL = document.getElementById("bandcampInput").value;
-    
-    fetch(https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bandcampURL: bandcampURL })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "error") {
-            alert("Error: " + data.message);
-        } else {
-            document.getElementById("codeDisplay").innerText = "Your code: " + data.code;
+      document.querySelectorAll(".redeem-btn").forEach(button => {
+    button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        
+        let bandcampURL = prompt("Enter your Bandcamp URL:");
+        if (!bandcampURL) {
+            alert("Bandcamp URL is required.");
+            return;
         }
-    })
-    .catch(error => {
-        console.error("Fetch error:", error);
-        alert("Something went wrong. Try again.");
+
+        let album = event.target.getAttribute("href").split("=")[1]; // Get album name from URL
+
+        let requestData = {
+            bandcampURL: bandcampURL,
+            album: album
+        };
+
+        try {
+            let response = await fetch("https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData)
+            });
+
+            let result = await response.json();
+            if (result.status === "success") {
+                alert(`Code Redeemed: ${result.code}`);
+            } else {
+                alert(`Error: ${result.message}`);
+            }
+        } catch (error) {
+            console.error("Request failed:", error);
+            alert("Something went wrong. Try again.");
+        }
     });
 });
+
 
   </script>
 </body>
