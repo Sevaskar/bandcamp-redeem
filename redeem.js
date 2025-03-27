@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let album = this.getAttribute("data-album"); // Get the album name from the button
 
             try {
-                let response = await fetch("https://script.google.com/macros/s/AKfycbw1bW2fq5JnNz0RiH8-u3-_OQqZb8KBNSVipR9lfHLbhvh9ONgmOfmsrFFuj5YivflT/exec", {
+                let response = await fetch("https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ bandcampURL: userUrl, album: album })
