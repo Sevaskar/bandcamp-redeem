@@ -218,26 +218,28 @@
       };
 
       // Call Google Apps Script with a POST request
-      fetch(https://script.google.com/macros/s/AKfycbw5qXhfAxMCCqFgJF5hOtexBwBYn1BNtJUMT6w6fItnX2P2seEyRUYhQ8qooYXN75xn/exec, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        if (result.success) {
-          alert("Success! Your code is: " + result.code);
+      document.getElementById("redeemButton").addEventListener("click", function() {
+    const bandcampURL = document.getElementById("bandcampInput").value;
+    
+    fetch(https://script.google.com/macros/s/AKfycbz_UhnHUo4atYBVxwOU8kRVb3LC-1BX-UqWOyT25Qw/dev, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bandcampURL: bandcampURL })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "error") {
+            alert("Error: " + data.message);
         } else {
-          alert("Error: " + result.message);
+            document.getElementById("codeDisplay").innerText = "Your code: " + data.code;
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert("Something went wrong. Please try again.");
-      });
-    }
+    })
+    .catch(error => {
+        console.error("Fetch error:", error);
+        alert("Something went wrong. Try again.");
+    });
+});
+
   </script>
 </body>
 </html>
