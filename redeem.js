@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".redeem-btn").forEach(button => {
     button.addEventListener("click", async function () {
+      console.log("Redeem button clicked!"); // Debugging
+
       let bandcampURL = prompt("Enter your Bandcamp URL:");
       if (!bandcampURL) {
         alert("Bandcamp URL is required.");
@@ -8,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       let album = this.getAttribute("data-album");
+      console.log("Album selected:", album); // Debugging
 
       try {
         let response = await fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {
@@ -17,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         let result = await response.json();
+        console.log("Response from server:", result); // Debugging
+
         if (result.status === "success") {
           alert(`Code Redeemed: ${result.code}`);
           window.open(`https://sevaskar.bandcamp.com/yum?code=${result.code}`, "_blank");
@@ -26,11 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
         console.error("Request failed:", error);
         alert("Something went wrong. Try again.");
-      }
-    });
-  });
-});
-
       }
     });
   });
