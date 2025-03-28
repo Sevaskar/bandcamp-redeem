@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".redeem-btn").forEach(button => {
     button.addEventListener("click", async function () {
-      let userUrl = prompt("Enter your Bandcamp URL:");
-      if (!userUrl) {
+      let bandcampURL = prompt("Enter your Bandcamp URL:");
+      if (!bandcampURL) {
         alert("Bandcamp URL is required.");
         return;
       }
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let response = await fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bandcampURL: userUrl, album: album })
+          body: JSON.stringify({ bandcampURL, album })
         });
 
         let result = await response.json();
