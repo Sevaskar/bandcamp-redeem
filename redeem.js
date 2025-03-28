@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
       let album = this.getAttribute("data-album");
 
       try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {, {
+        let response = await fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ bandcampURL: userUrl, album: album })
+          body: JSON.stringify({ bandcampURL: bandcampURL, album: album })
         });
 
         let result = await response.json();
@@ -26,6 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
         console.error("Request failed:", error);
         alert("Something went wrong. Try again.");
+      }
+    });
+  });
+});
+
       }
     });
   });
