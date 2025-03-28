@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".redeem-btn").forEach(button => {
     button.addEventListener("click", async function () {
-      console.log("Redeem button clicked!"); // Debugging
+      console.log("Redeem button clicked!");
 
       let bandcampURL = prompt("Enter your Bandcamp URL:");
       if (!bandcampURL) {
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       let album = this.getAttribute("data-album");
-      console.log("Album selected:", album); // Debugging
+      console.log("Album selected:", album);
 
       try {
         let response = await fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         let result = await response.json();
-        console.log("Response from server:", result); // Debugging
+        console.log("Response from server:", result);
 
         if (result.status === "success") {
           alert(`Code Redeemed: ${result.code}`);
