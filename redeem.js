@@ -1,93 +1,57 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
+document.addEventListener("DOMContentLoaded", function () {
+    const bandcampURL = localStorage.getItem("bandcampURL");
 
-// Function to prompt for Bandcamp URL on first visit
-function checkUserSession() {
-    let userUrl = sessionStorage.getItem("bandcampUrl");
-    if (!userUrl) {
-        userUrl = prompt("Enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
-        if (userUrl) {
-            sessionStorage.setItem("bandcampUrl", userUrl);
-        } else {
-            alert("You must enter a valid Bandcamp URL to proceed.");
-            return false;
-        }
+    if (!bandcampURL) {
+        alert("Please enter your Bandcamp URL first.");
+        return;
     }
-    return userUrl;
+
+    checkRedemptions(bandcampURL);
+
+    document.querySelectorAll(".redeem-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const album = this.getAttribute("data-album");
+            redeemCode(bandcampURL, album, this);
+        });
+    });
+});
+
+function checkRedemptions(bandcampURL) {
+    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?action=check&url=" + encodeURIComponent(bandcampURL))
+        .then(response => response.json())
+        .then(data => {
+            document.querySelectorAll(".redeem-btn").forEach(button => {
+                const album = button.getAttribute("data-album");
+                if (data.redeemed.includes(album)) {
+                    button.textContent = "In Collection";
+                    button.disabled = true;
+                    button.style.backgroundColor = "gray";
+                }
+            });
+        })
+        .catch(error => console.error("Error checking redemptions:", error));
 }
 
-// Function to handle Redeem Code button click
-async function redeemCode(title, button) {
-    const userUrl = checkUserSession();
-    if (!userUrl) return;
-
-    button.disabled = true;
+function redeemCode(bandcampURL, album, button) {
     button.textContent = "Processing...";
+    button.disabled = true;
 
-    try {
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
+    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?action=redeem&url=" + encodeURIComponent(bandcampURL) + "&album=" + encodeURIComponent(album))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.textContent = "In Collection";
+                button.style.backgroundColor = "gray";
+            } else {
+                button.textContent = "Redeem Code";
+                button.disabled = false;
+                alert("Redemption failed: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error redeeming code:", error);
+            button.textContent = "Redeem Code";
+            button.disabled = false;
+            alert("An error occurred. Please try again.");
         });
-
-        const result = await response.json();
-
-        if (result.success) {
-            autoSubmitCode(result.code);
-            button.textContent = "In Collection";
-            button.style.background = "#888";
-        } else {
-            button.textContent = result.message;
-            button.style.background = "#888";
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        button.textContent = "Error. Try Again";
-        button.disabled = false;
-    }
 }
-
-// Function to auto-submit the redeemed code to Bandcamp
-function autoSubmitCode(code) {
-    const form = document.createElement("form");
-    form.setAttribute("action", "https://sevaskar.bandcamp.com/yum");
-    form.setAttribute("method", "get");
-    form.setAttribute("target", "_blank");
-
-    const input = document.createElement("input");
-    input.setAttribute("type", "hidden");
-    input.setAttribute("name", "code");
-    input.setAttribute("value", code);
-
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-}
-
-// Run on page load: Check previous redemptions and update buttons
-async function updateButtons() {
-    const userUrl = checkUserSession();
-    if (!userUrl) return;
-
-    const buttons = document.querySelectorAll(".redeem-button");
-
-    for (let button of buttons) {
-        const title = button.dataset.title;
-        
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
-        });
-
-        const result = await response.json();
-
-        if (!result.success && result.message === "Already Redeemed") {
-            button.textContent = "In Collection";
-            button.style.background = "#888";
-            button.disabled = true;
-        }
-    }
-}
-
-document.addEventListener("DOMContentLoaded", updateButtons);
