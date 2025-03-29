@@ -1,29 +1,38 @@
-<input type="text" id="bandcamp-url" placeholder="Enter your Bandcamp URL">
-<button id="redeem-button">Redeem Code</button>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("redeem-button").addEventListener("click", function () {
-      let userUrl = document.getElementById("bandcamp-url").value;
-      if (!userUrl) {
-        alert("Please enter your Bandcamp URL.");
-        return;
-      }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Code</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-      fetch("https://script.google.com/macros/s/AKfycbwKsU3UpcpsTJfGgDyvROt7xMHZLNRlBylJQVcphbdIlIXXbgSuOQDhjCAguz9PEXPh/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bandcampURL: userUrl })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          window.open(`https://sevaskar.bandcamp.com/yum?code=${data.code}`, "_blank");
-        } else {
-          alert(data.message);
+    <div class="container">
+        <h2>Redeem Your Code</h2>
+
+        <!-- Bandcamp URL Input -->
+        <label for="bandcampUrl">Enter your Bandcamp URL:</label>
+        <input type="text" id="bandcampUrl" placeholder="https://bandcamp.com/yourname">
+        <button onclick="saveBandcampUrl()">Continue</button>
+
+        <p>Don't have a Bandcamp account? <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a></p>
+
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        function saveBandcampUrl() {
+            let userUrl = document.getElementById("bandcampUrl").value.trim();
+            if (userUrl.startsWith("https://bandcamp.com/")) {
+                sessionStorage.setItem("bandcampUrl", userUrl);
+                document.getElementById("statusMessage").innerHTML = "<p style='color:green;'>Saved! You can now redeem a code.</p>";
+                setTimeout(() => { window.location.href = "index.html"; }, 1000);
+            } else {
+                document.getElementById("statusMessage").innerHTML = "<p style='color:red;'>Please enter a valid Bandcamp URL.</p>";
+            }
         }
-      })
-      .catch(error => console.error("Error:", error));
-    });
-  });
-</script>
+    </script>
 
+</body>
+</html>
