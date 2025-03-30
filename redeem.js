@@ -95,3 +95,5 @@ async function updateButtons() {
         }
     }
 }
+
+document.addEventListener("DOMContentLoaded", updateButtons)
