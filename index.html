@@ -187,23 +187,5 @@
 
   <script src="redeem.js"></script>
   
- <script>
-    function submitBandcampURL() {
-      const url = document.getElementById("bandcamp-url").value.trim();
-      if (url === "" || !url.startsWith("https://bandcamp.com/")) {
-        alert("Please enter a valid Bandcamp URL.");
-        return;
-      }
-      localStorage.setItem("bandcampURL", url);
-      document.getElementById("bandcamp-prompt").style.display = "none";
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      const savedURL = localStorage.getItem("bandcampURL");
-      if (savedURL) {
-        document.getElementById("bandcamp-prompt").style.display = "none";
-      }
-    });
- </script>
 </body>
 </html>
