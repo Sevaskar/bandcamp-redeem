@@ -27,7 +27,7 @@
             if (userUrl.startsWith("https://bandcamp.com/")) {
                 sessionStorage.setItem("bandcampUrl", userUrl);
                 document.getElementById("statusMessage").innerHTML = "<p style='color:green;'>Saved! You can now redeem a code.</p>";
-                setTimeout(() => { window.location.href = "index.html"; }, 1000);
+                window.location.href = "index.html";
             } else {
                 document.getElementById("statusMessage").innerHTML = "<p style='color:red;'>Please enter a valid Bandcamp URL.</p>";
             }
