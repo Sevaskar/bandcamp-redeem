@@ -269,7 +269,7 @@
 
   async function checkRedemptions(bandcampURL) {
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec' + encodeURIComponent(bandcampURL));
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + encodeURIComponent(bandcampURL));
       const redeemedTitles = await response.json();
       
       document.querySelectorAll(".redeem-btn").forEach(button => {
