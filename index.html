@@ -13,13 +13,12 @@
       margin: 0;
       padding: 0;
     }
-    
+
     /* Banner */
     .banner {
-      background: url('https://raw.githubusercontent.com/Sevaskar/bandcamp-redeem/refs/heads/main/Screenshot_2025-03-25-10-57-59-353.jpg') no-repeat center center;
-      background-size: contain;
       width: 100%;
-      height: 200px;
+      max-width: 100%;
+      height: auto;
       margin-bottom: 20px;
     }
 
@@ -121,11 +120,17 @@
       text-align: center;
     }
 
+    .paypal-link img {
+      width: 150px;
+      margin-top: 10px;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="banner"></div>
+  <!-- Banner Image -->
+  <img class="banner" src="https://raw.githubusercontent.com/Sevaskar/bandcamp-redeem/refs/heads/main/Screenshot_2025-03-25-10-57-59-353.jpg" alt="Sevaskar Banner">
 
   <!-- Navigation Bar -->
   <div class="navbar">
@@ -171,11 +176,15 @@
       </iframe>
       <button class="redeem-btn" data-album="2.0">Redeem Code</button>
     </div>
+
+    <!-- Add more player-box divs for remaining 5 players -->
   </div>
 
   <!-- Footer -->
   <div class="footer">
-    <a href="https://PayPal.me/sevaskar" target="_blank" style="color: red; font-weight: bold;">Fan Support</a>
+    <a href="https://PayPal.me/sevaskar" target="_blank" class="paypal-link">
+      <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="Support on PayPal">
+    </a>
     <br><br>
     &copy; 2025 Sevaskar. All rights reserved.
   </div>
