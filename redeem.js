@@ -1,3 +1,5 @@
+alert("redeem.js is running!");
+
 document.addEventListener("DOMContentLoaded", function () {
     let bandcampURL = localStorage.getItem("bandcampURL");
 
@@ -17,13 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".redeem-btn").forEach(button => {
         button.addEventListener("click", function () {
             const album = this.getAttribute("data-album");
+            alert("Redeem button clicked for " + album); // Debugging alert
             redeemCode(bandcampURL, album, this);
         });
     });
 });
 
 function redeemCode(bandcampURL, album, button) {
-    fetch(`https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec`, {
+    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -37,6 +40,9 @@ function redeemCode(bandcampURL, album, button) {
     .then(data => {
         if (data.success) {
             let code = data.code;
+            alert("Code retrieved: " + code); // Debugging alert
+
+            // Create and auto-submit form to Bandcamp redemption page
             let form = document.createElement("form");
             form.setAttribute("action", "https://sevaskar.bandcamp.com/yum");
             form.setAttribute("method", "get");
@@ -51,6 +57,7 @@ function redeemCode(bandcampURL, album, button) {
             document.body.appendChild(form);
             form.submit();
 
+            // Update button after successful redemption
             button.disabled = true;
             button.textContent = "In Collection";
         } else {
@@ -60,5 +67,24 @@ function redeemCode(bandcampURL, album, button) {
     .catch(error => {
         console.error("Error:", error);
         alert("Something went wrong. Try again.");
+    });
+}
+
+function checkRedemptions(bandcampURL) {
+    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=" + encodeURIComponent(bandcampURL))
+    .then(response => response.json())
+    .then(data => {
+        if (data.redeemed) {
+            document.querySelectorAll(".redeem-btn").forEach(button => {
+                const album = button.getAttribute("data-album");
+                if (data.redeemed.includes(album)) {
+                    button.disabled = true;
+                    button.textContent = "In Collection";
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
     });
 }
