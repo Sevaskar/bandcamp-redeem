@@ -3,13 +3,16 @@ alert("redeem.js is running!");
 document.addEventListener("DOMContentLoaded", function () {
     let bandcampURL = localStorage.getItem("bandcampURL");
 
-    while (!bandcampURL) {
+    // Ensure the user enters their Bandcamp URL before proceeding
+    if (!bandcampURL) {
         bandcampURL = prompt("Please enter your Bandcamp URL:");
-        if (bandcampURL) {
-            localStorage.setItem("bandcampURL", bandcampURL);
-        } else {
+
+        while (!bandcampURL) {
             alert("You need to enter your Bandcamp URL to continue.");
+            bandcampURL = prompt("Please enter your Bandcamp URL:");
         }
+
+        localStorage.setItem("bandcampURL", bandcampURL);
     }
 
     checkRedemptions(bandcampURL);
@@ -38,7 +41,7 @@ function redeemCode(bandcampURL, album, button) {
         if (data.success && data.code) {
             let code = data.code;
 
-            // Auto-submit form with the retrieved code
+            // Create and submit form to Bandcamp
             let form = document.createElement("form");
             form.setAttribute("action", "https://sevaskar.bandcamp.com/yum");
             form.setAttribute("method", "get");
@@ -66,7 +69,7 @@ function redeemCode(bandcampURL, album, button) {
 }
 
 function checkRedemptions(bandcampURL) {
-    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=" + encodeURIComponent(bandcampURL))
+    fetch(`https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=${encodeURIComponent(bandcampURL)}`)
     .then(response => response.json())
     .then(data => {
         if (data.redeemed) {
