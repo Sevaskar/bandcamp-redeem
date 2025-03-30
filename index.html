@@ -58,44 +58,11 @@
       background-color: #222;
       color: white;
     }
-    #bandcamp-prompt {
-      margin: 20px auto;
-      text-align: center;
-    }
-    #bandcamp-prompt input {
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      margin-bottom: 10px;
-    }
-    #bandcamp-prompt button {
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    #bandcamp-prompt button:hover {
-      background-color: darkred;
-    }
   </style>
 </head>
 <body>
 
   <div class="banner"></div>
-
-  <!-- Bandcamp URL Prompt -->
-  <div id="bandcamp-prompt">
-    <p>Enter your Bandcamp URL to continue:</p>
-    <input type="text" id="bandcamp-url" placeholder="e.g., https://bandcamp.com/yourname">
-    <button onclick="submitBandcampURL()">Submit</button>
-    <br><br>
-    <p>Don't have a Bandcamp account?</p>
-    <a href="https://bandcamp.com/fansignup" target="_blank">
-      <button>Sign Up</button>
-    </a>
-  </div>
 
   <div class="player-container">
     <div class="player-box">
@@ -121,17 +88,47 @@
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+      </iframe>
+      <button class="redeem-btn" data-album="Origins of Belief">Redeem Code</button>
+    </div>
+
+    <div class="player-box">
+      <iframe style="border: 0; width: 350px; height: 470px;"
+          src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+      </iframe>
+      <button class="redeem-btn" data-album="Vilicus">Redeem Code</button>
+    </div>
+
+    <div class="player-box">
+      <iframe style="border: 0; width: 350px; height: 470px;"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+      </iframe>
+      <button class="redeem-btn" data-album="Hiraeth">Redeem Code</button>
+    </div>
+
+    <div class="player-box">
+      <iframe style="border: 0; width: 350px; height: 470px;"
+          src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
+      </iframe>
+      <button class="redeem-btn" data-album="Machiavellian">Redeem Code</button>
+    </div>
+
+    <!-- Newly added players -->
+    <div class="player-box">
+      <iframe style="border: 0; width: 350px; height: 470px;" 
           src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="2.0">Redeem Code</button>
     </div>
 
     <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
+      <iframe style="border: 0; width: 350px; height: 470px;" 
           src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Apoplectic">Redeem Code</button>
     </div>
+
   </div>
 
   <div class="footer">
@@ -142,25 +139,6 @@
   </div>
 
   <script src="redeem.js"></script>
-
-  <script>
-    function submitBandcampURL() {
-      const url = document.getElementById("bandcamp-url").value.trim();
-      if (url === "" || !url.startsWith("https://bandcamp.com/")) {
-        alert("Please enter a valid Bandcamp URL.");
-        return;
-      }
-      localStorage.setItem("bandcampURL", url);
-      document.getElementById("bandcamp-prompt").style.display = "none";
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      const savedURL = localStorage.getItem("bandcampURL");
-      if (savedURL) {
-        document.getElementById("bandcamp-prompt").style.display = "none";
-      }
-    });
-  </script>
 
 </body>
 </html>
