@@ -52,7 +52,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   padding: 20px;
   max-width: 1200px;
@@ -63,32 +63,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 350px;
   background-color: #333;
   padding: 10px;
   border-radius: 10px;
   text-align: center;
-  flex: 1 1 calc(33.33% - 40px); /* Ensures three per row with spacing */
+  flex: 1 1 350px; /* Ensures three per row with spacing */
   max-width: 350px;
 }
 
-    /* Redeem Button */
-    .redeem-btn {
-      margin-top: 10px;
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-      width: auto;
-      display: block;
-    }
+.redeem-btn {
+  margin-top: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%; /* Ensures button spans full width */
+  text-align: center;
+  display: block;
+}
 
-    .redeem-btn:hover {
-      background-color: darkred;
-    }
+.redeem-btn:hover {
+  background-color: darkred;
+}
 
     /* Footer */
     .footer {
