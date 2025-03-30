@@ -58,7 +58,6 @@ function showCustomPrompt() {
                 alert("Invalid URL. Try again.");
             }
         });
-    });
 }
 
 async function getUserBandcampUrl() {
@@ -76,7 +75,7 @@ function isValidBandcampURL(url) {
 
 // Function to handle Redeem Code button click
 async function redeemCode(title, button) {
-    const userUrl = getBandcampURL();
+    const userUrl = await getUserBandcampUrl();
     if (!userUrl) return;
 
     button.disabled = true;
