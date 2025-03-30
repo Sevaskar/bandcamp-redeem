@@ -413,6 +413,421 @@
       <img src="https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg" alt="Support on PayPal">
     </a>
     <br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sevaskar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: red;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Banner */
+    .banner {
+      background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
+      background-size: contain;
+      width: 100%;
+      height: 200px;
+      margin-bottom: 20px;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      background-color: black;
+      padding: 15px 0;
+    }
+
+    .nav-item {
+      color: blue;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 15px;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+
+    .nav-item:hover {
+      color: white;
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: black;
+      min-width: 150px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: blue;
+      padding: 10px;
+      display: block;
+      text-decoration: none;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Bandcamp URL Prompt */
+    #bandcamp-prompt {
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    #bandcamp-prompt input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 10px;
+    }
+
+    #bandcamp-prompt button {
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #bandcamp-prompt button:hover {
+      background-color: darkred;
+    }
+
+    /* Players */
+    .player-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .player-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 350px;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .redeem-btn {
+      margin-top: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      width: auto;
+      display: block;
+    }
+
+    .redeem-btn:hover {
+      background-color: darkred;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #222;
+      color: white;
+      text-align: center;
+    }
+
+    .paypal-link img {
+      width: 150px;
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="banner"></div>
+
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="https://sevaskar.bandcamp.com/" class="nav-item">Bandcamp</a>
+    <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item">Spotify</a>
+    <a href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd" class="nav-item">YouTube</a>
+
+    <div class="dropdown">
+      <a class="nav-item">Merch ▾</a>
+      <div class="dropdown-content">
+        <a href="https://my-store-11471314.creator-spring.com/">Store</a>
+        <a href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG">Books</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bandcamp URL Prompt -->
+  <div id="bandcamp-prompt">
+    <p>Enter your Bandcamp URL to continue:</p>
+    <input type="text" id="bandcamp-url" placeholder="e.g., https://bandcamp.com/yourname">
+    <button onclick="submitBandcampURL()">Submit</button>
+    <br><br>
+    <p>Don't have a Bandcamp account?</p>
+    <a href="https://bandcamp.com/fansignup" target="_blank">
+      <button>Sign Up</button>
+    </a>
+  </div>
+
+  <!-- Bandcamp Players -->
+  <div class="player-container">
+    <div class="player-box">
+      <iframe style="border: 0; width: 350px; height: 470px;"
+          src="YOUR_PLAYER_LINK_HERE" seamless></iframe>
+      <button class="redeem-btn" data-album="Album Name">Redeem Code</button>
+    </div>
+    <!-- Repeat the above block for all 9 players -->
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="https://PayPal.me/sevaskar" target="_blank" class="paypal-link">
+      <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="Support on PayPal">
+    </a>
+    <br><br>
+    &copy; 2025 Sevaskar. All rights reserved.
+  </div>
+
+  <script>
+    function submitBandcampURL() {
+      const url = document.getElementById("bandcamp-url").value.trim();
+      if (url === "" || !url.startsWith("https://bandcamp.com/")) {
+        alert("Please enter a valid Bandcamp URL.");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sevaskar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: red;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Banner */
+    .banner {
+      background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
+      background-size: contain;
+      width: 100%;
+      height: 200px;
+      margin-bottom: 20px;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      background-color: black;
+      padding: 15px 0;
+    }
+
+    .nav-item {
+      color: blue;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 15px;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+
+    .nav-item:hover {
+      color: white;
+    }
+
+    /* Dropdown Menu */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: black;
+      min-width: 120px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      text-align: left;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      color: blue;
+      padding: 10px;
+      display: block;
+      text-decoration: none;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    /* Bandcamp URL Prompt */
+    #bandcamp-prompt {
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    #bandcamp-prompt input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 10px;
+    }
+
+    #bandcamp-prompt button {
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #bandcamp-prompt button:hover {
+      background-color: darkred;
+    }
+
+    /* Players */
+    .player-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .player-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 350px;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .redeem-btn {
+      margin-top: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      width: auto;
+      display: block;
+    }
+
+    .redeem-btn:hover {
+      background-color: darkred;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #222;
+      color: white;
+      text-align: center;
+    }
+
+    .paypal-link img {
+      width: 200px;
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="banner"></div>
+
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="https://sevaskar.bandcamp.com/" class="nav-item">Bandcamp</a>
+    <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item">Spotify</a>
+    <a href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd" class="nav-item">YouTube</a>
+
+    <div class="dropdown">
+      <a class="nav-item">Merch ▾</a>
+      <div class="dropdown-content">
+        <a href="https://my-store-11471314.creator-spring.com/">Store</a>
+        <a href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG">Books</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bandcamp URL Prompt -->
+  <div id="bandcamp-prompt">
+    <p>Enter your Bandcamp URL to continue:</p>
+    <input type="text" id="bandcamp-url" placeholder="e.g., https://bandcamp.com/yourname">
+    <button onclick="submitBandcampURL()">Submit</button>
+    <br><br>
+    <p>Don't have a Bandcamp account?</p>
+    <a href="https://bandcamp.com/fansignup" target="_blank">
+      <button>Sign Up</button>
+    </a>
+  </div>
+
+  <!-- Bandcamp Players -->
+  <div class="player-container">
+    <div class="player-box">
+      <iframe src="YOUR_PLAYER_LINK_HERE" style="border: 0; width: 350px; height: 470px;" seamless></iframe>
+      <button class="redeem-btn">Redeem Code</button>
+    </div>
+    <!-- Add 8 more players in the same way -->
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="https://PayPal.me/sevaskar" target="_blank" class="paypal-link">
+      <img src="https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg" alt="Support on PayPal">
+    </a>
+    <br><br>
     &copy; 2025 Sevaskar. All rights reserved.
   </div>
 
