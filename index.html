@@ -18,7 +18,38 @@
     /* Banner */
     .banner {
       background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
-      background-size: contain;
+    .player-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+    .player-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 350px;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .redeem-btn {
+      margin-top: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      width: auto;
+      display: block;
+    }
+    .redeem-btn:hover {
+      background-color: darkred;
+    }  background-size: contain;
       width: 100%;
       height: 200px;
       margin-bottom: 20px;
@@ -43,50 +74,7 @@
       transition: 0.3s;
     }
 
-    .nav-item:hover {
-    .player-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.player-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #333;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  width: calc(33.33% - 20px); /* Ensures 3 per row */
-  max-width: 350px;
-  box-sizing: border-box;
-}
-
-.redeem-btn {
-  margin-top: 10px;
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-  text-align: center;
-  display: block;
-  width: 100%;
-  max-width: 200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.redeem-btn:hover {
-  background-color: darkred;
-}
+    
 
 
     /* Footer */
