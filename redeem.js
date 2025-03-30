@@ -75,24 +75,19 @@ async function updateButtons() {
     const userUrl = getUserBandcampUrl();
     if (!userUrl) return;
 
-    const buttons = document.querySelectorAll(".redeem-button");
+    const response = await fetch(`${WEB_APP_URL}?url=${encodeURIComponent(userUrl)}`);
+    const result = await response.json();
 
-    for (let button of buttons) {
-        const title = button.dataset.title;
-        
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
+    if (result.success) {
+        const redeemedTitles = result.redeemed || []; // Expecting an array of redeemed titles
+
+        document.querySelectorAll(".redeem-button").forEach((button) => {
+            if (redeemedTitles.includes(button.dataset.title)) {
+                button.textContent = "In Collection";
+                button.style.background = "#888";
+                button.disabled = true;
+            }
         });
-
-        const result = await response.json();
-
-        if (!result.success && result.message === "Already Redeemed") {
-            button.textContent = "In Collection";
-            button.style.background = "#888";
-            button.disabled = true;
-        }
     }
 }
 
