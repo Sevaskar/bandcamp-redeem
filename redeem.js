@@ -16,16 +16,21 @@ function getUserBandcampUrl() {
     return userUrl;
 }
 
+// Validate Bandcamp URL format
+function isValidBandcampUrl(url) {
+    return url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com");
+}
+
 // Function to handle Redeem Code button click
 async function redeemCode(title, button) {
-    const userUrl = await getUserBandcampUrl();
+    const userUrl = getUserBandcampUrl();
     if (!userUrl) return;
 
     button.disabled = true;
     button.textContent = "Processing...";
 
     try {
-        const response = await fetch(https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec, {
+        const response = await fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify({ userUrl, title }),
             headers: { "Content-Type": "application/json" }
@@ -91,4 +96,4 @@ async function updateButtons() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", updateButtons)
+document.addEventListener("DOMContentLoaded", updateButtons);
