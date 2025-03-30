@@ -6,7 +6,28 @@
   <title>Sevaskar</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-fami/* Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  padding: 15px 0;
+  gap: 20px; /* Evenly spaces the links */
+}
+
+/* Navigation Links */
+.nav-item {
+  color: blue; /* Ensures links are blue */
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  transition: 0.3s;
+}
+
+.nav-item:hover {
+  color: white;
+}ly: Arial, sans-serif;
       background-color: black;
       color: red;
       text-align: center;
@@ -20,58 +41,7 @@
       height: 200px;
       margin-bottom: 20px;
     }
-.navbar {
-  display: flex;
-  justify-content: center;
-  background-color: black;
-  padding: 15px 0;
-}
 
-/* Navigation Links */
-.nav-item {
-  color: blue;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  margin: 0 10px;
-  transition: 0.3s;
-}
-
-.nav-item:hover {
-  color: white;
-}
-
-/* Dropdown Menu */
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: black;
-  min-width: 120px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  text-align: left;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: blue;
-  padding: 10px;
-  display: block;
-  text-decoration: none;
-}
-
-.dropdown-content a:hover {
-  background-color: #333;
-  color: white;
-}
     .player-container {
       display: flex;
       flex-wrap: wrap;
@@ -123,56 +93,14 @@
   padding: 15px 0;
 }
 
-/* Navigation Links */
-.nav-item {
-  color: blue;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 15px;
-  margin: 0 10px;
-  transition: 0.3s;
-  display: flex;
-  align-items: center; /* Ensures text is aligned */
-}
-
-.nav-item:hover {
-  color: white;
-}
-
-/* Dropdown Menu */
-.dropdown {
-  position: relative;
-  display: flex;
-  align-items: center; /* Keeps "Merch" aligned with other links */
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: black;
-  min-width: 120px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  text-align: left;
-  top: 100%; /* Positions dropdown correctly */
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: blue;
-  padding: 10px;
-  display: block;
-  text-decoration: none;
-}
-
-.dropdown-content a:hover {
-  background-color: #333;
-  color: white;
-}
+<!-- Navigation Bar -->
+<div class="navbar">
+  <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank">Bandcamp</a>
+  <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item" target="_blank">Spotify</a>
+  <a href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd" class="nav-item" target="_blank">YouTube</a>
+  <a href="https://my-store-11471314.creator-spring.com/" class="nav-item" target="_blank">Store</a>
+  <a href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=9d006cf8-473f-408b-bf3f-1273a1d90eb8" class="nav-item" target="_blank">Books</a>
+</div>
 
   <div class="player-container">
     <div class="player-box">
