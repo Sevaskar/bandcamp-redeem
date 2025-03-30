@@ -61,11 +61,18 @@ function showCustomPrompt() {
     });
 }
 
-async function getUserBandcampUrl() {
+function getUserBandcampUrl() {
     let userUrl = sessionStorage.getItem("bandcampUrl");
-    if (!userUrl) {
-        userUrl = await showCustomPrompt();
+    
+    while (!userUrl || !isValidBandcampUrl(userUrl)) {
+        userUrl = prompt("Enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
+        if (userUrl && isValidBandcampUrl(userUrl)) {
+            sessionStorage.setItem("bandcampUrl", userUrl);
+        } else {
+            alert("Invalid Bandcamp URL. Please enter a valid URL.");
+        }
     }
+    
     return userUrl;
 }
 
