@@ -24,10 +24,8 @@ async function redeemCode(title, button) {
     button.textContent = "Processing...";
 
     try {
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
+        const response = await fetch(`${WEB_APP_URL}?userUrl=${encodeURIComponent(userUrl)}&title=${encodeURIComponent(title)}`, {
+            method: "GET",
         });
 
         const result = await response.json();
@@ -37,7 +35,7 @@ async function redeemCode(title, button) {
             button.textContent = "In Collection";
             button.style.background = "#888";
         } else {
-            button.textContent = result.message;
+            button.textContent = result.message || "No Codes Available";
             button.style.background = "#888";
         }
     } catch (error) {
@@ -74,10 +72,8 @@ async function updateButtons() {
     for (let button of buttons) {
         const title = button.dataset.title;
         
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
+        const response = await fetch(`${WEB_APP_URL}?userUrl=${encodeURIComponent(userUrl)}&title=${encodeURIComponent(title)}`, {
+            method: "GET",
         });
 
         const result = await response.json();
