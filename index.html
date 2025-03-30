@@ -48,7 +48,29 @@
     }
 
     /* Player Container */
-    
+    .player-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.player-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1 1 calc(33.33% - 40px); /* Ensures three per row with spacing */
+  max-width: 350px;
+}
 
     /* Redeem Button */
     .redeem-btn {
