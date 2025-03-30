@@ -23,14 +23,14 @@ function isValidBandcampUrl(url) {
 
 // Function to handle Redeem Code button click
 async function redeemCode(title, button) {
-    const userUrl = getUserBandcampUrl();
+    const userUrl = await getUserBandcampUrl();
     if (!userUrl) return;
 
     button.disabled = true;
     button.textContent = "Processing...";
 
     try {
-        const response = await fetch(WEB_APP_URL, {
+        const response = await fetch(https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec, {
             method: "POST",
             body: JSON.stringify({ userUrl, title }),
             headers: { "Content-Type": "application/json" }
