@@ -98,10 +98,66 @@
       padding: 10px 15px;
       transition: 0.3s;
     }
+
+    /* Initial Prompt Styling */
+.prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.prompt-box {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+}
+
+.prompt-box input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.prompt-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.prompt-links a {
+  color: #0f91ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.prompt-links a:hover {
+  text-decoration: underline;
+}
+    
 </style>
 </head>
 <body>
   <div class="banner"></div>
+  <!-- Initial Bandcamp URL Prompt -->
+<div id="bandcamp-prompt" class="prompt-overlay">
+  <div class="prompt-box">
+    <p>Welcome! Please enter your Bandcamp URL.</p>
+    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/your-profile">
+    <div class="prompt-links">
+      <a href="#" onclick="submitBandcampURL()">Enter</a>
+      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
+    </div>
+  </div>
+</div>
 
 <div class="navbar">
   <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank">Bandcamp</a>
@@ -186,6 +242,47 @@
 </div>
 
   <script src="redeem.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    localStorage.removeItem("bandcampURL"); // Force prompt on refresh
+
+    const promptOverlay = document.getElementById("bandcamp-prompt");
+    let bandcampURL = localStorage.getItem("bandcampURL");
+
+    if (!bandcampURL) {
+      promptOverlay.style.display = "flex";
+    } else {
+      checkRedemptions(bandcampURL);
+    }
+  });
+
+  function submitBandcampURL() {
+    const url = document.getElementById("bandcamp-url").value.trim();
+    if (!url.startsWith("https://bandcamp.com/")) {
+      alert("Please enter a valid Bandcamp URL.");
+      return;
+    }
+    localStorage.setItem("bandcampURL", url);
+    document.getElementById("bandcamp-prompt").style.display = "none";
+    checkRedemptions(url);
+  }
+
+  async function checkRedemptions(bandcampURL) {
+    try {
+      const response = await fetch('https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_URL_HERE/exec?url=' + encodeURIComponent(bandcampURL));
+      const redeemedTitles = await response.json();
+      
+      document.querySelectorAll(".redeem-btn").forEach(button => {
+        const albumTitle = button.getAttribute("data-album");
+        if (redeemedTitles.includes(albumTitle)) {
+          button.outerHTML = "<p>Already in Collection</p>";
+        }
+      });
+    } catch (error) {
+      console.error("Error checking redemptions:", error);
+    }
+  }
+        </script>
   
 </body>
 </html>
