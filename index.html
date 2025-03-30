@@ -45,11 +45,24 @@
 
     .nav-item:hover {
     .player-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
+  di
+
+    /* Player Container */
+    
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #222;
+      color: white;
+    }
+
+ .player-container {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  padding: 20px;
+  gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -63,8 +76,9 @@
   padding: 10px;
   border-radius: 10px;
   text-align: center;
-  width: 100%;
+  width: calc(33.33% - 20px); /* Ensures 3 per row */
   max-width: 350px;
+  box-sizing: border-box;
 }
 
 .redeem-btn {
@@ -76,27 +90,14 @@
   cursor: pointer;
   border-radius: 5px;
   font-size: 16px;
-  width: 100%;
+  width: auto;
   text-align: center;
+  display: block;
 }
 
 .redeem-btn:hover {
   background-color: darkred;
-}  color: white;
-    }
-
-    /* Player Container */
-    
-
-    /* Footer */
-    .footer {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #222;
-      color: white;
-    }
-
-  </style>
+} </style>
 </head>
 <body>
   <div class="banner"></div>
