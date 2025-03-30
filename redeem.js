@@ -3,15 +3,13 @@ alert("redeem.js is running!");
 document.addEventListener("DOMContentLoaded", function () {
     let bandcampURL = localStorage.getItem("bandcampURL");
 
-    if (!bandcampURL) {
+    while (!bandcampURL) {
         bandcampURL = prompt("Please enter your Bandcamp URL:");
-
-        if (!bandcampURL) {
+        if (bandcampURL) {
+            localStorage.setItem("bandcampURL", bandcampURL);
+        } else {
             alert("You need to enter your Bandcamp URL to continue.");
-            return;
         }
-
-        localStorage.setItem("bandcampURL", bandcampURL);
     }
 
     checkRedemptions(bandcampURL);
@@ -19,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".redeem-btn").forEach(button => {
         button.addEventListener("click", function () {
             const album = this.getAttribute("data-album");
-            alert("Redeem button clicked for " + album); // Debugging alert
             redeemCode(bandcampURL, album, this);
         });
     });
@@ -38,11 +35,10 @@ function redeemCode(bandcampURL, album, button) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.success && data.code) {
             let code = data.code;
-            alert("Code retrieved: " + code); // Debugging alert
 
-            // Create and auto-submit form to Bandcamp redemption page
+            // Auto-submit form with the retrieved code
             let form = document.createElement("form");
             form.setAttribute("action", "https://sevaskar.bandcamp.com/yum");
             form.setAttribute("method", "get");
@@ -57,7 +53,6 @@ function redeemCode(bandcampURL, album, button) {
             document.body.appendChild(form);
             form.submit();
 
-            // Update button after successful redemption
             button.disabled = true;
             button.textContent = "In Collection";
         } else {
