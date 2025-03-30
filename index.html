@@ -45,9 +45,47 @@
 
     .nav-item:hover {
     .player-container {
-  di
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    /* Player Container */
+.player-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  width: calc(33.33% - 20px); /* Ensures 3 per row */
+  max-width: 350px;
+  box-sizing: border-box;
+}
+
+.redeem-btn {
+  margin-top: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  width: auto;
+  text-align: center;
+  display: block;
+}
+
+.redeem-btn:hover {
+  background-color: darkred;
+}
+
+
     
 
     /* Footer */
