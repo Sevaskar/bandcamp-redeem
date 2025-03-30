@@ -48,12 +48,12 @@
     }
 
     /* Player Container */
-    .player-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
+    ..player-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  padding: 20px;
     }
 
     .player-box {
