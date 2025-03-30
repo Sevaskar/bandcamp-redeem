@@ -5,6 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sevaskar</title>
   <style>
+    /* Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  padding: 15px 0;
+}
+
+/* Navigation Links */
+.nav-item {
+  color: blue;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  margin: 0 10px;
+  transition: 0.3s;
+}
+
+.nav-item:hover {
+  color: white;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: black;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  text-align: left;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: blue;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #333;
+  color: white;
+}
     body {
       font-family: Arial, sans-serif;
       background-color: black;
