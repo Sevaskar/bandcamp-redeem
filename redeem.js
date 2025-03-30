@@ -1,96 +1,49 @@
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
-// Function to prompt for Bandcamp URL and prevent bypassing
-function showCustomPrompt() {
-    return new Promise((resolve) => {
-        const modal = document.createElement("div");
-        modal.style.position = "fixed";
-        modal.style.top = "0";
-        modal.style.left = "0";
-        modal.style.width = "100%";
-        modal.style.height = "100%";
-        modal.style.background = "rgba(0, 0, 0, 0.8)";
-        modal.style.display = "flex";
-        modal.style.alignItems = "center";
-        modal.style.justifyContent = "center";
-        modal.style.zIndex = "1000";
-
-        const box = document.createElement("div");
-        box.style.background = "#222";
-        box.style.padding = "20px";
-        box.style.borderRadius = "10px";
-        box.style.textAlign = "center";
-        box.style.color = "white";
-
-        const message = document.createElement("p");
-        message.textContent = "Please enter your Bandcamp URL:";
-        box.appendChild(message);
-
-        const input = document.createElement("input");
-        input.style.width = "90%";
-        input.style.padding = "10px";
-        input.style.marginBottom = "10px";
-        input.style.borderRadius = "5px";
-        input.style.border = "none";
-        input.style.textAlign = "center";
-        box.appendChild(input);
-
-        const button = document.createElement("button");
-        button.textContent = "Submit";
-        button.style.padding = "10px 20px";
-        button.style.background = "red";
-        button.style.color = "white";
-        button.style.border = "none";
-        button.style.borderRadius = "5px";
-        button.style.cursor = "pointer";
-        box.appendChild(button);
-
-        modal.appendChild(box);
-        document.body.appendChild(modal);
-
-        button.addEventListener("click", () => {
-            const url = input.value.trim();
-            if (url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com")) {
-                sessionStorage.setItem("bandcampUrl", url);
-                document.body.removeChild(modal);
-                resolve(url);
-            } else {
-                alert("Invalid URL. Try again.");
-            }
-        });
-}
-
-async function getUserBandcampUrl() {
+// Force user to enter Bandcamp URL before accessing the page
+function getUserBandcampUrl() {
     let userUrl = sessionStorage.getItem("bandcampUrl");
-    if (!userUrl) {
-        userUrl = await showCustomPrompt();
+    
+    while (!userUrl || !isValidBandcampUrl(userUrl)) {
+        userUrl = prompt("Enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
+        if (userUrl && isValidBandcampUrl(userUrl)) {
+            sessionStorage.setItem("bandcampUrl", userUrl);
+        } else {
+            alert("Invalid Bandcamp URL. Please enter a valid URL.");
+        }
     }
+    
     return userUrl;
 }
 
-// Validate the Bandcamp URL format
-function isValidBandcampURL(url) {
-    return url.startsWith("https://bandcamp.com/");
+// Validate Bandcamp URL format
+function isValidBandcampUrl(url) {
+    return url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com");
 }
 
 // Function to handle Redeem Code button click
 async function redeemCode(title, button) {
-    const userUrl = await getUserBandcampUrl();
+    const userUrl = getUserBandcampUrl();
     if (!userUrl) return;
 
     button.disabled = true;
     button.textContent = "Processing...";
 
     try {
-        const response = await fetch(`${WEB_APP_URL}?userUrl=${encodeURIComponent(userUrl)}&title=${encodeURIComponent(title)}`);
+        const response = await fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ userUrl, title }),
+            headers: { "Content-Type": "application/json" }
+        });
+
         const result = await response.json();
 
-        if (result.success && result.code) {
+        if (result.success) {
             autoSubmitCode(result.code);
             button.textContent = "In Collection";
             button.style.background = "#888";
         } else {
-            button.textContent = result.message || "No Codes Available";
+            button.textContent = result.message || "No codes left";
             button.style.background = "#888";
         }
     } catch (error) {
@@ -117,9 +70,9 @@ function autoSubmitCode(code) {
     form.submit();
 }
 
-// Check previous redemptions and update buttons
+// Run on page load: Check previous redemptions and update buttons
 async function updateButtons() {
-    const userUrl = getBandcampURL();
+    const userUrl = getUserBandcampUrl();
     if (!userUrl) return;
 
     const buttons = document.querySelectorAll(".redeem-button");
@@ -127,20 +80,18 @@ async function updateButtons() {
     for (let button of buttons) {
         const title = button.dataset.title;
         
-        try {
-            const response = await fetch(`${WEB_APP_URL}?userUrl=${encodeURIComponent(userUrl)}&title=${encodeURIComponent(title)}`);
-            const result = await response.json();
+        const response = await fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ userUrl, title }),
+            headers: { "Content-Type": "application/json" }
+        });
 
-            if (!result.success && result.message === "Already Redeemed") {
-                button.textContent = "In Collection";
-                button.style.background = "#888";
-                button.disabled = true;
-            }
-        } catch (error) {
-            console.error("Error checking redemptions:", error);
+        const result = await response.json();
+
+        if (!result.success && result.message === "Already Redeemed") {
+            button.textContent = "In Collection";
+            button.style.background = "#888";
+            button.disabled = true;
         }
     }
 }
-
-// Run on page load
-document.addEventListener("DOMContentLoaded", updateButtons);
