@@ -114,19 +114,65 @@
 </head>
 <body>
   <div class="banner"></div>
-  <div class="navbar">
-    <a href="https://sevaskar.bandcamp.com/" class="nav-item">Bandcamp</a>
-    <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item">Spotify</a>
-    <a href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd" class="nav-item">YouTube</a>
+  /* Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Ensures vertical alignment */
+  background-color: black;
+  padding: 15px 0;
+}
 
-    <div class="dropdown">
-      <a class="nav-item">Merch ▾</a>
-      <div class="dropdown-content">
-        <a href="https://my-store-11471314.creator-spring.com/">Store</a>
-        <a href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG">Books</a>
-      </div>
-    </div>
-  </div>
+/* Navigation Links */
+.nav-item {
+  color: blue;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  margin: 0 10px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center; /* Ensures text is aligned */
+}
+
+.nav-item:hover {
+  color: white;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center; /* Keeps "Merch" aligned with other links */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: black;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  text-align: left;
+  top: 100%; /* Positions dropdown correctly */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: blue;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #333;
+  color: white;
+}
 
   <div class="player-container">
     <div class="player-box">
