@@ -72,21 +72,22 @@
   background-color: red;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
   font-size: 16px;
-  width: auto;
   text-align: center;
   display: block;
+  width: 100%;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .redeem-btn:hover {
   background-color: darkred;
 }
 
-
-    
 
     /* Footer */
     .footer {
@@ -98,70 +99,11 @@
 
  .player-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.player-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #333;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  width: calc(33.33% - 20px); /* Ensures 3 per row */
-  max-width: 350px;
-  box-sizing: border-box;
-}
-
-.redeem-btn {
-  margin-top: 10px;
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-  width: auto;
-  text-align: center;
-  display: block;
-}
-
-.redeem-btn:hover {
-  background-color: darkred;
-} </style>
+</style>
 </head>
 <body>
   <div class="banner"></div>
 
-<!-- N.player-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.player-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 350px;
-  background-color: #333;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  flex: 1 1 calc(33.33% - 40px); /* Ensures three per row with spacing */
-  max-width: 350px;
   }avigation Bar -->
 <div class="navbar">
   <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank">Bandcamp</a>
@@ -177,56 +119,64 @@
           src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Pandemonium" onclick="redeemCode('Pandemonium')">Redeem Code</button>
+    </div> <!-- Closing div added here -->
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Boombox" onclick="redeemCode('Boombox')">Redeem Code</button>
+    </div>
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
-      <button class="redeem-btn" data-album="Prophet for Prophet Remix" onclick="redeemCode('Prophet for Profit Remix')">Redeem Code</button>
+      <button class="redeem-btn" data-album="Prophet for Profit Remix" onclick="redeemCode('Prophet for Profit Remix')">Redeem Code</button>
+    </div>
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Origins of Belief" onclick="redeemCode('Origins of Belief')">Redeem Code</button>
+    </div>
+
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Vilicus" onclick="redeemCode('Vilicus')">Redeem Code</button>
+    </div>
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Hiraeth" onclick="redeemCode('Hiraeth')">Redeem Code</button>
+    </div>
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Machiavellian" onclick="redeemCode('Machiavellian')">Redeem Code</button>
+    </div>
 
-    <!-- Newly added players -->
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;" 
           src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="2.0" onclick="redeemCode('2.0')">Redeem Code</button>
+    </div>
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;" 
           src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
       <button class="redeem-btn" data-album="Apoplectic" onclick="redeemCode('Apoplectic')">Redeem Code</button>
-
-  </div>
+    </div>
+</div> <!-- Closing div for .player-container -->
 
 <!-- Footer -->
 <div class="footer">
