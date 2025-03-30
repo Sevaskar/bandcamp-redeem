@@ -5,7 +5,7 @@ function getUserBandcampUrl() {
     let userUrl = sessionStorage.getItem("bandcampUrl");
     
     while (!userUrl || !isValidBandcampUrl(userUrl)) {
-        userUrl = prompt("Please enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
+        userUrl = prompt("Enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
         if (userUrl && isValidBandcampUrl(userUrl)) {
             sessionStorage.setItem("bandcampUrl", userUrl);
         } else {
