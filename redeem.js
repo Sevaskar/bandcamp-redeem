@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to handle Redeem Code button click
-function redeemCode(album, button) {
+async function redeemCode(title, button) {
     const bandcampURL = getUserBandcampUrl();
     
     if (!bandcampURL) {
