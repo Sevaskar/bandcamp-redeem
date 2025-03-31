@@ -25,7 +25,7 @@ document.querySelectorAll('.redeem-button').forEach(button => {
 
         let userUrl = localStorage.getItem('bandcampUrl'); // Retrieve stored Bandcamp URL
         if (!userUrl) {
-            alert("Please enter your Bandcamp URL first!");
+            alert("Please refresh the page and enter your Bandcamp URL.");
             return;
         }
 
