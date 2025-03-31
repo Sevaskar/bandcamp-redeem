@@ -2,7 +2,7 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV
 
 // Function to get Bandcamp URL from the input field
 function getUserBandcampUrl() {
-    return sessionStorage.getItem("bandcampUrl") || "";
+    return localStorage.setItem("bandcampUrl", userUrl) || "";
 }
 
 // Validate Bandcamp URL format
