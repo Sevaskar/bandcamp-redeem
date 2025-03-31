@@ -247,22 +247,6 @@
 </div>
 
   <script src="redeem.js"></script>
-
-  <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let bandcampUrl = localStorage.getItem("bandcampUrl");
-
-    if (!bandcampUrl) {
-        bandcampUrl = prompt("Enter your Bandcamp URL:");
-        if (bandcampUrl) {
-            localStorage.setItem("bandcampUrl", bandcampUrl);
-        } else {
-            alert("You need to enter your Bandcamp URL to continue.");
-            window.location.reload();
-        }
-    }
-});
-  </script>
   
   <script>
   document.addEventListener("DOMContentLoaded", async function () {
