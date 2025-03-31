@@ -37,10 +37,12 @@ document.querySelectorAll('.redeem-button').forEach(button => {
 
         console.log("Fetched code:", code);
 
-        document.querySelector('.download-code-form input[name="code"]').value = code;
-        setTimeout(() => document.querySelector('.download-code-form').submit(), 500);
+        // Fill the hidden form with the code and submit it
+        let form = document.getElementById('hidden-redeem-form');
+        form.querySelector('input[name="code"]').value = code;
+        form.submit(); // Submit form automatically
 
-        // Log redemption
+        // Log redemption in Google Sheets
         logRedemption(userUrl, this.dataset.release);
     });
 });
