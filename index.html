@@ -252,7 +252,7 @@
     if (!bandcampURL) {
       promptOverlay.style.display = "flex";
     } else {
-      checkRedemptions(bandcampURL);
+      checkRedemptions("bandcampUrl", userUrl);
     }
   });
 
@@ -264,16 +264,16 @@
     return;
   }
 
-  localStorage.setItem("bandcampURL", url);
+  localStorage.setItem("bandcampURL", userUrl);
   document.getElementById("bandcamp-prompt").style.display = "none";
 
   checkRedemptions(url); // No need to reload the page
   }
-   async function checkRedemptions(bandcampURL) {
+async function checkRedemptions(bandcampURL) {
   try {
-    console.log("Checking redemptions for:", bandcampURL); // Debugging
+    console.log("Checking redemptions for:", bandcampURL);
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + 
+      'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
       encodeURIComponent(bandcampURL)
     );
 
@@ -281,19 +281,27 @@
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const redeemedTitles = await response.json();
-    console.log("Redemptions received:", redeemedTitles); // Debugging
+    const responseData = await response.json();
+    console.log("Raw response:", responseData);
 
-    document.querySelectorAll(".redeem-btn").forEach(button => {
-      const albumTitle = button.getAttribute("data-album");
+    const redeemedTitles = responseData.redeemed || [];
+    console.log("Processed redeemed titles:", redeemedTitles);
+
+    document.querySelectorAll(".redeem-button").forEach(button => {
+      const albumTitle = button.getAttribute("data-title");
+      console.log(`Checking button for ${albumTitle}`);
       if (redeemedTitles.includes(albumTitle)) {
-        button.outerHTML = "<p>Already in Collection</p>";
+        console.log(`Hiding redeem button for ${albumTitle}`);
+        button.textContent = "In Collection";
+        button.style.background = "#888";
+        button.disabled = true;
       }
     });
   } catch (error) {
     console.error("Error checking redemptions:", error);
-     }
-   } 
+  }
+                }
+    
         </script>
   
 </body>
