@@ -267,9 +267,8 @@
   localStorage.setItem("bandcampURL", url);
   document.getElementById("bandcamp-prompt").style.display = "none";
 
-  checkRedemptions(url); // Correctly placed inside the function
-  location.reload(); // Refresh to apply changes
-}
+  checkRedemptions(url); // No need to reload the page
+  }
    async function checkRedemptions(bandcampURL) {
   try {
     console.log("Checking redemptions for:", bandcampURL); // Debugging
