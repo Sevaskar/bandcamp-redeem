@@ -247,7 +247,7 @@
 // Force prompt on refresh
 
     const promptOverlay = document.getElementById("bandcamp-prompt");
-    let bandcampURL = localStorage.setItem("bandcampUrl", userUrl);
+    let bandcampURL = localStorage.setItem("bandcampUrl");
 
     if (!bandcampURL) {
       promptOverlay.style.display = "flex";
