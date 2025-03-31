@@ -83,6 +83,41 @@ function autoSubmitCode(code) {
     document.body.appendChild(form);
     form.submit();
 }
+async function checkRedemptions(bandcampURL) {
+  try {
+    console.log("Checking redemptions for:", bandcampURL);
+    
+    const response = await fetch(
+      'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
+      encodeURIComponent(bandcampURL)
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    console.log("Raw response:", responseData);
+
+    // Place this line here after parsing the response
+    const redeemedTitles = responseData.redeemed || [];
+    console.log("Processed redeemed titles:", redeemedTitles);
+
+    document.querySelectorAll(".redeem-button").forEach(button => {
+      const albumTitle = button.getAttribute("data-title");
+      console.log(`Checking button for ${albumTitle}`);
+      
+      if (redeemedTitles.includes(albumTitle)) {
+        console.log(`Hiding redeem button for ${albumTitle}`);
+        button.textContent = "In Collection";
+        button.style.background = "#888";
+        button.disabled = true;
+      }
+    });
+  } catch (error) {
+    console.error("Error checking redemptions:", error);
+  }
+}
 
 // Update buttons based on redemption history
 async function updateButtons() {
