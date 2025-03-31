@@ -47,7 +47,7 @@ async function redeemCode(title, button) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: bandcampURL, album: album }),
+        body: JSON.stringify({ url: bandcampURL, album: title }),
     })
     .then(response => response.json())
     .then(data => {
