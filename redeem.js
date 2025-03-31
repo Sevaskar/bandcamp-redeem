@@ -1,5 +1,67 @@
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
+document.addEventListener("DOMContentLoaded", () => {
+    fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Redemptions data:", data);
 
+            let userUrl = localStorage.getItem('bandcampUrl');
+            if (!userUrl) return;
+
+            document.querySelectorAll('.redeem-button').forEach(button => {
+                let release = button.dataset.release;
+                if (data.some(entry => entry.bandcampUrl === userUrl && entry.release === release)) {
+                    button.disabled = true;
+                    button.textContent = "Already In Collection";
+                }
+            });
+        })
+        .catch(error => console.error("Error fetching redemption data:", error));
+});
+
+document.querySelectorAll('.redeem-button').forEach(button => {
+    button.addEventListener('click', async function() {
+        console.log("Redeem button clicked:", this.dataset.release);
+
+        let userUrl = localStorage.getItem('bandcampUrl'); // Retrieve stored Bandcamp URL
+        if (!userUrl) {
+            alert("Please enter your Bandcamp URL first!");
+            return;
+        }
+
+        let code = await fetchCodeFromSheet(this.dataset.release); // Fetch a code from Google Sheets
+        if (!code) {
+            alert("No Available Codes");
+            return;
+        }
+
+        console.log("Fetched code:", code);
+
+        document.querySelector('.download-code-form input[name="code"]').value = code;
+        setTimeout(() => document.querySelector('.download-code-form').submit(), 500);
+
+        // Log redemption
+        logRedemption(userUrl, this.dataset.release);
+    });
+});
+
+async function fetchCodeFromSheet(release) {
+    let response = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?release=' + encodeURIComponent(release));
+    let data = await response.json();
+    console.log("Fetched data:", data);
+    return data.code || null;
+}
+
+async function logRedemption(userUrl, release) {
+    let response = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bandcampUrl: userUrl, release: release })
+    });
+
+    let result = await response.json();
+    console.log("Redemption logged:", result);
+}
 // Function to get Bandcamp URL from the input field
 function getUserBandcampUrl() {
     return localStorage.setItem("bandcampUrl") || "";
