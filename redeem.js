@@ -31,9 +31,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Function to handle Redeem Code button click
-async function redeemCode(title, button) {
-    const userUrl = getUserBandcampUrl();
-    if (!userUrl) {
+function redeemCode(album, button) {
+    const bandcampURL = getUserBandcampUrl();
+    
+    if (!bandcampURL) {
         alert("Please enter your Bandcamp URL first.");
         return;
     }
@@ -41,28 +42,29 @@ async function redeemCode(title, button) {
     button.disabled = true;
     button.textContent = "Processing...";
 
-    try {
-        const response = await fetch(WEB_APP_URL, {
-            method: "POST",
-            body: JSON.stringify({ userUrl, title }),
-            headers: { "Content-Type": "application/json" }
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            autoSubmitCode(result.code);
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: bandcampURL, album: album }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            autoSubmitCode(data.code); // Submit code to Bandcamp
             button.textContent = "In Collection";
             button.style.background = "#888";
         } else {
-            button.textContent = result.message || "No codes left";
+            button.textContent = data.message || "No codes left";
             button.style.background = "#888";
         }
-    } catch (error) {
-        console.error("Error:", error);
+    })
+    .catch(error => {
+        console.error("Error redeeming code:", error);
         button.textContent = "Error. Try Again";
         button.disabled = false;
-    }
+    });
 }
 
 // Function to auto-submit the redeemed code to Bandcamp
