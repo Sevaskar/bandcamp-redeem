@@ -1,19 +1,8 @@
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
-// Force user to enter Bandcamp URL before accessing the page
+// Function to get Bandcamp URL from the input field
 function getUserBandcampUrl() {
-    let userUrl = sessionStorage.getItem("bandcampUrl");
-    
-    while (!userUrl || !isValidBandcampUrl(userUrl)) {
-        userUrl = prompt("Enter your Bandcamp URL (e.g., https://bandcamp.com/yourname):");
-        if (userUrl && isValidBandcampUrl(userUrl)) {
-            sessionStorage.setItem("bandcampUrl", userUrl);
-        } else {
-            alert("Invalid Bandcamp URL. Please enter a valid URL.");
-        }
-    }
-    
-    return userUrl;
+    return sessionStorage.getItem("bandcampUrl") || "";
 }
 
 // Validate Bandcamp URL format
@@ -21,10 +10,33 @@ function isValidBandcampUrl(url) {
     return url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com");
 }
 
+// Handle user input from index.html form
+document.addEventListener("DOMContentLoaded", function () {
+    const urlInput = document.getElementById("bandcamp-url-input");
+    const submitButton = document.getElementById("bandcamp-url-submit");
+
+    if (urlInput && submitButton) {
+        submitButton.addEventListener("click", function () {
+            const userUrl = urlInput.value.trim();
+            if (isValidBandcampUrl(userUrl)) {
+                sessionStorage.setItem("bandcampUrl", userUrl);
+                updateButtons();
+            } else {
+                alert("Invalid Bandcamp URL. Please enter a valid URL.");
+            }
+        });
+    }
+
+    updateButtons(); // Load redemptions if the user already entered a URL
+});
+
 // Function to handle Redeem Code button click
 async function redeemCode(title, button) {
     const userUrl = getUserBandcampUrl();
-    if (!userUrl) return;
+    if (!userUrl) {
+        alert("Please enter your Bandcamp URL first.");
+        return;
+    }
 
     button.disabled = true;
     button.textContent = "Processing...";
@@ -70,25 +82,27 @@ function autoSubmitCode(code) {
     form.submit();
 }
 
-// Run on page load: Check previous redemptions and update buttons
+// Update buttons based on redemption history
 async function updateButtons() {
     const userUrl = getUserBandcampUrl();
     if (!userUrl) return;
 
-    const response = await fetch(`${WEB_APP_URL}?url=${encodeURIComponent(userUrl)}`);
-    const result = await response.json();
+    try {
+        const response = await fetch(`${WEB_APP_URL}?url=${encodeURIComponent(userUrl)}`);
+        const result = await response.json();
 
-    if (result.success) {
-        const redeemedTitles = result.redeemed || []; // Expecting an array of redeemed titles
+        if (result.success) {
+            const redeemedTitles = result.redeemed || [];
 
-        document.querySelectorAll(".redeem-button").forEach((button) => {
-            if (redeemedTitles.includes(button.dataset.title)) {
-                button.textContent = "In Collection";
-                button.style.background = "#888";
-                button.disabled = true;
-            }
-        });
+            document.querySelectorAll(".redeem-button").forEach((button) => {
+                if (redeemedTitles.includes(button.dataset.title)) {
+                    button.textContent = "In Collection";
+                    button.style.background = "#888";
+                    button.disabled = true;
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching redemption history:", error);
     }
 }
-
-document.addEventListener("DOMContentLoaded", updateButtons);
