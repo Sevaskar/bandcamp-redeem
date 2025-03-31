@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         submitButton.addEventListener("click", function () {
             const userUrl = urlInput.value.trim();
             if (isValidBandcampUrl(userUrl)) {
-                sessionStorage.setItem("bandcampUrl", userUrl);
+                localStorage.setItem("bandcampUrl", userUrl);
                 updateButtons();
             } else {
                 alert("Invalid Bandcamp URL. Please enter a valid URL.");
