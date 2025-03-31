@@ -258,16 +258,18 @@
 
   function submitBandcampURL() {
   const url = document.getElementById("bandcamp-url").value.trim();
+  
   if (!url.startsWith("https://bandcamp.com/")) {
     alert("Please enter a valid Bandcamp URL.");
     return;
   }
+
   localStorage.setItem("bandcampURL", url);
   document.getElementById("bandcamp-prompt").style.display = "none";
-  checkRedemptions(url); // This was outside the function, now fixed
+
+  checkRedemptions(url); // Correctly placed inside the function
   location.reload(); // Refresh to apply changes
-}apply changes
-    checkRedemptions(url);
+}
    async function checkRedemptions(bandcampURL) {
   try {
     console.log("Checking redemptions for:", bandcampURL); // Debugging
