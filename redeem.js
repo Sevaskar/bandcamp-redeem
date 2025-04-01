@@ -216,44 +216,59 @@ async function logRedemption(userUrl, release) {
 
 function isValidBandcampUrl(url) {
     return url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com");
-}
+function redeemCode(albumTitle, button) {
+    const promptOverlay = document.getElementById("bandcamp-prompt");
+    const inputField = document.getElementById("bandcamp-url");
 
-function autoSubmitCode(code) {
-    const form = document.createElement("form");
-    form.setAttribute("action", "https://sevaskar.bandcamp.com/yum");
-    form.setAttribute("method", "get");
-    form.setAttribute("target", "_blank");
+    // Show the Bandcamp prompt when Redeem Code is clicked
+    promptOverlay.style.display = "flex";
 
-    const input = document.createElement("input");
-    input.setAttribute("type", "hidden");
-    input.setAttribute("name", "code");
-    input.setAttribute("value", code);
+    // Modify submit function to redeem after entering URL
+    document.querySelector(".prompt-links a").onclick = function (event) {
+        event.preventDefault();
+        const bandcampURL = inputField.value.trim();
 
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-}
-
-async function updateButtons() {
-    const userUrl = localStorage.getItem("bandcampUrl");
-    if (!userUrl) return;
-
-    try {
-        const response = await fetch(`${WEB_APP_URL}?url=${encodeURIComponent(userUrl)}`);
-        const result = await response.json();
-
-        if (result.success) {
-            const redeemedTitles = result.redeemed || [];
-
-            document.querySelectorAll(".redeem-button").forEach((button) => {
-                if (redeemedTitles.includes(button.dataset.release)) {
-                    button.textContent = "In Collection";
-                    button.style.background = "#888";
-                    button.disabled = true;
-                }
-            });
+        if (!bandcampURL.startsWith("https://bandcamp.com/")) {
+            alert("Please enter a valid Bandcamp URL.");
+            return;
         }
+
+        // Save URL locally
+        localStorage.setItem("bandcampURL", bandcampURL);
+        promptOverlay.style.display = "none"; // Hide the prompt
+
+        // Continue with redemption process
+        fetchRedemptionCode(albumTitle, bandcampURL, button);
+    };
+}
+
+async function fetchRedemptionCode(albumTitle, bandcampURL, button) {
+    try {
+        console.log("Checking redemptions for:", bandcampURL);
+        const response = await fetch(
+            'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
+            encodeURIComponent(bandcampURL)
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        const redeemedTitles = responseData.redeemed || [];
+
+        if (redeemedTitles.includes(albumTitle)) {
+            button.disabled = true;
+            button.style.cursor = "not-allowed";
+            button.textContent = "Already In Collection"; 
+            button.style.backgroundColor = "gray";
+            return;
+        }
+
+        // Fetch and assign an available code here...
+        alert(`Code for ${albumTitle}: [Your logic to fetch a code]`);
+
     } catch (error) {
-        console.error("Error fetching redemption history:", error);
+        console.error("Error checking redemptions:", error);
     }
 }
