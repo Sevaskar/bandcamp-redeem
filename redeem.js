@@ -1,50 +1,48 @@
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
-document.addEventListener("DOMContentLoaded", () => {
-    fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec')
-        .then(response => response.json())
-        .then(data => {
-            console.log("Redemptions data:", data);
+document.addEventListener("DOMContentLoaded", function () {
+    let bandcampUrl = localStorage.getItem("bandcampUrl");
 
-            let userUrl = localStorage.getItem('bandcampUrl');
-            if (!userUrl) return;
+    const urlInputContainer = document.getElementById("bandcampUrlInput");
+    const urlInput = document.getElementById("bandcampUrl");
+    const submitButton = document.getElementById("enterBandcampUrl");
 
-            document.querySelectorAll('.redeem-button').forEach(button => {
-                let release = button.dataset.release;
-                if (data.some(entry => entry.bandcampUrl === userUrl && entry.release === release)) {
-                    button.disabled = true;
-                    button.textContent = "Already In Collection";
-                }
-            });
-        })
-        .catch(error => console.error("Error fetching redemption data:", error));
-});
+    // Show or hide input field based on whether a Bandcamp URL is stored
+    if (!bandcampUrl) {
+        urlInputContainer.style.display = "block";
+    } else {
+        urlInputContainer.style.display = "none";
+    }
 
-document.querySelectorAll('.redeem-button').forEach(button => {
-    button.addEventListener('click', async function() {
-        console.log("Redeem button clicked:", this.dataset.release);
+    // Handle Bandcamp URL submission
+    if (submitButton) {
+        submitButton.addEventListener("click", function () {
+            let inputUrl = urlInput.value.trim();
+            if (inputUrl) {
+                localStorage.setItem("bandcampUrl", inputUrl);
+                urlInputContainer.style.display = "none";
+                updateButtons(); // Update buttons after setting the URL
+            } else {
+                alert("Please enter a valid Bandcamp URL.");
+            }
+        });
+    }
 
-        let userUrl = localStorage.getItem('bandcampUrl'); // Retrieve stored Bandcamp URL
-        if (!userUrl) {
-            alert("Please refresh the page and enter your Bandcamp URL.");
-            return;
-        }
-
-        let code = await fetchCodeFromSheet(this.dataset.release); // Fetch a code from Google Sheets
-        if (!code) {
-            alert("No Available Codes");
-            return;
-        }
-
-        console.log("Fetched code:", code);
-
-        // Fill the hidden form with the code and submit it
-        let form = document.getElementById('hidden-redeem-form');
-        form.querySelector('input[name="code"]').value = code;
-        form.submit(); // Submit form automatically
-
-        // Log redemption in Google Sheets
-        logRedemption(userUrl, this.dataset.release);
+    // Ensure redeem buttons check the stored URL before allowing redemption
+    document.querySelectorAll(".redeem-button").forEach(button => {
+        button.addEventListener("click", function () {
+            let storedUrl = localStorage.getItem("bandcampUrl");
+            if (!storedUrl) {
+                alert("Please refresh the page and enter your Bandcamp URL.");
+                return;
+            }
+            redeemCode(this.dataset.release);
+        });
     });
+
+    // Load redemption status if Bandcamp URL is available
+    if (bandcampUrl) {
+        updateButtons();
+    }
 });
 
 async function fetchCodeFromSheet(release) {
