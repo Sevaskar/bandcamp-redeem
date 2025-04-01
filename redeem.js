@@ -212,4 +212,19 @@ async function updateButtons() {
     } catch (error) {
         console.error("Error fetching redemption history:", error);
     }
-}
+
+    document.querySelectorAll(".redeem-button").forEach(button => {
+    button.addEventListener("click", function () {
+        let storedUrl = localStorage.getItem("bandcampUrl");
+
+        console.log("Stored URL:", storedUrl);
+        console.log("Button dataset release:", this.dataset.release);
+
+        if (!storedUrl) {
+            alert("Please refresh the page and enter your Bandcamp URL.");
+            return;
+        }
+
+        redeemCode(this.dataset.release);
+    });
+});
