@@ -300,18 +300,20 @@ async function checkRedemptions(bandcampURL) {
     console.log("Raw response:", responseData);
 
     const redeemedTitles = responseData.redeemed || [];
-    console.log("Processed redeemed titles:", redeemedTitles);
+    console.log("Redeemed Titles:", redeemedTitles);
 
-    document.querySelectorAll(".redeem-button").forEach(button => {
+document.querySelectorAll(".redeem-button").forEach(button => {
   const albumTitle = button.getAttribute("data-title");
-  console.log(`Checking button for ${albumTitle}`);
+  console.log(`Checking button for album: ${albumTitle}`);
+  
   if (redeemedTitles.includes(albumTitle)) {
+    console.log(`Match found! Updating button for ${albumTitle}`);
     button.disabled = true;
     button.style.cursor = "not-allowed";
-    button.textContent = "Already In Collection"; // Change button text
-    button.style.backgroundColor = "gray"; // Optional: Change button color
+    button.textContent = "Already In Collection"; 
+    button.style.backgroundColor = "gray"; 
   }
-    });
+});
   } catch (error) {
     console.error("Error checking redemptions:", error);
   }
