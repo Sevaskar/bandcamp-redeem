@@ -265,8 +265,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 // Force prompt on refresh
 
     const promptOverlay = document.getElementById("bandcamp-prompt");
-    let bandcampURL = localStorage.setItem("bandcampUrl, userUrl");
-
+    let bandcampURL = localStorage.getItem("bandcampURL");
+    
     if (!bandcampURL) {
       promptOverlay.style.display = "flex";
     } else {
