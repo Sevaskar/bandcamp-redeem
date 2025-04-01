@@ -217,12 +217,15 @@ async function logRedemption(userUrl, release) {
 function isValidBandcampUrl(url) {
     return url.startsWith("https://bandcamp.com/") || url.includes(".bandcamp.com");
 function redeemCode(albumTitle, button) {
+    console.log("Button clicked for album:", albumTitle); // Debug log
     const promptOverlay = document.getElementById("bandcamp-prompt");
+    if (!promptOverlay) {
+        console.error("bandcamp-prompt element not found!");
+        return;
+    }
     const inputField = document.getElementById("bandcamp-url");
-
-    // Show the Bandcamp prompt when Redeem Code is clicked
     promptOverlay.style.display = "flex";
-
+}
     // Modify submit function to redeem after entering URL
     document.querySelector(".prompt-links a").onclick = function (event) {
         event.preventDefault();
