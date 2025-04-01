@@ -262,31 +262,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <script>
   document.addEventListener("DOMContentLoaded", async function () {
-// Force prompt on refresh
-
     const promptOverlay = document.getElementById("bandcamp-prompt");
     let bandcampURL = localStorage.getItem("bandcampURL");
-    
+
     if (!bandcampURL) {
-      promptOverlay.style.display = "flex";
+        promptOverlay.style.display = "flex";
     } else {
-      checkRedemptions(bandcampURL);
+        promptOverlay.style.display = "none"; // Hide prompt if URL exists
+        checkRedemptions(bandcampURL);
     }
-  });
+});
 
   function submitBandcampURL() {
-  const url = document.getElementById("bandcamp-url").value.trim();
-  
-  if (!url.startsWith("https://bandcamp.com/")) {
-    alert("Please enter a valid Bandcamp URL.");
-    return;
+    const url = document.getElementById("bandcamp-url").value.trim();
+    if (!url.startsWith("https://bandcamp.com/")) {
+        alert("Please enter a valid Bandcamp URL.");
+        return;
+    }
+    localStorage.setItem("bandcampURL", url);
+    document.getElementById("bandcamp-prompt").style.display = "none";
+    checkRedemptions(url); // Call function immediately after setting URL
   }
-
-  localStorage.setItem("bandcampURL", url);
-  document.getElementById("bandcamp-prompt").style.display = "none";
-
-  checkRedemptions(url); // No need to reload the page
-  }
+    
 async function checkRedemptions(bandcampURL) {
   try {
     console.log("Checking redemptions for:", bandcampURL);
@@ -309,10 +306,8 @@ async function checkRedemptions(bandcampURL) {
       const albumTitle = button.getAttribute("data-title");
       console.log(`Checking button for ${albumTitle}`);
       if (redeemedTitles.includes(albumTitle)) {
-        console.log(`Hiding redeem button for ${albumTitle}`);
-        button.textContent = "In Collection";
-        button.style.background = "#888";
         button.disabled = true;
+        button.style.cursor = "not-allowed";
       }
     });
   } catch (error) {
