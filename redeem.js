@@ -1,3 +1,4 @@
+console.log("redeem.js loaded"):
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
