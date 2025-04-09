@@ -257,7 +257,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <br>
   &copy; 2025 Sevaskar. All rights reserved.
 </div>
-
+if (typeof localStorage !== "undefined") {
+  // safe to use localStorage
+  let bandcampURL = localStorage.getItem("bandcampURL");
+  ...
+} else {
+  console.error("localStorage is not available.");
+}
   <script src="redeem.js"></script>
   
   <script>
