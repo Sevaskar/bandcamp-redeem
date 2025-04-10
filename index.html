@@ -248,6 +248,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <input name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" /> 
     <input type="submit" value="Redeem Code" />
   </form>
+
+  <div id="bandcampModal" style="display:none;">
+  <input type="text" id="bandcamp-url" placeholder="Enter your Bandcamp URL" />
+  <button onclick="saveBandcampURL()">Submit</button>
+  </div>
   
 <!-- Footer -->
 <div class="footer">
@@ -315,6 +320,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 </script>
+
+  <script>
+  let bandcampURL = '';
+
+  function showModalIfNeeded() {
+    if (!bandcampURL) {
+      const modal = document.getElementById("bandcampModal");
+      modal.style.display = "block";
+    }
+  }
+
+  function saveBandcampURL() {
+    const input = document.getElementById("bandcamp-url");
+    bandcampURL = input.value.trim();
+    if (bandcampURL) {
+      document.getElementById("bandcampModal").style.display = "none";
+    } else {
+      alert("Please enter a valid Bandcamp URL.");
+    }
+  }
+
+  function redeemCode(release) {
+    if (!bandcampURL) {
+      showModalIfNeeded();
+      return;
+    }
+
+    // proceed with redemption logic
+    // e.g. call fetch to Google Apps Script endpoint
+    console.log(`Redeeming code for ${release} with Bandcamp URL ${bandcampURL}`);
+  }
+
+  // Optionally trigger the modal on page load
+  window.onload = () => {
+    showModalIfNeeded();
+  }
+  </script>
   
 </body>
 </html>
