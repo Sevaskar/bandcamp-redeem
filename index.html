@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTM-TZQ6P49R"></script>
-                                                                                    
+  <meta charset="UTF-8">                                                                                    
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sevaskar</title>
   <style>
@@ -275,7 +272,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const promptOverlay = document.getElementById("bandcamp-prompt");
     let bandcampURL = localStorage.getItem("bandcampURL");
 
-    if (/^https?:\/\/[a-z0-9\-]+\.bandcamp\.com\/?$/i.test(bandcampURL)) {
+    if (/^https//:bandcamp.com/(username).test(bandcampURL)) {
       promptOverlay.style.display = "flex";
     } else {
       promptOverlay.style.display = "none";
@@ -337,7 +334,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function saveBandcampURL() {
   const input = document.getElementById("bandcamp-url");
   bandcampURL = input.value.trim();
-  const valid = /^https?:\/\/[a-z0-9\-]+\.bandcamp\.com\/?$/i.test(bandcampURL);
+  const valid = /^https//:bandcamp.com/(username).test(bandcampURL);
 
   if (valid) {
     document.getElementById("bandcampModal").style.display = "none";
