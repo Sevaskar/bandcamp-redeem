@@ -166,7 +166,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Welcome! Please enter your Bandcamp URL.</p>
     <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
     <div class="prompt-links">
-      <button onclick="submitBandcampURL()">Enter</button>
+      <a href="#" onclick="submitBandcampURL()">Enter</a>
       <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
     </div>
   </div>
@@ -376,6 +376,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Optionally trigger the modal on page load
   window.onload = () => {
     showModalIfNeeded();
+  }
+  </script>
+  <script>
+  function submitBandcampURL() {
+    const url = document.getElementById("bandcamp-url").value.trim();
+    if (url.startsWith("https://bandcamp.com/")) {
+      localStorage.setItem("bandcampURL", url);
+      document.getElementById("bandcamp-prompt").style.display = "none";
+    } else {
+      alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
+    }
   }
   </script>
   
