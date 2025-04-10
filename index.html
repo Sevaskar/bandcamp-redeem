@@ -328,7 +328,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function saveBandcampURL() {
   const input = document.getElementById("bandcamp-url");
   bandcampURL = input.value.trim();
-  const valid = /^https//:bandcamp.com/(username).test(bandcampURL);
+  const valid = /^https:\/\/bandcamp\.com\/[a-zA-Z0-9_-]+$/.test(bandcampURL);
   if (valid) {
     document.getElementById("bandcampModal").style.display = "none";
   } else {
