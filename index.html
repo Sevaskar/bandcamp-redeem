@@ -257,13 +257,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <br>
   &copy; 2025 Sevaskar. All rights reserved.
 </div>
-if (typeof localStorage !== "undefined") {
-  // safe to use localStorage
-  let bandcampURL = localStorage.getItem("bandcampURL");
-  ...
-} else {
-  console.error("localStorage is not available.");
-}
 <script>
   var bandcampURL = null;
 
@@ -338,10 +331,10 @@ document.querySelectorAll(".redeem-button").forEach(button => {
     button.style.backgroundColor = "gray"; 
   }
 });
-  } catch (error) {
+} catch (error) {
     console.error("Error checking redemptions:", error);
+    alert("Failed to check your collection. Please try again later.");
   }
-                }
     
         </script>
   
