@@ -1,23 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const bandcampURL = localStorage.getItem("bandcampURL");
-
-  if (!bandcampURL || !bandcampURL.startsWith("https://bandcamp.com/")) {
-    document.getElementById("bandcamp-prompt").style.display = "flex";
-  } else {
-    document.getElementById("bandcamp-prompt").style.display = "none";
-  }
-});
-
-function submitBandcampURL() {
-  const url = document.getElementById("bandcamp-url").value.trim();
-  if (url.startsWith("https://bandcamp.com/")) {
-    localStorage.setItem("bandcampURL", url);
-    document.getElementById("bandcamp-prompt").style.display = "none";
-  } else {
-    alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
-  }
-}
-
 async function redeemCode(releaseTitle, button) {
   let bandcampURL = localStorage.getItem("bandcampURL");
 
@@ -74,7 +54,10 @@ async function redeemCode(releaseTitle, button) {
 }
 
 function showBandcampPrompt(callback) {
+  if (document.getElementById("bandcamp-overlay")) return;
+
   const overlay = document.createElement("div");
+  overlay.id = "bandcamp-overlay";
   overlay.className = "prompt-overlay";
   overlay.innerHTML = `
     <div class="prompt-box">
