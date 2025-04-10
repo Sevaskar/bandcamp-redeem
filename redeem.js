@@ -3,22 +3,32 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV
 document.addEventListener("DOMContentLoaded", () => {
     const urlInput = document.getElementById("bandcamp-url-input");
     const submitButton = document.getElementById("bandcamp-url-submit");
+    const promptBox = document.getElementById("bandcamp-prompt");
+
     const storedUrl = localStorage.getItem("bandcampUrl");
+
+    if (storedUrl) {
+        promptBox.style.display = "none";
+        updateButtons();
+    }
 
     if (urlInput && submitButton) {
         submitButton.addEventListener("click", () => {
             const userUrl = urlInput.value.trim();
             if (isValidBandcampUrl(userUrl)) {
                 localStorage.setItem("bandcampUrl", userUrl);
+                promptBox.style.display = "none";
                 updateButtons();
             } else {
                 alert("Invalid Bandcamp URL. Please enter a valid URL.");
             }
         });
-    }
 
-    if (storedUrl) {
-        updateButtons();
+        urlInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                submitButton.click();
+            }
+        });
     }
 
     document.querySelectorAll(".redeem-button").forEach(button => {
@@ -27,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const release = this.dataset.release;
 
             if (!userUrl) {
-                alert("Please enter your Bandcamp URL first.");
+                promptBox.style.display = "flex";
                 return;
             }
 
