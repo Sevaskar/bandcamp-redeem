@@ -272,71 +272,78 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     localStorage.setItem("bandcampURL", normalizedUrl);
-    document.getElementById("bandcamp-prompt").style.display = "none";
-
-    // Store normalized URL for later use
+    document.querySelector(".prompt-box").style.display = "none";
     window.userBandcampURL = normalizedUrl;
 
-    // Optionally, you can preload redemption data here if needed
+    // Disable buttons that are already redeemed
+    checkRedemptions(normalizedUrl);
   }
-</script>
-    localStorage.setItem("bandcampURL", url);
-    document.getElementById("bandcamp-prompt").style.display = "none";
-    checkRedemptions(url);
-  }
-  
-      // Fetch Redemptions
-      const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
-      const redemptions = await redemptionsRes.json();
 
+  async function checkRedemptions(userUrl) {
+    const normalizedUrl = userUrl.trim().replace(/\/+$/, "");
+    const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
+    const redemptions = await redemptionsRes.json();
+
+    document.querySelectorAll(".redeem-button").forEach(button => {
+      const releaseTitle = button.dataset.title;
       const alreadyRedeemed = redemptions.some(entry =>
         entry["Bandcamp URL"].trim().replace(/\/+$/, "") === normalizedUrl &&
         entry["Release"].trim() === releaseTitle.trim()
       );
 
       if (alreadyRedeemed) {
-        alert("Already in Collection");
-        return;
+        button.textContent = "In Collection";
+        button.disabled = true;
+        button.style.backgroundColor = "gray";
+        button.style.cursor = "default";
       }
-
-      // Fetch Codes
-      const codesRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Codes");
-      const codes = await codesRes.json();
-
-      const availableCode = codes.find(code =>
-        code.Release === releaseTitle && (!code.Used || code.Used.toLowerCase() !== "true")
-      );
-
-      if (!availableCode) {
-        alert("No more codes available for this release.");
-        return;
-      }
-
-      // Open Bandcamp code redemption in new tab
-      const form = document.createElement("form");
-      form.action = "https://bandcamp.com/yum";
-      form.method = "POST";
-      form.target = "_blank";
-
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "code";
-      input.value = availableCode.Code;
-
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
-
-      alert(`Code redeemed: ${availableCode.Code}`);
-
-      // TODO: Log the redemption somewhere using Apps Script or Google Form
-
-    } catch (error) {
-      console.error("Redemption Error:", error);
-      alert("There was an error processing your request.");
-    }
+    });
   }
+
+  async function redeemCode(releaseTitle, button) {
+    const userUrl = localStorage.getItem("bandcampURL");
+    if (!userUrl) {
+      alert("Please enter your Bandcamp URL first.");
+      return;
+    }
+
+    const normalizedUrl = userUrl.trim().replace(/\/+$/, "");
+
+    const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
+    const redemptions = await redemptionsRes.json();
+
+    const alreadyRedeemed = redemptions.some(entry =>
+      entry["Bandcamp URL"].trim().replace(/\/+$/, "") === normalizedUrl &&
+      entry["Release"].trim() === releaseTitle.trim()
+    );
+
+    if (alreadyRedeemed) {
+      alert("Already in Collection");
+      return;
+    }
+
+    const codesRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Codes");
+    const codes = await codesRes.json();
+
+    const availableCode = codes.find(code =>
+      code.Release === releaseTitle && (!code.Used || code.Used.toLowerCase() !== "true")
+    );
+
+    if (!availableCode) {
+      alert("No more codes available for this release.");
+      return;
+    }
+
+    const form = document.getElementById("hidden-redeem-form");
+    form.querySelector("input[name='code']").value = availableCode.Code;
+    form.submit();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const storedUrl = localStorage.getItem("bandcampURL");
+    if (storedUrl) {
+      document.querySelector(".prompt-box").style.display = "none";
+      checkRedemptions(storedUrl);
+    }
+  });
   </script>
-  
-</body>
-</html>
