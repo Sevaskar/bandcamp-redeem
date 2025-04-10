@@ -264,6 +264,24 @@ if (typeof localStorage !== "undefined") {
 } else {
   console.error("localStorage is not available.");
 }
+<script>
+  var bandcampURL = null;
+
+  if (typeof localStorage !== "undefined") {
+    bandcampURL = localStorage.getItem("bandcampURL");
+
+    if (!bandcampURL) {
+      bandcampURL = prompt("Enter your Bandcamp URL:");
+      if (bandcampURL) {
+        localStorage.setItem("bandcampURL", bandcampURL);
+      }
+    }
+
+    console.log("Using Bandcamp URL:", bandcampURL);
+  } else {
+    console.error("localStorage is not available.");
+  }
+</script>
   <script src="redeem.js"></script>
   
   <script>
