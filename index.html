@@ -294,14 +294,15 @@ async function redeemCode(releaseTitle, buttonElement) {
   }
 
   try {
-    // Check if already redeemed
+    console.log("Checking previous redemptions...");
     const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
     const redemptions = await redemptionsRes.json();
+    console.log("Redemptions fetched:", redemptions);
 
     const normalizedURL = userURL.replace(/\/+$/, "");
     const alreadyRedeemed = redemptions.some(entry =>
-      entry["Bandcamp URL"].trim().replace(/\/+$/, "") === normalizedURL &&
-      entry["Release"].trim() === releaseTitle.trim()
+      entry["Bandcamp URL"]?.trim().replace(/\/+$/, "") === normalizedURL &&
+      entry["Release"]?.trim() === releaseTitle.trim()
     );
 
     if (alreadyRedeemed) {
@@ -313,9 +314,10 @@ async function redeemCode(releaseTitle, buttonElement) {
       return;
     }
 
-    // Get available code
+    console.log("Fetching codes...");
     const codesRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Codes");
     const codes = await codesRes.json();
+    console.log("Codes fetched:", codes);
 
     const availableCode = codes.find(code =>
       code.Release === releaseTitle && (!code.Used || code.Used.toLowerCase() !== "true")
@@ -326,7 +328,8 @@ async function redeemCode(releaseTitle, buttonElement) {
       return;
     }
 
-    // Open Bandcamp redemption
+    console.log("Using code:", availableCode.Code);
+
     const form = document.createElement("form");
     form.action = "https://bandcamp.com/yum";
     form.method = "POST";
@@ -348,9 +351,8 @@ async function redeemCode(releaseTitle, buttonElement) {
       buttonElement.textContent = "In Collection";
     }
 
-    // Optional: Log redemption via Google Form or Apps Script webhook
   } catch (err) {
-    console.error("Redemption error:", err);
+    console.error("Redemption error:", err); // This will help us see the issue in the console
     alert("There was an error processing your request.");
   }
 }
