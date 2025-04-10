@@ -283,60 +283,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let bandcampURL = localStorage.getItem("bandcampURL");
 
     if (!bandcampURL) {
-        promptOverlay.style.display = "flex";
+      promptOverlay.style.display = "flex";
     } else {
-        promptOverlay.style.display = "none"; // Hide prompt if URL exists
-        checkRedemptions(bandcampURL);
+      promptOverlay.style.display = "none";
+      checkRedemptions(bandcampURL);
     }
-});
+  });
 
   function submitBandcampURL() {
     const url = document.getElementById("bandcamp-url").value.trim();
     if (!url.startsWith("https://bandcamp.com/")) {
-        alert("Please enter a valid Bandcamp URL.");
-        return;
+      alert("Please enter a valid Bandcamp URL.");
+      return;
     }
     localStorage.setItem("bandcampURL", url);
     document.getElementById("bandcamp-prompt").style.display = "none";
-    checkRedemptions(url); // Call function immediately after setting URL
+    checkRedemptions(url);
   }
-    
-async function checkRedemptions(bandcampURL) {
-  try {
-    console.log("Checking redemptions for:", bandcampURL);
-    const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
-      encodeURIComponent(bandcampURL)
-    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+  async function checkRedemptions(bandcampURL) {
+    try {
+      console.log("Checking redemptions for:", bandcampURL);
+      const response = await fetch(
+        'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
+        encodeURIComponent(bandcampURL)
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      const redeemedTitles = responseData.redeemed || [];
+
+      document.querySelectorAll(".redeem-button").forEach(button => {
+        const albumTitle = button.getAttribute("data-title");
+        if (redeemedTitles.includes(albumTitle)) {
+          button.disabled = true;
+          button.style.cursor = "not-allowed";
+          button.textContent = "Already In Collection";
+          button.style.backgroundColor = "gray";
+        }
+      });
+    } catch (error) {
+      console.error("Error checking redemptions:", error);
     }
-
-    const responseData = await response.json();
-    console.log("Raw response:", responseData);
-
-    const redeemedTitles = responseData.redeemed || [];
-    console.log("Redeemed Titles:", redeemedTitles);
-
-document.querySelectorAll(".redeem-button").forEach(button => {
-  const albumTitle = button.getAttribute("data-title");
-  console.log(`Checking button for album: ${albumTitle}`);
-  
-  if (redeemedTitles.includes(albumTitle)) {
-    console.log(`Match found! Updating button for ${albumTitle}`);
-    button.disabled = true;
-    button.style.cursor = "not-allowed";
-    button.textContent = "Already In Collection"; 
-    button.style.backgroundColor = "gray"; 
   }
-});
-} catch (error) {
-    console.error("Error checking redemptions:", error);
-    alert("Failed to check your collection. Please try again later.");
-  }
-    
-        </script>
+</script>
   
 </body>
 </html>
