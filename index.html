@@ -258,22 +258,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   &copy; 2025 Sevaskar. All rights reserved.
 </div>
 <script>
-  var bandcampURL = null;
-
-  if (typeof localStorage !== "undefined") {
-    bandcampURL = localStorage.getItem("bandcampURL");
-
-    if (!bandcampURL) {
-      bandcampURL = prompt("Enter your Bandcamp URL:");
-      if (bandcampURL) {
-        localStorage.setItem("bandcampURL", bandcampURL);
-      }
-    }
-
-    console.log("Using Bandcamp URL:", bandcampURL);
-  } else {
-    console.error("localStorage is not available.");
-  }
+  console.log("Bandcamp URL setup handled in DOMContentLoaded");
 </script>
   <script src="redeem.js"></script>
   
