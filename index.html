@@ -262,16 +262,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="redeem.js"></script>
 
   <script>
-  function submitBandcampURL() {
-    const url = document.getElementById("bandcamp-url").value.trim();
-    if (url.startsWith("https://bandcamp.com/")) {
-      localStorage.setItem("bandcampURL", url);
-      document.getElementById("bandcamp-prompt").style.display = "none";
-    } else {
+  async function submitBandcampURL() {
+    const urlInput = document.getElementById("bandcamp-url");
+    const url = urlInput.value.trim();
+    const normalizedUrl = url.replace(/\/+$/, "");
+
+    if (!normalizedUrl.startsWith("https://bandcamp.com/")) {
       alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
+      return;
     }
+
+    localStorage.setItem("bandcampURL", normalizedUrl);
+    document.getElementById("bandcamp-prompt").style.display = "none";
+
+    // Store normalized URL for later use
+    window.userBandcampURL = normalizedUrl;
+
+    // Optionally, you can preload redemption data here if needed
   }
- <script>   
+</script>
     localStorage.setItem("bandcampURL", url);
     document.getElementById("bandcamp-prompt").style.display = "none";
     checkRedemptions(url);
