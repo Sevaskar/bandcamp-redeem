@@ -262,19 +262,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="redeem.js"></script>
 
   <script>
-  document.addEventListener("DOMContentLoaded", async function () {
-  const promptOverlay = document.getElementById("bandcamp-prompt");
-  const storedURL = localStorage.getItem("bandcampURL");
-
-  if (storedURL && /^https:\/\/bandcamp\.com\/[a-zA-Z0-9_-]+$/.test(storedURL)) {
-    promptOverlay.style.display = "none";
-    checkRedemptions(storedURL);
-  } else {
-    promptOverlay.style.display = "flex";
-  }
-});
     
-  function submitBandcampURL() {
+ async function submitBandcampURL() {
     const url = document.getElementById("bandcamp-url").value.trim();
     if (!url.startsWith("https://bandcamp.com/")) {
       alert("Please enter a valid Bandcamp URL.");
