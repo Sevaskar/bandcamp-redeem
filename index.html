@@ -4,7 +4,7 @@
   <meta charset="UTF-8">                                                                                    
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sevaskar</title>
-  <script src="redeem.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -263,17 +263,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <script>
   document.addEventListener("DOMContentLoaded", async function () {
-    const promptOverlay = document.getElementById("bandcamp-prompt");
-    let bandcampURL = localStorage.getItem("bandcampURL");
+  const promptOverlay = document.getElementById("bandcamp-prompt");
+  const storedURL = localStorage.getItem("bandcampURL");
 
-    if (/^https//:bandcamp.com/username.test(bandcampURL)) {
-      promptOverlay.style.display = "flex";
-    } else {
-      promptOverlay.style.display = "none";
-      checkRedemptions(bandcampURL);
-    }
-  });
-
+  if (storedURL && /^https:\/\/bandcamp\.com\/[a-zA-Z0-9_-]+$/.test(storedURL)) {
+    promptOverlay.style.display = "none";
+    checkRedemptions(storedURL);
+  } else {
+    promptOverlay.style.display = "flex";
+  }
+});
+    
   function submitBandcampURL() {
     const url = document.getElementById("bandcamp-url").value.trim();
     if (!url.startsWith("https://bandcamp.com/")) {
@@ -329,7 +329,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const input = document.getElementById("bandcamp-url");
   bandcampURL = input.value.trim();
   const valid = /^https//:bandcamp.com/(username).test(bandcampURL);
-
   if (valid) {
     document.getElementById("bandcampModal").style.display = "none";
   } else {
