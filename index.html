@@ -337,6 +337,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
   </script>
+  <script>
+  function submitBandcampURL() {
+    const url = document.getElementById("bandcamp-url").value.trim();
+    if (url.startsWith("https://bandcamp.com/")) {
+      localStorage.setItem("bandcampURL", url);
+      document.getElementById("bandcamp-prompt").style.display = "none";
+    } else {
+      alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
+    }
+  }
+  </script>
   
 </body>
 </html>
