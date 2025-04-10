@@ -332,14 +332,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   function saveBandcampURL() {
-    const input = document.getElementById("bandcamp-url");
-    bandcampURL = input.value.trim();
-    if (bandcampURL) {
-      document.getElementById("bandcampModal").style.display = "none";
-    } else {
-      alert("Please enter a valid Bandcamp URL.");
-    }
+  const input = document.getElementById("bandcamp-url");
+  bandcampURL = input.value.trim();
+  const valid = /^https?:\/\/[a-z0-9\-]+\.bandcamp\.com\/?$/i.test(bandcampURL);
+
+  if (valid) {
+    document.getElementById("bandcampModal").style.display = "none";
+  } else {
+    alert("Please enter a valid Bandcamp URL (e.g., https://yourname.bandcamp.com).");
   }
+}
 
   function redeemCode(release) {
     if (!bandcampURL) {
