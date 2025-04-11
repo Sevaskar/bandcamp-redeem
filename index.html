@@ -59,27 +59,21 @@
       background-color: #222;
       color: white;
     }
+    
     #bandcamp-prompt {
-      margin: 20px auto;
-      text-align: center;
-    }
-    #bandcamp-prompt input {
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      margin-bottom: 10px;
-    }
-    #bandcamp-prompt button {
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    #bandcamp-prompt button:hover {
-      background-color: darkred;
-    }
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  z-index: 10000;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
 
     /* Navigation Bar */
     .navbar {
@@ -98,6 +92,16 @@
       font-weight: bold;
       padding: 10px 15px;
       transition: 0.3s;
+    }
+
+    #overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
     }
 
     /* Initial Prompt Styling */
