@@ -102,6 +102,7 @@
 
     /* Initial Prompt Styling */
 .prompt-overlay {
+  display: none; /* <-- Add this line */
   position: fixed;
   top: 0;
   left: 0;
@@ -169,8 +170,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="#" onclick="submitBandcampURL()">Enter</a>
     <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
   </div>
+ </div>
 </div>
-
+  
 <div class="navbar">
   <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank">Bandcamp</a>
   <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item" target="_blank">Spotify</a>
@@ -316,5 +318,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 </script>
+  <script>
+  // Show prompt when any redeem button is clicked
+  document.querySelectorAll('.redeem-button').forEach(button => {
+    button.addEventListener('click', () => {
+      document.getElementById('bandcamp-overlay').style.display = 'flex';
+    });
+  });
+
+  // Handle submission of URL
+  function submitBandcampURL() {
+    const url = document.getElementById('bandcamp-url').value;
+    if (url && url.startsWith("https://bandcamp.com/")) {
+      console.log("Bandcamp URL entered:", url); // Placeholder for your redemption logic
+      document.getElementById('bandcamp-overlay').style.display = 'none';
+      // Optionally trigger code redemption or update UI here
+    } else {
+      alert("Please enter a valid Bandcamp URL.");
+    }
+  }
+  </script>
 </body>
 </html>
