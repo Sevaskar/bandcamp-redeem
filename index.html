@@ -263,6 +263,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const promptBox = document.getElementById("bandcamp-prompt");
+    const overlay = document.getElementById("overlay");
     const redeemButtons = document.querySelectorAll(".redeem-button");
 
     redeemButtons.forEach(button => {
@@ -270,13 +271,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const selectedTitle = this.getAttribute("data-title");
         promptBox.setAttribute("data-selected-title", selectedTitle);
         promptBox.style.display = "block";
+        overlay.style.display = "block";
       });
+    });
+
+    // Optional: hide popup if overlay is clicked
+    overlay.addEventListener("click", function () {
+      promptBox.style.display = "none";
+      overlay.style.display = "none";
     });
   });
 
   function submitBandcampURL() {
-    const bandcampUrl = document.getElementById("bandcamp-url").value;
+    const bandcampUrl = document.getElementById("bandcamp-url").value.trim();
     const promptBox = document.getElementById("bandcamp-prompt");
+    const overlay = document.getElementById("overlay");
     const title = promptBox.getAttribute("data-selected-title");
 
     if (!bandcampUrl || !title) {
@@ -291,6 +300,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })
     .then(res => res.json())
     .then(data => {
+      overlay.style.display = "none";
+      promptBox.style.display = "none";
+
       if (data.status === "already_redeemed") {
         alert("You already have this title in your collection.");
       } else if (data.status === "code_redeemed") {
@@ -298,6 +310,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       } else {
         alert("Something went wrong.");
       }
+    })
+    .catch(() => {
+      alert("Error contacting server.");
     });
   }
 </script>
