@@ -337,45 +337,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // Send info to server
     fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        bandcampUrl,
-        title
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (loadingSpinner) loadingSpinner.style.display = "none";
-        if (data.status === "success" && data.code) {
-          const form = document.getElementById("hidden-redeem-form");
-          form.querySelector('input[name="code"]').value = data.code;
-          form.submit();
-        } else if (data.status === "already_redeemed") {
-          showToast("You’ve already redeemed this release.");
-        } else {
-          showToast("No codes left or an error occurred.");
-        }
-      })
-      .catch(err => {
-        if (loadingSpinner) loadingSpinner.style.display = "none";
-        showToast("Something went wrong. Try again later.");
-        console.error(err);
-      });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    url: bandcampUrl,
+    title: title
+  })
+})
+.then(response => response.json())
+.then(data => {
+  if (data && data.code) {
+    // Inject code into the hidden form and submit
+    const form = document.getElementById("hidden-redeem-form");
+    form.querySelector("input[name='code']").value = data.code;
+    form.submit();
+
+    // Optionally mark the button as redeemed
+    const redeemButton = [...document.querySelectorAll(".redeem-button")].find(b => b.getAttribute("data-title") === title);
+    if (redeemButton) {
+      redeemButton.textContent = "Redeemed!";
+      redeemButton.classList.add("redeemed");
+      redeemButton.disabled = true;
+    }
+  } else if (data && data.message === "Already Redeemed") {
+    showToast("You already redeemed this title.");
+  } else {
+    showToast("No codes left or unknown error.");
+  }
+})
+.catch(error => {
+  console.error("Fetch error:", error);
+  showToast("Something went wrong. Try again later.");
+});
   }
 
   function showToast(message) {
-    let toast = document.querySelector(".toast");
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.className = "toast";
-      document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 4000);
+  let toast = document.querySelector(".toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "toast";
+    document.body.appendChild(toast);
   }
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000);
+}
 </script>
 <script>
   // Send info to server // Replace this URL with your actual Apps Script endpoint
