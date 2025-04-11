@@ -1,100 +1,67 @@
-async function redeemCode(releaseTitle, button) {
-  let bandcampURL = localStorage.getItem("bandcampURL");
+let userBandcampUrl = null;
+const apiUrl = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
-  if (!bandcampURL) {
-    showBandcampPrompt(() => redeemCode(releaseTitle, button));
-    return;
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  const redeemButtons = document.querySelectorAll(".redeem-btn");
+  const urlPrompt = document.getElementById("urlPrompt");
+  const urlSubmitBtn = document.getElementById("urlSubmitBtn");
+  const bandcampUrlInput = document.getElementById("bandcampUrl");
 
-  bandcampURL = bandcampURL.trim().replace(/\/+$/, "");
-
-  // Fetch Redemptions
-  const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
-  const redemptions = await redemptionsRes.json();
-
-  const alreadyRedeemed = redemptions.some(entry =>
-    entry["User"].trim().replace(/\/+$/, "") === bandcampURL &&
-    entry["Title"].trim() === releaseTitle.trim()
-  );
-
-  if (alreadyRedeemed) {
-    button.disabled = true;
-    button.innerText = "In Collection";
-    return;
-  }
-
-  // Fetch Codes
-  const codesRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Codes");
-  const codes = await codesRes.json();
-
-  const availableCode = codes.find(code =>
-    code.Title === releaseTitle && (!code.Status || code.Status.toLowerCase() !== "redeemed")
-  );
-
-  if (!availableCode) {
-    alert("No more codes available for this release.");
-    return;
-  }
-
-  // Submit code to Bandcamp
-  const form = document.createElement("form");
-  form.action = "https://sevaskar.bandcamp.com/yum";
-  form.method = "get";
-  form.target = "_blank";
-
-  const input = document.createElement("input");
-  input.name = "code";
-  input.type = "hidden";
-  input.value = availableCode.Code;
-
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-
-  // Record redemption
-  await fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      user: bandcampURL,
-      title: releaseTitle,
-      code: availableCode.Code
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
+  redeemButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!userBandcampUrl) {
+        urlPrompt.style.display = "block";
+        urlPrompt.dataset.pendingTitle = btn.dataset.title;
+      } else {
+        handleRedemption(btn.dataset.title, btn);
+      }
+    });
   });
 
-  alert(`Code redeemed: ${availableCode.Code}`);
-  button.disabled = true;
-  button.innerText = "In Collection";
-}
-
-function showBandcampPrompt(callback) {
-  if (document.getElementById("bandcamp-overlay")) return;
-
-  const overlay = document.createElement("div");
-  overlay.id = "bandcamp-overlay";
-  overlay.className = "prompt-overlay";
-  overlay.innerHTML = `
-    <div class="prompt-box">
-      <p>Please enter your Bandcamp URL:</p>
-      <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
-      <div class="prompt-links">
-        <a href="#" id="submit-url">Enter</a>
-        <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
-  document.getElementById("submit-url").addEventListener("click", () => {
-    const urlInput = document.getElementById("bandcamp-url").value.trim();
-    if (!urlInput.startsWith("https://bandcamp.com/")) {
-      alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
+  urlSubmitBtn.addEventListener("click", () => {
+    const inputUrl = bandcampUrlInput.value.trim();
+    if (!inputUrl || !inputUrl.startsWith("https://")) {
+      alert("Please enter a valid Bandcamp URL.");
       return;
     }
-    localStorage.setItem("bandcampURL", urlInput.replace(/\/+$/, ""));
-    overlay.remove();
-    callback();
+
+    userBandcampUrl = inputUrl;
+    urlPrompt.style.display = "none";
+
+    const pendingTitle = urlPrompt.dataset.pendingTitle;
+    if (pendingTitle) {
+      const pendingButton = [...document.querySelectorAll(".redeem-btn")].find(
+        btn => btn.dataset.title === pendingTitle
+      );
+      if (pendingButton) {
+        handleRedemption(pendingTitle, pendingButton);
+      }
+    }
   });
+});
+
+function handleRedemption(title, button) {
+  fetch(`${apiUrl}?action=check&bandcampUrl=${encodeURIComponent(userBandcampUrl)}&title=${encodeURIComponent(title)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.alreadyRedeemed) {
+        button.textContent = "In Collection";
+        button.disabled = true;
+      } else {
+        fetch(`${apiUrl}?action=redeem&bandcampUrl=${encodeURIComponent(userBandcampUrl)}&title=${encodeURIComponent(title)}`)
+          .then(res => res.json())
+          .then(result => {
+            if (result.success) {
+              window.open(`https://bandcamp.com/yum?code=${result.code}`, "_blank");
+              button.textContent = "Redeemed";
+              button.disabled = true;
+            } else {
+              alert("No codes available or an error occurred.");
+            }
+          });
+      }
+    })
+    .catch(() => {
+      alert("There was an error connecting to the server.");
+    });
 }
