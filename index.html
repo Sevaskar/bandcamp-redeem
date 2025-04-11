@@ -377,5 +377,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }, 4000);
   }
 </script>
+<script>
+  // Send info to server // Replace this URL with your actual Apps Script endpoint
+    const endpoint = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
+
+    fetch(`${endpoint}?title=${encodeURIComponent(title)}&bandcamp=${encodeURIComponent(bandcampUrl)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (loadingSpinner) loadingSpinner.style.display = "none";
+
+        if (data.code) {
+          const form = document.getElementById("hidden-redeem-form");
+          form.querySelector('input[name="code"]').value = data.code;
+          form.submit();
+        } else {
+          showToast(data.error || "No code available.");
+        }
+      })
+      .catch(err => {
+        if (loadingSpinner) loadingSpinner.style.display = "none";
+        console.error(err);
+        showToast("Something went wrong. Try again later.");
+      });
+  }
+
+  function showToast(message) {
+    let toast = document.querySelector(".toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.classList.add("toast");
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  }
+</script>
 </body>
 </html>
