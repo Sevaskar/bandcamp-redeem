@@ -148,7 +148,34 @@
 .prompt-links a:hover {
   text-decoration: underline;
 }
-</style>
+
+  .toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 9999;
+}
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.redeemed {
+  border: 2px solid red !important;
+}
+#loading-spinner {
+  display: none;
+  margin-top: 10px;
+}
+    </style>
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -323,6 +350,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 </script>
   <script>
+  async function handleEnterClick(title, button) {
+  const bandcampURL = userBandcampURL; // Retrieved from user input
+  const loadingSpinner = document.getElementById('loading-spinner');
+  loadingSpinner.style.display = 'block';
+
+  try {
+    const response = await fetch(scriptURL + `?bandcampURL=${encodeURIComponent(bandcampURL)}&title=${encodeURIComponent(title)}`);
+    const data = await response.json();
+
+    loadingSpinner.style.display = 'none';
+
+    if (data.status === 'already_redeemed') {
+      button.classList.add('redeemed');
+      button.textContent = 'In Collection';
+      showToast('Already in collection.');
+    } else if (data.status === 'no_codes') {
+      showToast('No codes available.', 4000);
+    } else if (data.status === 'code_redeemed') {
+      // Fill the form with the code and auto-submit
+      const form = document.querySelector('.download-code-form');
+      form.querySelector('input[name="code"]').value = data.code;
+      showToast('Code redeemed! Check your Bandcamp.');
+      form.submit();
+    }
+  } catch (error) {
+    loadingSpinner.style.display = 'none';
+    showToast('Something went wrong. Try again.');
+  }
+}
+    </script>
+  <script>
   // Show prompt when any redeem button is clicked
   document.querySelectorAll('.redeem-button').forEach(button => {
     button.addEventListener('click', () => {
@@ -341,6 +399,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       alert("Please enter a valid Bandcamp URL.");
     }
   }
+    function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, duration);
+    }
   </script>
+  <div id="toast" class="toast"></div>
+<div id="loading-spinner">Checking...</div>
 </body>
 </html>
