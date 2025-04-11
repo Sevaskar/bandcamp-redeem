@@ -329,7 +329,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
-    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
@@ -384,6 +383,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     loadingSpinner.style.display = 'none';
     showToast('Something went wrong. Try again.');
   }
+}
+    </script>
+  <script>
+  function showToast(message) {
+  let toast = document.querySelector('.toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
     </script>
   <script>
