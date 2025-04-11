@@ -257,7 +257,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   console.log("Bandcamp URL setup handled in DOMContentLoaded");
 </script>
   <script src="redeem.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if user URL is already saved in localStorage
+    let userURL = localStorage.getItem('bandcampURL');
+    
+    if (!userURL) {
+      // Create the modal overlay
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.zIndex = 9999;
 
+      // Create the modal box
+      const modal = document.createElement('div');
+      modal.style.backgroundColor = '#fff';
+      modal.style.padding = '30px';
+      modal.style.borderRadius = '10px';
+      modal.style.maxWidth = '400px';
+      modal.style.width = '90%';
+      modal.style.boxShadow = '0 0 15px rgba(0,0,0,0.3)';
+      modal.style.textAlign = 'center';
+
+      // Modal content
+      modal.innerHTML = `
+        <h2>Welcome!</h2>
+        <p>Please enter your Bandcamp URL:</p>
+        <input type="text" id="bandcampInput" placeholder="https://bandcamp.com/yourname" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+          <button id="enterBtn" style="flex: 1; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Enter</button>
+          <button id="signupBtn" style="flex: 1; padding: 10px; background-color: #2196F3; color: white; border: none; border-radius: 5px;">Sign Up</button>
+        </div>
+      `;
+
+      // Append modal to overlay and overlay to body
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      // Button listeners
+      document.getElementById('enterBtn').addEventListener('click', () => {
+        const input = document.getElementById('bandcampInput').value.trim();
+        if (input && input.startsWith('http')) {
+          localStorage.setItem('bandcampURL', input);
+          window.location.reload();
+        } else {
+          alert('Please enter a valid Bandcamp URL.');
+        }
+      });
+
+      document.getElementById('signupBtn').addEventListener('click', () => {
+        window.open('https://bandcamp.com', '_blank');
+      });
+    }
+  });
+</script>
   <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec"; // Replace with your actual deployed Apps Script URL
 
