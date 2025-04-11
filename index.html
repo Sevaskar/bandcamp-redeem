@@ -261,94 +261,65 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="redeem.js"></script>
 
   <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const storedURL = localStorage.getItem("bandcampURL");
-  const promptBox = document.querySelector(".prompt-box");
-  if (storedURL) {
-    window.userBandcampURL = storedURL;
-    if (promptBox) promptBox.style.display = "none";
-  }
-});
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if user URL is already saved in localStorage
+    let userURL = localStorage.getItem('bandcampURL');
+    
+    if (!userURL) {
+      // Create the modal overlay
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.zIndex = 9999;
 
-async function submitBandcampURL() {
-  const urlInput = document.getElementById("bandcamp-url");
-  const url = urlInput.value.trim().replace(/\/+$/, "");
+      // Create the modal box
+      const modal = document.createElement('div');
+      modal.style.backgroundColor = '#fff';
+      modal.style.padding = '30px';
+      modal.style.borderRadius = '10px';
+      modal.style.maxWidth = '400px';
+      modal.style.width = '90%';
+      modal.style.boxShadow = '0 0 15px rgba(0,0,0,0.3)';
+      modal.style.textAlign = 'center';
 
-  if (!url.startsWith("https://bandcamp.com/")) {
-    alert("Please enter a valid Bandcamp URL starting with https://bandcamp.com/");
-    return;
-  }
+      // Modal content
+      modal.innerHTML = `
+        <h2>Welcome!</h2>
+        <p>Please enter your Bandcamp URL:</p>
+        <input type="text" id="bandcampInput" placeholder="https://bandcamp.com/yourname" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+          <button id="enterBtn" style="flex: 1; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Enter</button>
+          <button id="signupBtn" style="flex: 1; padding: 10px; background-color: #2196F3; color: white; border: none; border-radius: 5px;">Sign Up</button>
+        </div>
+      `;
 
-  localStorage.setItem("bandcampURL", url);
-  window.userBandcampURL = url;
+      // Append modal to overlay and overlay to body
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
 
-  const promptBox = document.querySelector(".prompt-box");
-  if (promptBox) promptBox.style.display = "none";
-}
+      // Button listeners
+      document.getElementById('enterBtn').addEventListener('click', () => {
+        const input = document.getElementById('bandcampInput').value.trim();
+        if (input && input.startsWith('http')) {
+          localStorage.setItem('bandcampURL', input);
+          window.location.reload();
+        } else {
+          alert('Please enter a valid Bandcamp URL.');
+        }
+      });
 
-async function redeemCode(releaseTitle, buttonElement) {
-  const userURL = window.userBandcampURL || localStorage.getItem("bandcampURL");
-  if (!userURL) {
-    alert("Please enter your Bandcamp URL first.");
-    return;
-  }
-
-  try {
-    console.log("Checking previous redemptions...");
-    const redemptionsRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Redemptions");
-    const redemptions = await redemptionsRes.json();
-    console.log("Redemptions fetched:", redemptions);
-
-    const normalizedURL = userURL.replace(/\/+$/, "");
-    const alreadyRedeemed = redemptions.some(entry =>
-      entry["Bandcamp URL"]?.trim().replace(/\/+$/, "") === normalizedURL &&
-      entry["Release"]?.trim() === releaseTitle.trim()
-    );
-
-    if (alreadyRedeemed) {
-      alert("Already in Collection");
-      if (buttonElement) {
-        buttonElement.disabled = true;
-        buttonElement.textContent = "In Collection";
-      }
-      return;
+      document.getElementById('signupBtn').addEventListener('click', () => {
+        window.open('https://bandcamp.com', '_blank');
+      });
     }
-
-    const codesRes = await fetch("https://opensheet.elk.sh/1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM/Codes");
-    const codes = await codesRes.json();
-    const availableCode = codes.find(entry => entry["Release"]?.trim() === releaseTitle.trim());
-
-    if (!availableCode || !availableCode["Code"]) {
-      alert("No code available for this release.");
-      return;
-    }
-
-    const form = document.getElementById("hidden-redeem-form");
-    if (form) {
-      form.elements["code"].value = availableCode["Code"];
-      form.submit();
-    }
-
-    // Optional: POST to your Google Form or app script to log redemption
-    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "Bandcamp URL": userURL,
-        "Release": releaseTitle
-      })
-    });
-
-    if (buttonElement) {
-      buttonElement.disabled = true;
-      buttonElement.textContent = "In Collection";
-    }
-  } catch (error) {
-    console.error("Error during redemption:", error);
-    alert("Something went wrong. Try again later.");
-  }
-}
-</script>
+  });
+  </script>
 </body>
+</html>
