@@ -271,19 +271,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.body.appendChild(promptDiv);
   });
 </script>
-  <script>
+  
+    <script>
   document.addEventListener("DOMContentLoaded", function () {
     const urlPrompt = document.getElementById("urlPrompt");
     const redeemButtons = document.querySelectorAll(".redeem-button");
 
     redeemButtons.forEach(button => {
       button.addEventListener("click", function () {
-        // Show the prompt only if it's not already visible
-        if (urlPrompt.style.display === "none") {
-          urlPrompt.style.display = "block";
-        }
+        // Show the prompt
+        urlPrompt.style.display = "block";
 
-        // Store the title from the clicked button
+        // Store the title
         const selectedTitle = this.getAttribute("data-title");
         urlPrompt.setAttribute("data-selected-title", selectedTitle);
       });
@@ -294,7 +293,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const title = urlPrompt.getAttribute("data-selected-title");
 
       if (bandcampUrl && title) {
-        // Call your API with bandcampUrl and title
         fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
           method: "POST",
           headers: {
@@ -315,6 +313,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   });
-  </script>  
+    </script>
 </body>
 </html>
