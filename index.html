@@ -259,62 +259,70 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="redeem.js"></script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Check if user URL is already saved in localStorage
-    let userURL = localStorage.getItem('bandcampURL');
-    
-    if (!userURL) {
-      // Create the modal overlay
-      const overlay = document.createElement('div');
-      overlay.style.position = 'fixed';
-      overlay.style.top = 0;
-      overlay.style.left = 0;
-      overlay.style.width = '100vw';
-      overlay.style.height = '100vh';
-      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
-      overlay.style.display = 'flex';
-      overlay.style.justifyContent = 'center';
-      overlay.style.alignItems = 'center';
-      overlay.style.zIndex = 9999;
+const scriptURL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec"; // Replace with your actual deployed Apps Script URL
 
-      // Create the modal box
-      const modal = document.createElement('div');
-      modal.style.backgroundColor = '#fff';
-      modal.style.padding = '30px';
-      modal.style.borderRadius = '10px';
-      modal.style.maxWidth = '400px';
-      modal.style.width = '90%';
-      modal.style.boxShadow = '0 0 15px rgba(0,0,0,0.3)';
-      modal.style.textAlign = 'center';
+document.getElementById("submit-btn").addEventListener("click", async function() {
+  const bandcampURL = document.getElementById("bandcamp-url").value.trim();
+  const selectedTitle = document.getElementById("url-prompt").dataset.title;
 
-   <div class="prompt-box" id="bandcamp-prompt">
-    <p>Welcome! Please enter your Bandcamp URL.</p>
-    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
-    <div class="prompt-links">
-      <a href="#" onclick="submitBandcampURL()">Enter</a>
-      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
-    </div>
+  if (!bandcampURL || !selectedTitle) {
+    alert("Please enter your Bandcamp URL.");
+    return;
+  }
 
-      // Append modal to overlay and overlay to body
-      overlay.appendChild(modal);
-      document.body.appendChild(overlay);
+  // Disable button to prevent multiple clicks
+  this.disabled = true;
+  this.textContent = "Checking...";
 
-      // Button listeners
-      document.getElementById('enterBtn').addEventListener('click', () => {
-        const input = document.getElementById('bandcampInput').value.trim();
-        if (input && input.startsWith('http')) {
-          localStorage.setItem('bandcampURL', input);
-          window.location.reload();
-        } else {
-          alert('Please enter a valid Bandcamp URL.');
-        }
-      });
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({
+        bandcampUrl: bandcampURL,
+        title: selectedTitle
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
-      document.getElementById('signupBtn').addEventListener('click', () => {
-        window.open('https://bandcamp.com', '_blank');
-      });
+    const result = await response.json();
+
+    if (result.status === "already_redeemed") {
+      updateButtonState(selectedTitle, "In Collection", true);
+    } else if (result.status === "code_issued") {
+      updateButtonState(selectedTitle, "In Collection", true);
+      window.open(`https://bandcamp.com/yum?code=${result.code}`, "_blank");
+    } else {
+      alert("Something went wrong. Please try again later.");
+      this.disabled = false;
+      this.textContent = "Submit";
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("There was a problem processing your request.");
+    this.disabled = false;
+    this.textContent = "Submit";
+  }
+});
+
+function updateButtonState(title, text, disabled) {
+  const allButtons = document.querySelectorAll(".redeem-btn");
+  allButtons.forEach(btn => {
+    if (btn.dataset.title === title) {
+      btn.textContent = text;
+      if (disabled) {
+        btn.disabled = true;
+        btn.classList.add("disabled");
+      }
     }
   });
-  </script>
+  // Hide input prompt
+  document.getElementById("url-prompt").style.display = "none";
+  document.getElementById("bandcamp-url").value = "";
+  document.getElementById("submit-btn").disabled = false;
+  document.getElementById("submit-btn").textContent = "Submit";
+}
+</script>
 </body>
 </html>
