@@ -13,12 +13,13 @@ async function redeemCode(releaseTitle, button) {
   const redemptions = await redemptionsRes.json();
 
   const alreadyRedeemed = redemptions.some(entry =>
-    entry["Bandcamp URL"].trim().replace(/\/+$/, "") === bandcampURL &&
-    entry["Release"].trim() === releaseTitle.trim()
+    entry["User"].trim().replace(/\/+$/, "") === bandcampURL &&
+    entry["Title"].trim() === releaseTitle.trim()
   );
 
   if (alreadyRedeemed) {
-    alert("Already in Collection");
+    button.disabled = true;
+    button.innerText = "In Collection";
     return;
   }
 
@@ -27,7 +28,7 @@ async function redeemCode(releaseTitle, button) {
   const codes = await codesRes.json();
 
   const availableCode = codes.find(code =>
-    code.Release === releaseTitle && (!code.Used || code.Used.toLowerCase() !== "true")
+    code.Title === releaseTitle && (!code.Status || code.Status.toLowerCase() !== "redeemed")
   );
 
   if (!availableCode) {
@@ -35,22 +36,37 @@ async function redeemCode(releaseTitle, button) {
     return;
   }
 
-  // Redeem code
+  // Submit code to Bandcamp
   const form = document.createElement("form");
-  form.action = "https://bandcamp.com/yum";
-  form.method = "POST";
+  form.action = "https://sevaskar.bandcamp.com/yum";
+  form.method = "get";
   form.target = "_blank";
 
   const input = document.createElement("input");
-  input.type = "hidden";
   input.name = "code";
+  input.type = "hidden";
   input.value = availableCode.Code;
 
   form.appendChild(input);
   document.body.appendChild(form);
   form.submit();
 
+  // Record redemption
+  await fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      user: bandcampURL,
+      title: releaseTitle,
+      code: availableCode.Code
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
   alert(`Code redeemed: ${availableCode.Code}`);
+  button.disabled = true;
+  button.innerText = "In Collection";
 }
 
 function showBandcampPrompt(callback) {
