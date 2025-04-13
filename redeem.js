@@ -1,85 +1,77 @@
-let userBandcampURL = "";
-
-function redeemCodePrompt() {
-  // Triggered when any "Redeem Code" button is clicked
-  document.getElementById('bandcampOverlay').style.display = 'flex';
-}
+let currentBandcampURL = "";
 
 function submitBandcampURL() {
-  const url = document.getElementById('bandcampUrl').value.trim();
-  if (url && url.includes('bandcamp.com')) {
-    userBandcampURL = url;
-    document.getElementById('bandcampOverlay').style.display = 'none';
-    loadTitlesPopup();
-  } else {
-    alert('Please enter a valid Bandcamp URL.');
+  const urlInput = document.getElementById("bandcamp-url");
+  const url = urlInput.value.trim();
+
+  if (!url.startsWith("https://bandcamp.com/")) {
+    showToast("Please enter a valid Bandcamp URL.");
+    return;
+  }
+
+  currentBandcampURL = url;
+
+  document.getElementById("bandcamp-prompt").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+
+  const selectedTitle = document.getElementById("bandcamp-prompt").getAttribute("data-selected-title");
+  const redeemButton = Array.from(document.querySelectorAll(".redeem-button")).find(
+    btn => btn.getAttribute("data-title") === selectedTitle
+  );
+
+  if (selectedTitle && redeemButton) {
+    redeemCode(selectedTitle, redeemButton);
   }
 }
 
-function loadTitlesPopup() {
-  fetch(`https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=${encodeURIComponent(userBandcampURL)}`)
-    .then(res => res.json())
-    .then(data => {
-      showTitlesTable(data.titles);
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error loading titles.");
-    });
-}
-
-function showTitlesTable(titles) {
-  const popup = document.getElementById('titlesPopup');
-  const table = popup.querySelector('tbody');
-  table.innerHTML = '';
-
-  titles.forEach(entry => {
-    const row = document.createElement('tr');
-
-    const titleCell = document.createElement('td');
-    titleCell.textContent = entry.title;
-
-    const actionCell = document.createElement('td');
-    if (entry.status === "Add To Collection") {
-      const button = document.createElement('button');
-      button.textContent = "Add To Collection";
-      button.onclick = () => redeemCode(entry.title, button);
-      actionCell.appendChild(button);
-    } else {
-      const span = document.createElement('span');
-      span.textContent = entry.status;
-      actionCell.appendChild(span);
-    }
-
-    row.appendChild(titleCell);
-    row.appendChild(actionCell);
-    table.appendChild(row);
-  });
-
-  popup.style.display = 'block';
-}
-
 function redeemCode(title, button) {
-  fetch(`https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=${encodeURIComponent(userBandcampURL)}&title=${encodeURIComponent(title)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.code) {
-        // Update button
-        button.disabled = true;
-        button.textContent = "In Collection";
+  if (!currentBandcampURL) {
+    const prompt = document.getElementById("bandcamp-prompt");
+    prompt.setAttribute("data-selected-title", title);
+    prompt.style.display = "flex";
+    document.getElementById("overlay").style.display = "block";
+    return;
+  }
 
-        // Auto-submit hidden Bandcamp redeem form
-        const form = document.getElementById("hidden-redeem-form");
-        form.querySelector("input[name=code]").value = data.code;
-        form.submit();
-      } else if (data.error) {
-        alert("Error: " + data.error);
-      } else {
-        alert("No code available or unknown response.");
-      }
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-      alert("Failed to redeem code. Please try again.");
-    });
+  showToast("Contacting Sevaskar's servers...");
+
+  fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, bandcampURL: currentBandcampURL }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Server responded with an error");
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Response from server:", data);
+    if (data.status === "success") {
+      document.querySelector('input[name="code"]').value = data.code;
+      document.getElementById("hidden-redeem-form").submit();
+      showToast("Code assigned and form submitted.");
+    } else {
+      showToast(data.message || "Something went wrong.");
+    }
+  })
+  .catch(error => {
+    console.error("Error during fetch:", error);
+    showToast("Something went wrong. Try again later.");
+  });
+}
+
+function showToast(message) {
+  let toast = document.querySelector(".toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 4000);
 }
