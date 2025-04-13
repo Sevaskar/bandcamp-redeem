@@ -233,14 +233,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
-      <button class="redeem-button" data-title="Boombox" onclick="redeemCode('Origins of Belief',this)">Redeem Code</button>
+      <button class="redeem-button" data-title="Boombox" onclick="redeemCode('Boombox',this)">Redeem Code</button>
     </div> 
 
     <div class="player-box">
       <iframe style="border: 0; width: 350px; height: 470px;"
           src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
       </iframe>
-      <button class="redeem-button" data-title="Prophet for Profit" onclick="redeemCode('Origins of Belief',this)">Redeem Code</button>
+      <button class="redeem-button" data-title="Prophet for Profit" onclick="redeemCode('Prophet for Profit',this)">Redeem Code</button>
     </div> 
 
     <div class="player-box">
@@ -301,16 +301,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   console.log("Bandcamp URL setup handled in DOMContentLoaded");
 </script>
-  <body>
-  <!-- Your main content and modals here -->
+  
 
   <!-- Hidden Bandcamp redeem form -->
-  <form id="hidden-redeem-form" action="https://bandcamp.com/redeem" method="POST" style="display:none;" target="_blank">
+  <form id="hidden-redeem-form" action="https://sevaskar.bandcamp.com/yum" method="POST" style="display:none;" target="_blank">
     <input type="text" name="code" />
   </form>
   
   <script src="redeem.js"></script>
-  </body>
+  
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const promptBox = document.getElementById("bandcamp-prompt");
