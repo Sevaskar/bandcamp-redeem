@@ -20,7 +20,7 @@ function loadTitlesPopup() {
   fetch(`https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=${encodeURIComponent(userBandcampURL)}`)
     .then(res => res.json())
     .then(data => {
-      showTitlesTable(data.titles); // Expecting an array of objects: [{ title: "Title A", status: "Already In Collection" | "Add To Collection" | "No Available Codes" }]
+      showTitlesTable(data.titles);
     })
     .catch(err => {
       console.error(err);
@@ -64,8 +64,14 @@ function redeemCode(title, button) {
     .then(res => res.json())
     .then(data => {
       if (data.code) {
+        // Update button
         button.disabled = true;
         button.textContent = "In Collection";
+
+        // Auto-submit hidden Bandcamp redeem form
+        const form = document.getElementById("hidden-redeem-form");
+        form.querySelector("input[name=code]").value = data.code;
+        form.submit();
       } else if (data.error) {
         alert("Error: " + data.error);
       } else {
@@ -75,19 +81,5 @@ function redeemCode(title, button) {
     .catch(err => {
       console.error("Fetch error:", err);
       alert("Failed to redeem code. Please try again.");
-    });
-}
-
-        // Submit to Bandcamp form
-        const form = document.getElementById("hidden-redeem-form");
-        form.querySelector("input[name=code]").value = data.code;
-        form.submit();
-      } else {
-        alert("Code unavailable or already redeemed.");
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error redeeming code.");
     });
 }
