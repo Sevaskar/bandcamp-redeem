@@ -64,9 +64,19 @@ function redeemCode(title, button) {
     .then(res => res.json())
     .then(data => {
       if (data.code) {
-        // Update UI
         button.disabled = true;
         button.textContent = "In Collection";
+      } else if (data.error) {
+        alert("Error: " + data.error);
+      } else {
+        alert("No code available or unknown response.");
+      }
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      alert("Failed to redeem code. Please try again.");
+    });
+}
 
         // Submit to Bandcamp form
         const form = document.getElementById("hidden-redeem-form");
