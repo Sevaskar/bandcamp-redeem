@@ -301,7 +301,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   console.log("Bandcamp URL setup handled in DOMContentLoaded");
 </script>
+  <body>
+  <!-- Your main content and modals here -->
+
+  <!-- Hidden Bandcamp redeem form -->
+  <form id="hidden-redeem-form" action="https://bandcamp.com/redeem" method="POST" style="display:none;" target="_blank">
+    <input type="text" name="code" />
+  </form>
+  
   <script src="redeem.js"></script>
+  </body>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const promptBox = document.getElementById("bandcamp-prompt");
