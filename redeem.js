@@ -33,6 +33,9 @@ function redeemCode(title, button) {
     return;
   }
 
+  // Disable button to prevent double click
+  button.disabled = true;
+
   showToast("Contacting Sevaskar's servers...");
 
   fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
@@ -56,11 +59,13 @@ function redeemCode(title, button) {
       showToast("Code assigned and form submitted.");
     } else {
       showToast(data.message || "Something went wrong.");
+      button.disabled = false;
     }
   })
   .catch(error => {
     console.error("Error during fetch:", error);
     showToast("Something went wrong. Try again later.");
+    button.disabled = false;
   });
 }
 
