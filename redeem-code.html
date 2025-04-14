@@ -1,38 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redeem Code</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redeem Your Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .title-list {
+      margin-top: 2em;
+    }
+
+    .title-item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .title-item button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      font-size: 0.9em;
+    }
+
+    .title-status {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+  <h1>Redeem Your Code</h1>
 
-    <div class="container">
-        <h2>Redeem Your Code</h2>
+  <p style="text-align: center;">Click a button below to start redeeming a title. You will be asked for your Bandcamp URL.</p>
 
-        <!-- Bandcamp URL Input -->
-        <label for="bandcampUrl">Enter your Bandcamp URL:</label>
-        <input type="text" id="bandcampUrl" placeholder="https://bandcamp.com/yourname">
-        <button onclick="saveBandcampUrl()">Continue</button>
-
-        <p>Don't have a Bandcamp account? <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a></p>
-
-        <div id="statusMessage"></div>
+  <!-- These buttons must include data-title for each release -->
+  <div class="title-list">
+    <div class="title-item">
+      <span>Pandemonium</span>
+      <button class="redeem-code-button" data-title="Pandemonium">Redeem Code</button>
     </div>
+    <div class="title-item">
+      <span>Vilicus</span>
+      <button class="redeem-code-button" data-title="Vilicus">Redeem Code</button>
+    </div>
+    <div class="title-item">
+      <span>Boombox</span>
+      <button class="redeem-code-button" data-title="Boombox">Redeem Code</button>
+    </div>
+    <!-- Add more titles as needed -->
+  </div>
 
-    <script>
-        function saveBandcampUrl() {
-            let userUrl = document.getElementById("bandcampUrl").value.trim();
-            if (userUrl.startsWith("https://bandcamp.com/")) {
-                localStorage.setItem("bandcampUrl", userUrl);
-                document.getElementById("statusMessage").innerHTML = "<p style='color:green;'>Saved! You can now redeem a code.</p>";
-                window.location.href = "index.html";
-            } else {
-                document.getElementById("statusMessage").innerHTML = "<p style='color:red;'>Please enter a valid Bandcamp URL.</p>";
-            }
-        }
-    </script>
-<script src="redeem.js"></script>
+  <!-- This hidden form will be used when a code is assigned -->
+  <form id="hidden-redeem-form" class="download-code-form" action="https://sevaskar.bandcamp.com/yum" method="get" target="_blank" style="display: none;">
+    <input id="hidden-code-input" name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" />
+    <input type="submit" value="Redeem Code" />
+  </form>
+
+  <!-- Script to handle Bandcamp URL prompt and dispatch event -->
+  <script src="redeem.js"></script>
+
+  <!-- Your new script goes here (the one that listens for bandcampUrlSubmitted and handles logic) -->
+  <script src="new-redeem-logic.js"></script>
 </body>
 </html>
