@@ -1,82 +1,53 @@
-let currentBandcampURL = "";
+document.addEventListener("DOMContentLoaded", function () {
+    const redeemButtons = document.querySelectorAll(".redeem-code-button");
 
-function submitBandcampURL() {
-  const urlInput = document.getElementById("bandcamp-url");
-  const url = urlInput.value.trim();
+    redeemButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const title = button.getAttribute("data-title");
+            const existingPopup = document.getElementById("bandcamp-url-popup");
 
-  if (!url.startsWith("https://bandcamp.com/")) {
-    showToast("Please enter a valid Bandcamp URL.");
-    return;
-  }
+            if (!existingPopup) {
+                const popup = document.createElement("div");
+                popup.id = "bandcamp-url-popup";
+                popup.style.position = "fixed";
+                popup.style.top = "50%";
+                popup.style.left = "50%";
+                popup.style.transform = "translate(-50%, -50%)";
+                popup.style.backgroundColor = "#fff";
+                popup.style.border = "1px solid #ccc";
+                popup.style.padding = "20px";
+                popup.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.2)";
+                popup.style.zIndex = 9999;
 
-  currentBandcampURL = url;
+                const input = document.createElement("input");
+                input.type = "text";
+                input.placeholder = "Enter your Bandcamp URL";
+                input.style.marginRight = "10px";
+                input.style.width = "300px";
 
-  document.getElementById("bandcamp-prompt").style.display = "none";
-  document.getElementById("overlay").style.display = "none";
+                const submitBtn = document.createElement("button");
+                submitBtn.textContent = "Submit";
 
-  const selectedTitle = document.getElementById("bandcamp-prompt").getAttribute("data-selected-title");
-  const redeemButton = Array.from(document.querySelectorAll(".redeem-button")).find(
-    btn => btn.getAttribute("data-title") === selectedTitle
-  );
+                submitBtn.addEventListener("click", () => {
+                    const bandcampUrl = input.value.trim();
+                    if (!bandcampUrl) {
+                        alert("Please enter a valid Bandcamp URL.");
+                        return;
+                    }
 
-  if (selectedTitle && redeemButton) {
-    redeemCode(selectedTitle, redeemButton);
-  }
-}
+                    popup.remove();
 
-function redeemCode(title, button) {
-  if (!currentBandcampURL) {
-    const prompt = document.getElementById("bandcamp-prompt");
-    prompt.setAttribute("data-selected-title", title);
-    prompt.style.display = "flex";
-    document.getElementById("overlay").style.display = "block";
-    return;
-  }
+                    // Dispatch a custom event with the Bandcamp URL
+                    const urlEvent = new CustomEvent("bandcampUrlSubmitted", {
+                        detail: { bandcampUrl }
+                    });
+                    window.dispatchEvent(urlEvent);
+                });
 
-  // Disable button to prevent double click
-  button.disabled = true;
-
-  showToast("Contacting Sevaskar's servers...");
-
-  fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ title, bandcampURL: currentBandcampURL }),
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("Server responded with an error");
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log("Response from server:", data);
-    if (data.status === "success") {
-      document.querySelector('input[name="code"]').value = data.code;
-      document.getElementById("hidden-redeem-form").submit();
-      showToast("Code assigned and form submitted.");
-    } else {
-      showToast(data.message || "Something went wrong.");
-      button.disabled = false;
-    }
-  })
-  .catch(error => {
-    console.error("Error during fetch:", error);
-    showToast("Something went wrong. Try again later.");
-    button.disabled = false;
-  });
-}
-
-function showToast(message) {
-  let toast = document.querySelector(".toast");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "toast";
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 4000);
-}
+                popup.appendChild(input);
+                popup.appendChild(submitBtn);
+                document.body.appendChild(popup);
+            }
+        });
+    });
+});
