@@ -304,130 +304,109 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="redeem.js"></script>
   
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const promptBox = document.getElementById("bandcamp-prompt");
-    const overlay = document.getElementById("overlay");
-    const redeemButtons = document.querySelectorAll(".redeem-button");
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
-    redeemButtons.forEach(button => {
-      button.addEventListener("click", function () {
-        const selectedTitle = this.getAttribute("data-title");
-        promptBox.setAttribute("data-selected-title", selectedTitle);
-        promptBox.style.display = "flex";
-        overlay.style.display = "block";
-      });
+  async function handleRedeemClick() {
+    const bandcampURL = prompt("Enter your Bandcamp URL:");
+    if (!bandcampURL) return;
+
+    try {
+      const response = await fetch(`${scriptURL}?bandcampUrl=${encodeURIComponent(bandcampURL)}`);
+      const data = await response.json();
+
+      showStatusPopup(data.titles, bandcampURL);
+    } catch (error) {
+      alert("Error retrieving data. Please try again.");
+      console.error(error);
+    }
+  }
+
+  function showStatusPopup(titles, bandcampURL) {
+    const popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "10%";
+    popup.style.left = "50%";
+    popup.style.transform = "translateX(-50%)";
+    popup.style.background = "#fff";
+    popup.style.border = "1px solid #ccc";
+    popup.style.padding = "20px";
+    popup.style.zIndex = "10000";
+    popup.style.maxWidth = "90%";
+    popup.style.maxHeight = "70%";
+    popup.style.overflowY = "auto";
+    popup.innerHTML = `<h3>Your Collection Status</h3>`;
+
+    titles.forEach(({ title, status }) => {
+      const entry = document.createElement("div");
+      entry.style.marginBottom = "10px";
+      entry.innerText = `${title} - ${status}`;
+
+      if (status === "Add To Collection") {
+        const button = document.createElement("button");
+        button.textContent = "Add To Collection";
+        button.style.marginLeft = "10px";
+        button.onclick = () => redeemCode(title, bandcampURL, popup);
+        entry.appendChild(button);
+      }
+
+      popup.appendChild(entry);
     });
 
-    overlay.addEventListener("click", function () {
-      promptBox.style.display = "flex";
-      overlay.style.display = "none";
-    });
+    const close = document.createElement("button");
+    close.textContent = "Close";
+    close.style.marginTop = "15px";
+    close.onclick = () => document.body.removeChild(popup);
+    popup.appendChild(close);
+
+    document.body.appendChild(popup);
+  }
+
+  async function redeemCode(title, bandcampURL, popup) {
+    try {
+      const response = await fetch(`${scriptURL}?action=redeem&bandcampUrl=${encodeURIComponent(bandcampURL)}&title=${encodeURIComponent(title)}`);
+      const data = await response.json();
+
+      if (data.code) {
+        const form = document.createElement("form");
+        form.className = "download-code-form";
+        form.action = "https://sevaskar.bandcamp.com/yum";
+        form.method = "get";
+        form.target = "_blank";
+
+        const input = document.createElement("input");
+        input.name = "code";
+        input.type = "text";
+        input.value = data.code;
+
+        const submit = document.createElement("input");
+        submit.type = "submit";
+        submit.value = "Redeem Code";
+
+        form.appendChild(input);
+        form.appendChild(submit);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+
+        alert(`Code Redeemed: ${data.code}`);
+
+        // Refresh the popup status list
+        const refreshed = await fetch(`${scriptURL}?bandcampUrl=${encodeURIComponent(bandcampURL)}`);
+        const newData = await refreshed.json();
+        document.body.removeChild(popup);
+        showStatusPopup(newData.titles, bandcampURL);
+      } else {
+        alert("No available code or error processing request.");
+      }
+    } catch (error) {
+      alert("Redemption failed. Please try again.");
+      console.error(error);
+    }
+  }
+
+  document.querySelectorAll(".redeem-code-button").forEach(button => {
+    button.addEventListener("click", handleRedeemClick);
   });
-
-  function submitBandcampURL() {
-    const bandcampUrl = document.getElementById("bandcamp-url").value.trim();
-    const promptBox = document.getElementById("bandcamp-prompt");
-    const overlay = document.getElementById("overlay");
-    const title = promptBox.getAttribute("data-selected-title");
-
-    if (!bandcampUrl || !title) {
-      alert("Missing info!");
-      return;
-    }
-
-    // e prompt
-    promptBox.style.display = "none";
-    overlay.style.display = "none";
-
-    // Show loading spinner (optional, implement #loading-spinner if needed)
-    const loadingSpinner = document.getElementById("loading-spinner");
-    if (loadingSpinner) loadingSpinner.style.display = "block";
-
-    // Send info to server
-    fetch("https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    url: bandcampUrl,
-    title: title
-  })
-})
-.then(response => response.json())
-.then(data => {
-  if (data && data.code) {
-    // Inject code into the hidden form and submit
-    const form = document.getElementById("hidden-redeem-form");
-    form.querySelector("input[name='code']").value = data.code;
-    form.submit();
-
-    // Optionally mark the button as redeemed
-    const redeemButton = [...document.querySelectorAll(".redeem-button")].find(b => b.getAttribute("data-title") === title);
-    if (redeemButton) {
-      redeemButton.textContent = "Redeemed!";
-      redeemButton.classList.add("redeemed");
-      redeemButton.disabled = true;
-    }
-  } else if (data && data.message === "Already Redeemed") {
-    showToast("You already redeemed this title.");
-  } else {
-    showToast("No codes left or unknown error.");
-  }
-})
-.catch(error => {
-  console.error("Fetch error:", error);
-  showToast("Something went wrong. Try again later.");
-});
-  }
-
-  function showToast(message) {
-  let toast = document.querySelector(".toast");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "toast";
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
-}
-</script>
-<script>
-  // Send info to server // Replace this URL with your actual Apps Script endpoint
-    const endpoint = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
-
-    fetch(`${endpoint}?title=${encodeURIComponent(title)}&bandcamp=${encodeURIComponent(bandcampUrl)}`)
-      .then(response => response.json())
-      .then(data => {
-        if (loadingSpinner) loadingSpinner.style.display = "none";
-
-        if (data.code) {
-          const form = document.getElementById("hidden-redeem-form");
-          form.querySelector('input[name="code"]').value = data.code;
-          form.submit();
-        } else {
-          showToast(data.error || "No code available.");
-        }
-      })
-      .catch(err => {
-        if (loadingSpinner) loadingSpinner.style.display = "none";
-        console.error(err);
-        showToast("Something went wrong. Try again later.");
-      });
-  }
-
-  function showToast(message) {
-    let toast = document.querySelector(".toast");
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.classList.add("toast");
-      document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3000);
-  }
 </script>
 </body>
 </html>
