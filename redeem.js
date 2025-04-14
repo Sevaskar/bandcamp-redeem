@@ -1,88 +1,91 @@
-const scriptUrl = 'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec';
+const scriptURL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
 
-let userBandcampUrl = '';
-let availableCodes = {};
+let userURL = "";
 
-document.getElementById('submitUrl').addEventListener('click', () => {
-  const urlInput = document.getElementById('bandcampUrl').value.trim();
-  if (!urlInput.startsWith('https://bandcamp.com/')) {
-    alert('Please enter a valid Bandcamp profile URL.');
-    return;
-  }
+// Show Bandcamp URL prompt when redeem button is clicked
+document.querySelectorAll(".redeem-button").forEach(button => {
+    button.addEventListener("click", () => {
+        userURL = prompt("Enter your Bandcamp profile URL:");
+        if (!userURL) return;
 
-  userBandcampUrl = urlInput;
-  document.getElementById('bandcampPrompt').style.display = 'none';
-  fetchTitlesAndStatus();
+        fetch(`${scriptURL}?action=getRedemptionStatus&bandcampURL=${encodeURIComponent(userURL)}`)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.createElement("div");
+                container.className = "popup";
+                let html = "<h2>Select a title to redeem:</h2><ul>";
+
+                data.forEach(item => {
+                    const { title, status } = item;
+                    let statusText = "";
+                    let button = "";
+
+                    if (status === "Already In Collection") {
+                        statusText = "<span style='color:green;'>Already in Collection</span>";
+                    } else if (status === "No Available Codes") {
+                        statusText = "<span style='color:red;'>No Available Codes</span>";
+                    } else if (status === "Available") {
+                        button = `<button class='add-button' data-title="${title}">Add to Collection</button>`;
+                    }
+
+                    html += `<li><strong>${title}</strong>: ${statusText || button}</li>`;
+                });
+
+                html += "</ul><button onclick='document.body.removeChild(this.parentElement)'>Close</button>";
+                container.innerHTML = html;
+                document.body.appendChild(container);
+
+                // Attach listeners to "Add to Collection" buttons
+                document.querySelectorAll(".add-button").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const title = btn.getAttribute("data-title");
+                        redeemCode(title, userURL);
+                        btn.disabled = true;
+                        btn.textContent = "Processing...";
+                    });
+                });
+            })
+            .catch(err => {
+                alert("Failed to load titles. Try again later.");
+                console.error(err);
+            });
+    });
 });
 
-async function fetchTitlesAndStatus() {
-  try {
-    const res = await fetch(`${scriptUrl}?action=getTitles&bandcampUrl=${encodeURIComponent(userBandcampUrl)}`);
-    const data = await res.json();
-    if (!data || !data.titles) throw new Error("Invalid response");
+// Function to redeem code
+function redeemCode(title, bandcampURL) {
+    fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({ action: "redeemCode", title, bandcampURL }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success && response.code) {
+            // Auto-submit Bandcamp redemption form
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "https://bandcamp.com/yum";
+            form.target = "_blank";
 
-    availableCodes = data.availableCodes || {};
-    renderTitles(data.titles, data.redeemedTitles);
-  } catch (err) {
-    console.error('Error fetching titles:', err);
-    alert('Failed to load titles. Please try again.');
-  }
-}
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "code";
+            input.value = response.code;
 
-function renderTitles(allTitles, redeemedTitles) {
-  const container = document.getElementById('titles');
-  container.innerHTML = '';
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
 
-  allTitles.forEach(title => {
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'title-entry';
-
-    const status = redeemedTitles.includes(title)
-      ? 'Already In Collection'
-      : !availableCodes[title] || availableCodes[title].length === 0
-        ? 'No Available Codes'
-        : 'Add To Collection';
-
-    const button = document.createElement('button');
-    button.textContent = status;
-    button.disabled = (status !== 'Add To Collection');
-    button.dataset.title = title;
-    button.addEventListener('click', handleRedeem);
-
-    titleDiv.innerHTML = `<strong>${title}</strong> `;
-    titleDiv.appendChild(button);
-    container.appendChild(titleDiv);
-  });
-
-  document.getElementById('titleContainer').style.display = 'block';
-}
-
-async function handleRedeem(event) {
-  const title = event.target.dataset.title;
-  const confirmRedeem = confirm(`Redeem code for "${title}"?`);
-  if (!confirmRedeem) return;
-
-  try {
-    const res = await fetch(scriptUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'redeemCode',
-        bandcampUrl: userBandcampUrl,
-        title: title
-      }),
-      headers: { 'Content-Type': 'application/json' }
+            alert(`Code Redeemed: ${response.code}`);
+        } else {
+            alert("Redemption failed: " + (response.message || "Unknown error."));
+        }
+    })
+    .catch(error => {
+        console.error("Redemption error:", error);
+        alert("Error redeeming code.");
     });
-
-    const data = await res.json();
-    if (data.success) {
-      alert(`Success! Your code for "${title}" is: ${data.code}`);
-      event.target.textContent = 'In Collection';
-      event.target.disabled = true;
-    } else {
-      alert(`Failed: ${data.message || 'Unknown error'}`);
-    }
-  } catch (err) {
-    console.error('Redemption error:', err);
-    alert('Failed to redeem code. Please try again.');
-  }
 }
