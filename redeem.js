@@ -1,62 +1,94 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const redeemButtons = document.querySelectorAll(".redeem-code-button");
-
-    redeemButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const title = button.getAttribute("data-title");
-            const existingPopup = document.getElementById("bandcamp-url-popup");
-
-            if (!existingPopup) {
-                const popup = document.createElement("div");
-                popup.id = "bandcamp-url-popup";
-                popup.style.position = "fixed";
-                popup.style.top = "50%";
-                popup.style.left = "50%";
-                popup.style.transform = "translate(-50%, -50%)";
-                popup.style.backgroundColor = "#fff";
-                popup.style.border = "1px solid #ccc";
-                popup.style.padding = "20px";
-                popup.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.2)";
-                popup.style.zIndex = 9999;
-
-                const input = document.createElement("input");
-                input.type = "text";
-                input.placeholder = "Enter your Bandcamp URL";
-                input.style.marginRight = "10px";
-                input.style.width = "300px";
-
-                const submitBtn = document.createElement("button");
-                submitBtn.textContent = "Submit";
-
-                submitBtn.addEventListener("click", () => {
-                    const bandcampUrl = input.value.trim();
-                    if (!bandcampUrl) {
-                        alert("Please enter a valid Bandcamp URL.");
-                        return;
-                    }
-
-                    popup.remove();
-
-                    // Dispatch a custom event with the Bandcamp URL
-                    const urlEvent = new CustomEvent("bandcampUrlSubmitted", {
-                        detail: { bandcampUrl }
-                    });
-                    window.dispatchEvent(urlEvent);
-                });
-
-                popup.appendChild(input);
-                popup.appendChild(submitBtn);
-                document.body.appendChild(popup);
-                document.querySelectorAll(".redeem-code-button").forEach(button => {
-  button.addEventListener("click", function () {
+document.querySelectorAll(".redeem-code-button").forEach(button => {
+  button.addEventListener("click", async function () {
     const title = this.getAttribute("data-title");
     const bandcampUrl = prompt("Enter your Bandcamp URL:");
 
-    if (bandcampUrl) {
-      const event = new CustomEvent("bandcampUrlSubmitted", {
-        detail: { title, bandcampUrl }
+    if (!bandcampUrl) return;
+
+    // Call API to get titles + redemption status
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+        method: 'POST',
+        body: JSON.stringify({
+          action: "getUserRedemptionStatus",
+          bandcampUrl: bandcampUrl
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
-      window.dispatchEvent(event);
+
+      const data = await response.json();
+
+      if (!data || !data.titles) {
+        alert("Redemption failed. Please try again.");
+        return;
+      }
+
+      // Build dynamic popup
+      const popup = document.createElement("div");
+      popup.classList.add("popup");
+
+      const list = document.createElement("ul");
+
+      data.titles.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.title} - ${item.status}`;
+
+        if (item.status === "Add To Collection") {
+          const btn = document.createElement("button");
+          btn.textContent = "Add";
+          btn.addEventListener("click", async () => {
+            const redeemResponse = await fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+              method: 'POST',
+              body: JSON.stringify({
+                action: "redeemCode",
+                bandcampUrl: bandcampUrl,
+                title: item.title
+              }),
+              headers: {
+                "Content-Type": "application/json"
+              }
+            });
+
+            const result = await redeemResponse.json();
+
+            if (result.success && result.code) {
+              const form = document.createElement("form");
+              form.classList.add("download-code-form");
+              form.action = "https://sevaskar.bandcamp.com/yum";
+              form.method = "get";
+              form.target = "_blank";
+
+              const input = document.createElement("input");
+              input.name = "code";
+              input.type = "text";
+              input.value = result.code;
+              form.appendChild(input);
+
+              document.body.appendChild(form);
+              form.submit();
+
+              // Cleanup & refresh UI
+              popup.remove();
+              alert("Code redeemed! Refreshing list...");
+              window.location.reload();
+            } else {
+              alert("Redemption failed. Please try again.");
+            }
+          });
+          li.appendChild(btn);
+        }
+
+        list.appendChild(li);
+      });
+
+      popup.appendChild(list);
+      document.body.appendChild(popup);
+
+    } catch (err) {
+      console.error(err);
+      alert("Redemption failed. Please try again.");
     }
   });
 });
