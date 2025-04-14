@@ -1,91 +1,187 @@
-const scriptURL = "https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec";
+let userBandcampURL = localStorage.getItem('bandcampURL');
+let pendingAction = null;
 
-let userURL = "";
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.redeem-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const title = button.getAttribute('data-title');
 
-// Show Bandcamp URL prompt when redeem button is clicked
-document.querySelectorAll(".redeem-button").forEach(button => {
-    button.addEventListener("click", () => {
-        userURL = prompt("Enter your Bandcamp profile URL:");
-        if (!userURL) return;
-
-        fetch(`${scriptURL}?action=getRedemptionStatus&bandcampURL=${encodeURIComponent(userURL)}`)
-            .then(res => res.json())
-            .then(data => {
-                const container = document.createElement("div");
-                container.className = "popup";
-                let html = "<h2>Select a title to redeem:</h2><ul>";
-
-                data.forEach(item => {
-                    const { title, status } = item;
-                    let statusText = "";
-                    let button = "";
-
-                    if (status === "Already In Collection") {
-                        statusText = "<span style='color:green;'>Already in Collection</span>";
-                    } else if (status === "No Available Codes") {
-                        statusText = "<span style='color:red;'>No Available Codes</span>";
-                    } else if (status === "Available") {
-                        button = `<button class='add-button' data-title="${title}">Add to Collection</button>`;
-                    }
-
-                    html += `<li><strong>${title}</strong>: ${statusText || button}</li>`;
-                });
-
-                html += "</ul><button onclick='document.body.removeChild(this.parentElement)'>Close</button>";
-                container.innerHTML = html;
-                document.body.appendChild(container);
-
-                // Attach listeners to "Add to Collection" buttons
-                document.querySelectorAll(".add-button").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const title = btn.getAttribute("data-title");
-                        redeemCode(title, userURL);
-                        btn.disabled = true;
-                        btn.textContent = "Processing...";
-                    });
-                });
-            })
-            .catch(err => {
-                alert("Failed to load titles. Try again later.");
-                console.error(err);
-            });
+      if (!userBandcampURL) {
+        pendingAction = title;
+        document.getElementById('bandcamp-prompt').style.display = 'flex';
+      } else {
+        handleRedemption(title, userBandcampURL);
+      }
     });
+  });
 });
 
-// Function to redeem code
-function redeemCode(title, bandcampURL) {
-    fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify({ action: "redeemCode", title, bandcampURL }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+function submitBandcampURL() {
+  const urlInput = document.getElementById('bandcamp-url');
+  const url = urlInput.value.trim();
+
+  if (!url || !url.startsWith("https://bandcamp.com/")) {
+    alert("Please enter a valid Bandcamp URL.");
+    return;
+  }
+
+  userBandcampURL = url;
+  localStorage.setItem('bandcampURL', userBandcampURL);
+  document.getElementById('bandcamp-prompt').style.display = 'none';
+
+  if (pendingAction) {
+    handleRedemption(pendingAction, userBandcampURL);
+    pendingAction = null;
+  }
+}
+
+function handleRedemption(title, url) {
+  const popup = document.getElementById('popup-container');
+  popup.innerHTML = `<div class="popup">Checking status for <b>${title}</b>...</div>`;
+
+  fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + encodeURIComponent(url))
     .then(res => res.json())
-    .then(response => {
-        if (response.success && response.code) {
-            // Auto-submit Bandcamp redemption form
-            const form = document.createElement("form");
-            form.method = "POST";
-            form.action = "https://bandcamp.com/yum";
-            form.target = "_blank";
+    .then(userData => {
+      if (userData.redeemedTitles && userData.redeemedTitles.includes(title)) {
+        popup.innerHTML = `<div class="popup">${title} is already in your collection.</div>`;
+        updateButtonState(title, "In Collection", true);
+      } else {
+        fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?title=' + encodeURIComponent(title))
+          .then(res => res.json())
+          .then(codeData => {
+            if (!codeData.code) {
+              popup.innerHTML = `<div class="popup">No available codes for ${title}.</div>`;
+              updateButtonState(title, "No Available Codes", true);
+            } else {
+              const form = document.createElement('form');
+              form.method = 'POST';
+              form.action = 'https://bandcamp.com/yum';
+              form.target = '_blank';
 
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "code";
-            input.value = response.code;
+              const inputCode = document.createElement('input');
+              inputCode.type = 'hidden';
+              inputCode.name = 'code';
+              inputCode.value = codeData.code;
+              form.appendChild(inputCode);
 
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
+              document.body.appendChild(form);
+              form.submit();
 
-            alert(`Code Redeemed: ${response.code}`);
-        } else {
-            alert("Redemption failed: " + (response.message || "Unknown error."));
-        }
+              popup.innerHTML = `<div class="popup">${title} added to your collection with code ${codeData.code}.</div>`;
+              updateButtonState(title, "In Collection", true);
+
+              fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: title, url: url })
+              });
+            }
+          });
+      }
     })
-    .catch(error => {
-        console.error("Redemption error:", error);
-        alert("Error redeeming code.");
+    .catch(() => {
+      popup.innerHTML = `<div class="popup">Error checking redemption status.</div>`;
     });
+}
+
+function updateButtonState(title, text, disabled) {
+  const buttons = document.querySelectorAll(`.redeem-button[data-title="${title}"]`);
+  buttons.forEach(btn => {
+    btn.innerText = text;
+    btn.disabled = disabled;
+  });
+}let userBandcampURL = localStorage.getItem('bandcampURL');
+let pendingAction = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.redeem-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const title = button.getAttribute('data-title');
+
+      if (!userBandcampURL) {
+        pendingAction = title;
+        document.getElementById('bandcamp-prompt').style.display = 'flex';
+      } else {
+        handleRedemption(title, userBandcampURL);
+      }
+    });
+  });
+});
+
+function submitBandcampURL() {
+  const urlInput = document.getElementById('bandcamp-url');
+  const url = urlInput.value.trim();
+
+  if (!url || !url.startsWith("https://bandcamp.com/")) {
+    alert("Please enter a valid Bandcamp URL.");
+    return;
+  }
+
+  userBandcampURL = url;
+  localStorage.setItem('bandcampURL', userBandcampURL);
+  document.getElementById('bandcamp-prompt').style.display = 'none';
+
+  if (pendingAction) {
+    handleRedemption(pendingAction, userBandcampURL);
+    pendingAction = null;
+  }
+}
+
+function handleRedemption(title, url) {
+  const popup = document.getElementById('popup-container');
+  popup.innerHTML = `<div class="popup">Checking status for <b>${title}</b>...</div>`;
+
+  fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + encodeURIComponent(url))
+    .then(res => res.json())
+    .then(userData => {
+      if (userData.redeemedTitles && userData.redeemedTitles.includes(title)) {
+        popup.innerHTML = `<div class="popup">${title} is already in your collection.</div>`;
+        updateButtonState(title, "In Collection", true);
+      } else {
+        fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?title=' + encodeURIComponent(title))
+          .then(res => res.json())
+          .then(codeData => {
+            if (!codeData.code) {
+              popup.innerHTML = `<div class="popup">No available codes for ${title}.</div>`;
+              updateButtonState(title, "No Available Codes", true);
+            } else {
+              const form = document.createElement('form');
+              form.method = 'POST';
+              form.action = 'https://bandcamp.com/yum';
+              form.target = '_blank';
+
+              const inputCode = document.createElement('input');
+              inputCode.type = 'hidden';
+              inputCode.name = 'code';
+              inputCode.value = codeData.code;
+              form.appendChild(inputCode);
+
+              document.body.appendChild(form);
+              form.submit();
+
+              popup.innerHTML = `<div class="popup">${title} added to your collection with code ${codeData.code}.</div>`;
+              updateButtonState(title, "In Collection", true);
+
+              fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: title, url: url })
+              });
+            }
+          });
+      }
+    })
+    .catch(() => {
+      popup.innerHTML = `<div class="popup">Error checking redemption status.</div>`;
+    });
+}
+
+function updateButtonState(title, text, disabled) {
+  const buttons = document.querySelectorAll(`.redeem-button[data-title="${title}"]`);
+  buttons.forEach(btn => {
+    btn.innerText = text;
+    btn.disabled = disabled;
+  });
 }
