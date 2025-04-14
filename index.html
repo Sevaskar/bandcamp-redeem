@@ -298,39 +298,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <br>
   &copy; 2025 Sevaskar. All rights reserved.
 </div>
-<script>
-  console.log("Bandcamp URL setup handled in DOMContentLoaded");
-</script> 
   
+  <<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redeem Your Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
   <script src="redeem.js"></script>
-<script src="new-redeem-logic.js"></script>
-<script>
-  
-  <!-- Hidden Bandcamp URL Prompt -->
-<div id="bandcamp-popup" class="popup" style="display:none;">
-  <h2>Enter Your Bandcamp URL</h2>
-  <p>This is needed to verify what you’ve already collected.</p>
-  <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/yourname" style="width: 100%; padding: 10px; font-size: 1em; margin-top: 10px;" />
-  <br/><br/>
-  <button id="submit-bandcamp-url">Continue</button>
-</div>
 
-<!-- Main Popup to Display Available Titles -->
-<div id="title-status-popup" class="popup" style="display:none;">
-  <h2>Your Collection Status</h2>
-  <ul id="title-status-list">
-    <!-- Titles will be inserted here dynamically -->
-  </ul>
-</div>
+  <h1>Redeem Your Bandcamp Code</h1>
 
-<!-- Hidden Redemption Form -->
-<form id="hidden-redeem-form" class="download-code-form" action="https://sevaskar.bandcamp.com/yum" method="get" target="_blank" style="display: none;">
-  <input id="hidden-code-input" name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" />
-  <input type="submit" value="Redeem Code" />
-</form>
+  <div id="bandcampPrompt" class="modal">
+    <div class="modal-content">
+      <label for="bandcampUrl">Enter your Bandcamp URL:</label>
+      <input type="text" id="bandcampUrl" placeholder="https://bandcamp.com/yourname">
+      <button id="submitUrl">Submit</button>
+    </div>
+  </div>
 
-<!-- Scripts -->
-<script src="redeem.js"></script>
-<script src="new-redeem-logic.js"></script>
+  <div id="titleContainer" style="display: none;">
+    <h2>Available Titles</h2>
+    <div id="titles"></div>
+  </div>
+
 </body>
 </html>
