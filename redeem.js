@@ -47,7 +47,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 popup.appendChild(input);
                 popup.appendChild(submitBtn);
                 document.body.appendChild(popup);
-            }
-        });
-    });
+                document.querySelectorAll(".redeem-code-button").forEach(button => {
+  button.addEventListener("click", function () {
+    const title = this.getAttribute("data-title");
+    const bandcampUrl = prompt("Enter your Bandcamp URL:");
+
+    if (bandcampUrl) {
+      const event = new CustomEvent("bandcampUrlSubmitted", {
+        detail: { title, bandcampUrl }
+      });
+      window.dispatchEvent(event);
+    }
+  });
 });
