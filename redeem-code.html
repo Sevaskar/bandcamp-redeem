@@ -34,6 +34,39 @@
     .title-status {
       font-weight: bold;
     }
+
+    .popup {
+      position: fixed;
+      top: 20%;
+      left: 10%;
+      right: 10%;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      z-index: 9999;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .popup ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .popup li {
+      margin-bottom: 10px;
+    }
+
+    .popup button {
+      margin-left: 10px;
+      background: #d00;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
@@ -41,7 +74,6 @@
 
   <p style="text-align: center;">Click a button below to start redeeming a title. You will be asked for your Bandcamp URL.</p>
 
-  <!-- These buttons must include data-title for each release -->
   <div class="title-list">
     <div class="title-item">
       <span>Pandemonium</span>
@@ -58,50 +90,14 @@
     <!-- Add more titles as needed -->
   </div>
 
-  <!-- This hidden form will be used when a code is assigned -->
+  <!-- Hidden form used when a code is assigned -->
   <form id="hidden-redeem-form" class="download-code-form" action="https://sevaskar.bandcamp.com/yum" method="get" target="_blank" style="display: none;">
     <input id="hidden-code-input" name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" />
     <input type="submit" value="Redeem Code" />
   </form>
 
-  <!-- Script to handle Bandcamp URL prompt and dispatch event -->
+  <!-- Scripts -->
   <script src="redeem.js"></script>
-
-  <!-- Your new script goes here (the one that listens for bandcampUrlSubmitted and handles logic) -->
   <script src="new-redeem-logic.js"></script>
-<script>
-  .popup {
-  position: fixed;
-  top: 20%;
-  left: 10%;
-  right: 10%;
-  background: #111;
-  color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  z-index: 9999;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.popup ul {
-  list-style: none;
-  padding: 0;
-}
-
-.popup li {
-  margin-bottom: 10px;
-}
-
-.popup button {
-  margin-left: 10px;
-  background: #d00;
-  color: white;
-  border: none;
-  padding: 4px 10px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-</script>
 </body>
 </html>
