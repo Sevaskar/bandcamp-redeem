@@ -349,44 +349,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   &copy; 2025 Sevaskar. All rights reserved.
 </div>
   
-  <!-- Bandcamp URL Prompt -->
-<!-- Overlay for background dimming -->
-<div id="overlay" style="display:none;"></div>
+  <!-- Overlay -->
+<div id="overlay"></div>
 
-<!-- Bandcamp URL Prompt -->
-<div id="bandcamp-prompt" style="display:none;">
-  <h2>Welcome! Please enter your Bandcamp URL</h2>
-  <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/yourname">
-  <div class="button-row">
-    <button id="submit-btn" onclick="submitBandcampURL()">Enter</button>
-    <button id="cancel-btn" onclick="closeBandcampPrompt()">Cancel</button>
+<!-- Initial Bandcamp URL Prompt -->
+<div id="bandcamp-prompt" class="prompt-overlay">
+  <div class="prompt-box">
+    <p>Welcome! Please enter your Bandcamp URL.</p>
+    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/your-profile">
+    <div class="prompt-links">
+      <a href="#" onclick="submitBandcampURL()">Enter</a>
+      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
+    </div>
   </div>
 </div>
 
-<form id="hidden-redeem-form" action="https://bandcamp.com/yum" method="POST" target="_blank" style="display: none;">
-  <input type="hidden" name="code" value="">
-</form>>
+<!-- Toast Notification -->
+<div class="toast" id="toast">Redeemed successfully!</div>
 
-<!-- Popup container for redemption UI -->
-<div id="popup-container"></div>
-  <div id="bandcamp-prompt" style="display:none;">
-  <input id="bandcamp-url" type="text" placeholder="Enter your Bandcamp URL" />
-  </div>
+<!-- Loading Spinner -->
+<div id="loading-spinner">Loading...</div>
 
-  <div id="overlay"></div>
-
-<div id="bandcamp-prompt">
-  <h2>Enter your Bandcamp URL</h2>
-  <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/yourname">
-  <button onclick="submitBandcampURL()">Submit</button>
-</div>
-
-<form id="hidden-redeem-form" action="https://bandcamp.com/yum" method="POST" target="_blank" style="display: none;">
-  <input type="hidden" name="code" value="">
-</form>
-
-<!-- JavaScript for redemption logic -->
-<script src="redeem.js" defer></script>
+<!-- JavaScript -->
+<script src="redeem.js"></script>
 </body>
 </html>
 
