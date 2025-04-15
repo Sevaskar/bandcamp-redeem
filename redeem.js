@@ -1,128 +1,73 @@
-let userBandcampURL = localStorage.getItem('bandcampURL');
-let pendingTitle = null;
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const buttons = document.querySelectorAll('.redeem-button');
+let selectedTitle = null;
+let bandcampURL = null;
 
-  buttons.forEach(button => {
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      const title = button.getAttribute('data-title');
-
-      if (!userBandcampURL) {
-        pendingTitle = title;
-        showBandcampPrompt();
-      } else {
-        handleRedemption(title, userBandcampURL);
-      }
-    });
+document.querySelectorAll('.redeem-button').forEach(button => {
+  button.addEventListener('click', () => {
+    selectedTitle = button.getAttribute('data-title');
+    if (!bandcampURL) {
+      document.getElementById('bandcamp-prompt').style.display = 'flex';
+      document.getElementById('overlay').style.display = 'block';
+    } else {
+      checkRedemptionStatus();
+    }
   });
-
-  const bandcampInput = document.getElementById('bandcamp-url');
-  if (bandcampInput) {
-    bandcampInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        submitBandcampURL();
-      }
-    });
-  }
 });
 
-function showBandcampPrompt() {
-  const overlay = document.getElementById('overlay');
-  const prompt = document.getElementById('bandcamp-prompt');
-
-  if (overlay && prompt) {
-    overlay.style.display = 'block';
-    prompt.style.display = 'block';
-  }
-}
-
-function hideBandcampPrompt() {
-  const overlay = document.getElementById('overlay');
-  const prompt = document.getElementById('bandcamp-prompt');
-
-  if (overlay && prompt) {
-    overlay.style.display = 'none';
-    prompt.style.display = 'none';
-  }
-}
-
 function submitBandcampURL() {
-  const urlInput = document.getElementById('bandcamp-url');
-  if (!urlInput) return;
+  const input = document.getElementById('bandcamp-url');
+  const url = input.value.trim();
 
-  const url = urlInput.value.trim();
   if (!url.startsWith('https://bandcamp.com/')) {
-    alert('Please enter a valid Bandcamp URL starting with https://bandcamp.com/');
+    alert('Please enter a valid Bandcamp URL.');
     return;
   }
 
-  localStorage.setItem('bandcampURL', url);
-  userBandcampURL = url;
-  hideBandcampPrompt();
+  bandcampURL = url;
 
-  if (pendingTitle) {
-    handleRedemption(pendingTitle, userBandcampURL);
-    pendingTitle = null;
-  }
+  // Close the prompt
+  document.getElementById('bandcamp-prompt').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+
+  checkRedemptionStatus();
 }
 
-function handleRedemption(title, url) {
-  const popup = document.getElementById('popup-container');
-  if (!popup) return;
+function checkRedemptionStatus() {
+  if (!bandcampURL || !selectedTitle) return;
 
-  popup.innerHTML = `<div class="popup">Checking ${title}...</div>`;
-
-  fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + encodeURIComponent(url))
+  fetch(`${scriptURL}?bandcamp=${encodeURIComponent(bandcampURL)}&title=${encodeURIComponent(selectedTitle)}`)
     .then(res => res.json())
     .then(data => {
-      if (data.redeemedTitles && data.redeemedTitles.includes(title)) {
-        popup.innerHTML = `<div class="popup">${title} is already in your collection.</div>`;
-        updateButton(title, "In Collection", true);
+      const button = document.querySelector(`.redeem-button[data-title="${selectedTitle}"]`);
+
+      if (data.status === 'Already In Collection') {
+        button.innerText = 'In Collection';
+        button.disabled = true;
+        button.classList.add('redeemed');
+      } else if (data.status === 'No Available Codes') {
+        button.innerText = 'No Codes';
+        button.disabled = true;
+        button.classList.add('redeemed');
+      } else if (data.status === 'Success' && data.code) {
+        redeemCode(data.code);
+        button.innerText = 'Redeemed!';
+        button.disabled = true;
+        button.classList.add('redeemed');
       } else {
-        fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?title=' + encodeURIComponent(title))
-          .then(res => res.json())
-          .then(codeData => {
-            if (!codeData.code) {
-              popup.innerHTML = `<div class="popup">No codes left for ${title}.</div>`;
-              updateButton(title, "No Codes", true);
-            } else {
-              const form = document.createElement('form');
-              form.method = 'POST';
-              form.action = 'https://bandcamp.com/yum';
-              form.target = '_blank';
-
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = 'code';
-              input.value = codeData.code;
-              form.appendChild(input);
-              document.body.appendChild(form);
-              form.submit();
-
-              popup.innerHTML = `<div class="popup">Code redeemed for ${title}!</div>`;
-              updateButton(title, "In Collection", true);
-
-              fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title: title, url: url })
-              });
-            }
-          });
+        button.innerText = 'Error';
+        button.disabled = true;
+        button.classList.add('redeemed');
       }
     })
-    .catch(() => {
-      popup.innerHTML = `<div class="popup">Error checking ${title}. Try again.</div>`;
+    .catch(err => {
+      console.error('Error checking redemption status:', err);
+      alert('Something went wrong. Try again later.');
     });
 }
 
-function updateButton(title, text, disabled) {
-  const btns = document.querySelectorAll(`.redeem-button[data-title="${title}"]`);
-  btns.forEach(btn => {
-    btn.innerText = text;
-    btn.disabled = disabled;
-  });
+function redeemCode(code) {
+  const form = document.getElementById('hidden-redeem-form');
+  form.querySelector('input[name="code"]').value = code;
+  form.submit();
 }
