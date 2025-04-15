@@ -318,6 +318,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <input id="bandcamp-url" type="text" placeholder="Enter your Bandcamp URL" />
   </div>
 
+  <div id="overlay"></div>
+
+<div class="prompt-overlay" id="bandcamp-prompt">
+  <div class="prompt-box">
+    <p>Welcome! Please enter your Bandcamp URL.</p>
+    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
+    <div class="prompt-links">
+      <a href="#" onclick="submitBandcampURL()">Enter</a>
+      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
+    </div>
+  </div>
+</div>
+
 <!-- JavaScript for redemption logic -->
 <script src="redeem.js" defer></script>
 </body>
