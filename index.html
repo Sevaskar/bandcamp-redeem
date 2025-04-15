@@ -318,59 +318,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <input id="bandcamp-url" type="text" placeholder="Enter your Bandcamp URL" />
   </div>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", async function () {
-  const promptOverlay = document.getElementById("bandcamp-prompt");
-  const storedURL = localStorage.getItem("bandcampURL");
-
-  if (storedURL && /^https:\/\/bandcamp\.com\/[a-zA-Z0-9_-]+$/.test(storedURL)) {
-    promptOverlay.style.display = "none";
-    checkRedemptions(storedURL);
-  } else {
-    promptOverlay.style.display = "flex";
-  }
-});
-    
-  function submitBandcampURL() {
-    const url = document.getElementById("bandcamp-url").value.trim();
-    if (!url.startsWith("https://bandcamp.com/")) {
-      alert("Please enter a valid Bandcamp URL.");
-      return;
-    }
-    localStorage.setItem("bandcampURL", url);
-    document.getElementById("bandcamp-prompt").style.display = "none";
-    checkRedemptions(url);
-  }
-
-  async function checkRedemptions(bandcampURL) {
-    try {
-      console.log("Checking redemptions for:", bandcampURL);
-      const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' +
-        encodeURIComponent(bandcampURL)
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      const redeemedTitles = responseData.redeemed || [];
-
-      document.querySelectorAll(".redeem-button").forEach(button => {
-        const albumTitle = button.getAttribute("data-title");
-        if (redeemedTitles.includes(albumTitle)) {
-          button.disabled = true;
-          button.style.cursor = "not-allowed";
-          button.textContent = "Already In Collection";
-          button.style.backgroundColor = "gray";
-        }
-      });
-    } catch (error) {
-      console.error("Error checking redemptions:", error);
-    }
-  }
-
 <!-- JavaScript for redemption logic -->
 <script src="redeem.js" defer></script>
 </body>
