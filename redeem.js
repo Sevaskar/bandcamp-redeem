@@ -1,3 +1,6 @@
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM loaded");
+
 let userBandcampURL = localStorage.getItem('bandcampURL');
 let pendingTitle = null;
 
