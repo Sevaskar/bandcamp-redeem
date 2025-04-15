@@ -1,6 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM loaded");
-
 let userBandcampURL = localStorage.getItem('bandcampURL');
 let pendingTitle = null;
 
@@ -21,26 +18,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Allow "Enter" key to submit the Bandcamp URL
-  document.getElementById('bandcamp-url').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      submitBandcampURL();
-    }
-  });
+  const bandcampInput = document.getElementById('bandcamp-url');
+  if (bandcampInput) {
+    bandcampInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitBandcampURL();
+      }
+    });
+  }
 });
 
 function showBandcampPrompt() {
-  document.getElementById('bandcamp-prompt').style.display = 'flex';
+  const overlay = document.getElementById('overlay');
+  const prompt = document.getElementById('bandcamp-prompt');
+
+  if (overlay && prompt) {
+    overlay.style.display = 'block';
+    prompt.style.display = 'block';
+  }
 }
 
 function hideBandcampPrompt() {
-  document.getElementById('bandcamp-prompt').style.display = 'none';
+  const overlay = document.getElementById('overlay');
+  const prompt = document.getElementById('bandcamp-prompt');
+
+  if (overlay && prompt) {
+    overlay.style.display = 'none';
+    prompt.style.display = 'none';
+  }
 }
 
 function submitBandcampURL() {
-  const url = document.getElementById('bandcamp-url').value.trim();
+  const urlInput = document.getElementById('bandcamp-url');
+  if (!urlInput) return;
 
+  const url = urlInput.value.trim();
   if (!url.startsWith('https://bandcamp.com/')) {
     alert('Please enter a valid Bandcamp URL starting with https://bandcamp.com/');
     return;
@@ -58,6 +71,8 @@ function submitBandcampURL() {
 
 function handleRedemption(title, url) {
   const popup = document.getElementById('popup-container');
+  if (!popup) return;
+
   popup.innerHTML = `<div class="popup">Checking ${title}...</div>`;
 
   fetch('https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec?url=' + encodeURIComponent(url))
