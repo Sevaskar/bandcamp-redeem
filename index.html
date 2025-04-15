@@ -286,16 +286,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
   
   <!-- Bandcamp URL Prompt -->
-<div class="prompt-overlay" id="bandcamp-prompt" style="display: none;">
-  <div class="prompt-box">
-    <p>Welcome! Please enter your Bandcamp URL.</p>
-    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
-    <div class="prompt-links">
-      <a href="#" onclick="submitBandcampURL()">Enter</a>
-      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
-    </div>
+<div id="overlay"></div>
+
+<div id="bandcamp-prompt">
+  <h2>Welcome! Please enter your Bandcamp URL</h2>
+  <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/yourname">
+  <div class="button-row">
+    <button id="submit-btn" onclick="submitBandcampURL()">Enter</button>
+    <button id="cancel-btn" onclick="closeBandcampPrompt()">Cancel</button>
   </div>
 </div>
+
+<form id="hidden-redeem-form" action="https://bandcamp.com/yum" method="POST" target="_blank" style="display: none;">
+  <input type="hidden" name="code" value="">
+</form>
 
 <!-- Popup container for redemption UI -->
 <div id="popup-container"></div>
