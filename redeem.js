@@ -6,10 +6,13 @@ let bandcampURL = null;
 document.querySelectorAll('.redeem-button').forEach(button => {
   button.addEventListener('click', () => {
     selectedTitle = button.getAttribute('data-title');
+    
     if (!bandcampURL) {
-      document.getElementById('bandcamp-prompt').style.display = 'flex';
+      // Show prompt to enter Bandcamp URL
+      document.getElementById('bandcamp-prompt').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     } else {
+      // Proceed if we already have the Bandcamp URL
       checkRedemptionStatus();
     }
   });
@@ -20,16 +23,17 @@ function submitBandcampURL() {
   const url = input.value.trim();
 
   if (!url.startsWith('https://bandcamp.com/')) {
-    alert('Please enter a valid Bandcamp URL.');
+    alert('Please enter a valid Bandcamp profile URL.');
     return;
   }
 
   bandcampURL = url;
 
-  // Close the prompt
+  // Hide the prompt
   document.getElementById('bandcamp-prompt').style.display = 'none';
   document.getElementById('overlay').style.display = 'none';
 
+  // Proceed to check redemption
   checkRedemptionStatus();
 }
 
@@ -37,7 +41,7 @@ function checkRedemptionStatus() {
   if (!bandcampURL || !selectedTitle) return;
 
   fetch(`${scriptURL}?bandcamp=${encodeURIComponent(bandcampURL)}&title=${encodeURIComponent(selectedTitle)}`)
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
       const button = document.querySelector(`.redeem-button[data-title="${selectedTitle}"]`);
 
@@ -60,9 +64,9 @@ function checkRedemptionStatus() {
         button.classList.add('redeemed');
       }
     })
-    .catch(err => {
-      console.error('Error checking redemption status:', err);
-      alert('Something went wrong. Try again later.');
+    .catch(error => {
+      console.error('Error checking redemption:', error);
+      alert('There was an issue redeeming your code. Please try again later.');
     });
 }
 
