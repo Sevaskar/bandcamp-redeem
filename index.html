@@ -292,9 +292,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
   
   <!-- Bandcamp URL Prompt -->
-<div id="overlay"></div>
+<!-- Overlay for background dimming -->
+<div id="overlay" style="display:none;"></div>
 
-<div id="bandcamp-prompt">
+<!-- Bandcamp URL Prompt -->
+<div id="bandcamp-prompt" style="display:none;">
   <h2>Welcome! Please enter your Bandcamp URL</h2>
   <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/yourname">
   <div class="button-row">
@@ -305,7 +307,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <form id="hidden-redeem-form" action="https://bandcamp.com/yum" method="POST" target="_blank" style="display: none;">
   <input type="hidden" name="code" value="">
-</form>
+</form>>
 
 <!-- Popup container for redemption UI -->
 <div id="popup-container"></div>
