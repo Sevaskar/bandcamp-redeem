@@ -144,7 +144,18 @@
       padding: 10px 15px;
       transition: 0.3s;
     }
-
+#bandcamp-prompt {
+  display: none; /* This keeps it hidden on page load */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
 /* Prompt overlay - make it subtle and non-obstructive */
 .prompt-overlay {
   position: fixed;
@@ -406,10 +417,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="overlay"></div>
 
 <!-- Initial Bandcamp URL Prompt -->
+<!-- Bandcamp URL Prompt -->
 <div id="bandcamp-prompt" class="prompt-overlay">
   <div class="prompt-box">
     <p>Welcome! Please enter your Bandcamp URL.</p>
-    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
+    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/your-profile">
     <div class="prompt-links">
       <a href="#" onclick="submitBandcampURL()">Enter</a>
       <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
@@ -421,20 +433,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 document.querySelectorAll('.redeem-button').forEach(button => {
   button.addEventListener('click', function() {
     const title = this.getAttribute('data-title');
-    sessionStorage.setItem('selectedTitle', title); // Save the title
-    document.getElementById('bandcamp-prompt').style.display = 'flex'; // Show prompt
+    sessionStorage.setItem('selectedTitle', title);
+    document.getElementById('bandcamp-prompt').style.display = 'flex';
   });
 });
 
-// Submit Bandcamp URL (this function already exists, but if not, define it)
 function submitBandcampURL() {
-  const url = document.getElementById('bandcamp-url').value;
+  const url = document.getElementById('bandcamp-url').value.trim();
   const title = sessionStorage.getItem('selectedTitle');
-
+  
   if (url && title) {
-    // Continue with your redemption logic
+    // Continue with your redemption logic here
     document.getElementById('bandcamp-prompt').style.display = 'none';
-    // Your logic to fetch codes, update sheets, etc. goes here
+  } else {
+    alert("Please enter your Bandcamp URL.");
   }
 }
 </script>
