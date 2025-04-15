@@ -75,6 +75,9 @@
       text-decoration: none;
     font-size: 18px;
       
+ #bandcamp-prompt {
+  display: none;
+ }     
 #overlay {
   position: fixed;
   top: 0;
@@ -413,6 +416,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </div>
+  <script>
+  // Show the prompt when a "Redeem Code" button is clicked
+document.querySelectorAll('.redeem-button').forEach(button => {
+  button.addEventListener('click', function() {
+    const title = this.getAttribute('data-title');
+    sessionStorage.setItem('selectedTitle', title); // Save the title
+    document.getElementById('bandcamp-prompt').style.display = 'flex'; // Show prompt
+  });
+});
+
+// Submit Bandcamp URL (this function already exists, but if not, define it)
+function submitBandcampURL() {
+  const url = document.getElementById('bandcamp-url').value;
+  const title = sessionStorage.getItem('selectedTitle');
+
+  if (url && title) {
+    // Continue with your redemption logic
+    document.getElementById('bandcamp-prompt').style.display = 'none';
+    // Your logic to fetch codes, update sheets, etc. goes here
+  }
+}
+</script>
 
 <!-- Toast Notification -->
 <div class="toast" id="toast">Redeemed successfully!</div>
