@@ -59,8 +59,6 @@
       background-color: #222;
       color: white;
     }
-    
-    
 
     /* Navigation Bar */
     .navbar {
@@ -145,38 +143,98 @@
     }
 
     
-  .toast {
+/* Bandcamp Prompt Overlay */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 999;
+  display: none;
+}
+
+/* Bandcamp Prompt Box */
+#bandcamp-prompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  z-index: 1000;
+  display: none;
+  width: 320px;
+  text-align: center;
+  color: white;
+}
+
+#bandcamp-prompt h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+#bandcamp-prompt input {
+  width: 90%;
+  padding: 10px;
+  margin: 15px 0;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background: #222;
+  color: #fff;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+
+#bandcamp-prompt button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #2196F3;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#bandcamp-prompt button:hover {
+  background-color: #1976D2;
+}
+
+/* Toast Notification */
+.toast {
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: #222;
   color: #fff;
-  padding: 12px 18px#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95); /* Dark black background */
-  z-index: 999;
-  display: none;
+  padding: 12px 18px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2000;
 }
-
-#bandcamp-prompt {
 
 .toast.show {
   opacity: 1;
   pointer-events: auto;
 }
-.redeemed {
-  border: 2px solid red !important;
-}
+
+/* Loading Spinner */
 #loading-spinner {
   display: none;
   margin-top: 10px;
 }
-
     </style>
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
