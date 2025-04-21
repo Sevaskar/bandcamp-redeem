@@ -1,103 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Redeem Your Code</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      background-color: #f8f8f8;
-      color: #333;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redeem Your Code</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2em;
+        background-color: #f8f8f8;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-    h1 {
-      text-align: center;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 1em;
+      }
 
-    .title-list {
-      margin-top: 2em;
-    }
+      .title-list {
+        margin-top: 2em;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-    .title-item {
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-    }
+      .title-item {
+        padding: 15px;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .title-item button {
-      margin-left: 10px;
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
+      .title-item:last-child {
+        border-bottom: none;
+      }
 
-    .title-status {
-      font-weight: bold;
-    }
+      .title-item button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
 
-    .popup {
-      position: fixed;
-      top: 20%;
-      left: 10%;
-      right: 10%;
-      background: #111;
-      color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      z-index: 9999;
-      max-height: 60vh;
-      overflow-y: auto;
-    }
+      .title-item button:hover {
+        background-color: #c0392b;
+      }
 
-    .popup ul {
-      list-style: none;
-      padding: 0;
-    }
+      .title-item button.redeemed {
+        background-color: #7f8c8d;
+        cursor: not-allowed;
+      }
 
-    .popup li {
-      margin-bottom: 10px;
-    }
+      .title-status {
+        font-weight: bold;
+        color: #2ecc71;
+      }
 
-    .popup button {
-      margin-left: 10px;
-      background: #d00;
-      color: white;
-      border: none;
-      padding: 4px 10px;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Redeem Your Code</h1>
+      .prompt-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
 
-  <p style="text-align: center;">Click a button below to start redeeming a title. You will be asked for your Bandcamp URL.</p>
+      .prompt-box {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+      }
 
-  <div class="title-list">
-    <div class="title-item">
-      <span>Pandemonium</span>
-      <button class="redeem-code-button" data-title="Pandemonium">Redeem Code</button>
+      .prompt-box p {
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+
+      #bandcamp-url {
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .prompt-links {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .prompt-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 4px;
+        background: #3498db;
+        transition: background-color 0.3s;
+      }
+
+      .prompt-links a:hover {
+        background: #2980b9;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 2000;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+
+      #loading-spinner {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 2001;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Redeem Your Code</h1>
+
+    <p style="text-align: center">
+      Click a button below to start redeeming a title. You will be asked for
+      your Bandcamp URL.
+    </p>
+
+    <div class="title-list">
+      <div class="title-item">
+        <span>Pandemonium</span>
+        <button class="redeem-code-button" data-title="Pandemonium">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Vilicus</span>
+        <button class="redeem-code-button" data-title="Vilicus">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Boombox</span>
+        <button class="redeem-code-button" data-title="Boombox">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Prophet for Profit</span>
+        <button class="redeem-code-button" data-title="Prophet for Profit">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Origins of Belief</span>
+        <button class="redeem-code-button" data-title="Origins of Belief">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Hiraeth</span>
+        <button class="redeem-code-button" data-title="Hiraeth">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>Machiavellian</span>
+        <button class="redeem-code-button" data-title="Machiavellian">
+          Redeem Code
+        </button>
+      </div>
+      <div class="title-item">
+        <span>2.0</span>
+        <button class="redeem-code-button" data-title="2.0">Redeem Code</button>
+      </div>
+      <div class="title-item">
+        <span>Apoplectic</span>
+        <button class="redeem-code-button" data-title="Apoplectic">
+          Redeem Code
+        </button>
+      </div>
     </div>
-    <div class="title-item">
-      <span>Vilicus</span>
-      <button class="redeem-code-button" data-title="Vilicus">Redeem Code</button>
-    </div>
-    <div class="title-item">
-      <span>Boombox</span>
-      <button class="redeem-code-button" data-title="Boombox">Redeem Code</button>
-    </div>
-    <!-- Add more titles as needed -->
-  </div>
 
-  <!-- Hidden form used when a code is assigned -->
-  <form id="hidden-redeem-form" class="download-code-form" action="https://sevaskar.bandcamp.com/yum" method="get" target="_blank" style="display: none;">
-    <input id="hidden-code-input" name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" />
-    <input type="submit" value="Redeem Code" />
-  </form>
+    <!-- Hidden form used when a code is assigned -->
+    <form
+      id="hidden-redeem-form"
+      class="download-code-form"
+      action="https://sevaskar.bandcamp.com/yum"
+      method="get"
+      target="_blank"
+      style="display: none"
+    >
+      <input
+        id="hidden-code-input"
+        name="code"
+        type="text"
+        placeholder="e.g. lanz-gh9h"
+        aria-label="code"
+      />
+      <input type="submit" value="Redeem Code" />
+    </form>
 
-  <!-- Scripts -->
-  <script src="redeem.js"></script>
-  <script src="new-redeem-logic.js"></script>
-</body>
+    <!-- Bandcamp URL Prompt -->
+    <div id="bandcamp-prompt" class="prompt-overlay">
+      <div class="prompt-box">
+        <p>Please Enter Your Bandcamp URL</p>
+        <input
+          type="text"
+          id="bandcamp-url"
+          placeholder="https://bandcamp.com/username"
+        />
+        <div class="prompt-links">
+          <a href="#" id="submit-url-btn">Enter</a>
+          <a href="https://bandcamp.com/signup" target="_blank">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Redeemed successfully!</div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner">Processing your request...</div>
+
+    <!-- Scripts -->
+    <script src="redeem.js"></script>
+  </body>
 </html>
