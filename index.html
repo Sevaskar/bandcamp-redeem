@@ -1,465 +1,412 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">                                                                                    
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sevaskar</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sevaskar</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: black;
-      color: red;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    .banner {
-      background: url('https://f4.bcbits.com/img/0037956683_100.png') no-repeat center center;
-      background-size: contain;
-      width: 100%;
-      height: 200px;
-      margin-bottom: 20px;
-    }
-    .player-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
-    .player-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 350px;
-      background-color: #333;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .redeem-button {
-      margin-top: 10px;
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-      width: auto;
-      display: block;
-    }
-    .redeem-button:hover {
-      background-color: darkred;
-    }
-    .footer {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #222;
-      color: white;
-    }
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: black;
+        color: red;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      .banner {
+        background: url("https://f4.bcbits.com/img/0037956683_100.png")
+          no-repeat center center;
+        background-size: contain;
+        width: 100%;
+        height: 200px;
+        margin-bottom: 20px;
+      }
+      .player-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+      .player-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 350px;
+        background-color: #333;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+      }
+      .redeem-button {
+        margin-top: 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+        width: auto;
+        display: block;
+      }
+      .redeem-button:hover {
+        background-color: darkred;
+      }
+      .redeem-button.redeemed {
+        background-color: #555;
+        cursor: not-allowed;
+      }
+      .footer {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #222;
+        color: white;
+      }
 
-    /* Navigation Bar */
-    .navbar {
-      display: flex;
-      justify-content: center;
-      background-color: black;
-      padding: 15px 0;
-      gap: 20px;
-    }
+      /* Navigation Bar */
+      .navbar {
+        display: flex;
+        justify-content: center;
+        background-color: black;
+        padding: 15px 0;
+        gap: 20px;
+      }
 
-    /* Navigation Links */
-    .nav-item {
-      color: blue; /* Ensures links are blue */
-      text-decoration: none;
-    font-size: 18px;
-      
+      /* Navigation Links */
+      .nav-item {
+        color: blue;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 15px;
+        transition: 0.3s;
+      }
 
-#overlay {
-  position: fixed;
-  top: 50%;
-  left: 25%;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95); /* Dark black background */
-  z-index: 999;
-  display: none;
-}
+      #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        display: none;
+      }
 
-#bandcamp-prompt {
-  position: fixed;
-  top: 50%;
-  left: 25%;
-  transform: translate(-50%, -50%);
-  background: #111; /* Dark background for the box */
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 0px rgba(255, 255, 255, 0.2);
-  z-index: 1000;
-  display: none;
-  width: 320px;
-  text-align: center;
-  color: white;
-}
+      /* Prompt overlay - make it subtle and non-obstructive */
+      .prompt-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
 
-#bandcamp-prompt h2 {
-  color: white;
-  margin-bottom: 20px;
-}
+      /* Prompt box - the small input container */
+      .prompt-box {
+        background-color: #222;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+        max-width: 400px;
+        width: 90%;
+      }
 
-#bandcamp-prompt input {
-  width: 90%;
-  padding: 10px;
-  margin: 10px 0;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 5px solid #333;
-  background: #222;
-  color: #fff;
-}
- #bandcamp-prompt {
-  display: none;
- }     
-.button-row {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 15px;
-}
+      .prompt-box p {
+        color: #fff;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
 
-#bandcamp-prompt button {
-  padding: 10px 20px;
-  font-size: 14px;
-  background-color: #2196F3; /* Blue */
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  text-decoration: none;
-}
+      /* Prompt input */
+      #bandcamp-url {
+        width: 90%;
+        padding: 12px;
+        font-size: 14px;
+        margin: 10px 0;
+        border: 1px solid #444;
+        border-radius: 5px;
+        background: #333;
+        color: #fff;
+      }
 
-#bandcamp-prompt button:hover {
-  background-color: #1976D2;
-}      font-weight: bold;
-      padding: 10px 15px;
-      transition: 0.3s;
-    }
-#bandcamp-prompt {
-  display: none; /* This keeps it hidden on page load */
-  position: fixed;
-  top: 50%;
-  left: 32%;
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.0);
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-/* Prompt overlay - make it subtle and non-obstructive */
-.prompt-overlay {
-  position: fixed;
-  top: 50%;
-  left: 25%;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.0); /* Light transparent black */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  backdrop-filter: none; /* Optional: soft blur background */
-}
+      /* Prompt links (Enter / Sign Up) */
+      .prompt-links {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
 
-/* Prompt box - the small input container */
-.prompt-box {
-  background-color: #000; /* black box */
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
-  max-width: 300px;
-  width: 100%;
-}
+      .prompt-links a {
+        color: #4da3ff;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        background: #333;
+        transition: background-color 0.3s;
+      }
 
-.prompt-box p {
-  color: #fff; /* white text */
-  font-size: 18px;
-  margin-bottom: 10px;
-}
+      .prompt-links a:hover {
+        background: #444;
+      }
 
-/* Prompt input */
-#bandcamp-url {
-  width: 100%;
-  padding: 0px;
-  font-size: 14px;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  border-radius: 1px;
-}
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 2000;
+      }
 
-/* Prompt links (Enter / Sign Up) */
-.prompt-links {
-  margin-top: 20px;
-}
+      .toast.show {
+        opacity: 1;
+      }
 
-.prompt-links a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-  margin: 0 5px;
-  transition: color 0.3s;
-}
-
-.prompt-links a:hover {
-  color: #0056b3;
-
-/* Toast Notification */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #222;
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 5px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 2000;
-}
-
-.toast.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Loading /* Centered prompt overlay without dark screen */
-.prompt-overlay {
-  position: fixed;
-  top: 0%;
-  left: 0%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-  z-index: 1000;
-}
-
-/* Prompt box */
-.prompt-box {
-  background-color: #111;
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0,0,0,0.0);
-  max-width: 400px;
-  width: 90%;
-}
-
-/* Prompt text */
-.prompt-box p {
-  color: #fff;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-/* Bandcamp URL input */
-#bandcamp-url {
-  width: 80%;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  font-size: 16px;
-}
-
-/* Link container */
-.prompt-links {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-}
-
-/* Links - styled as buttons */
-.prompt-links a {
-  color: #4da3ff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-.prompt-links a:hover {
-  color: #1d75cf;
-}Spinner */
-#loading-spinner {
-  display: none;
-  margin-top: 10px;
-}
+      /* Loading Spinner */
+      #loading-spinner {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 2001;
+      }
     </style>
-  <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TZQ6P49R');</script>
-<!-- End Google Tag Manager -->
-  
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;">
-</head>
-<body>
-  <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TZQ6P49R"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-  <div class="banner"></div>
-  
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-TZQ6P49R");
+    </script>
+    <!-- End Google Tag Manager -->
 
-  
-  <div id="titlesPopup" style="display:none;">
-  <table>
-    <thead><tr><th>Title</th><th>Status</th></tr></thead>
-    <tbody></tbody>
-  </table>
-  </div>
-  
-<div class="navbar">
-  <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank">Bandcamp</a>
-  <a href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ" class="nav-item" target="_blank">Spotify</a>
-  <a href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd" class="nav-item" target="_blank">YouTube</a>
-  <a href="https://my-store-11471314.creator-spring.com/" class="nav-item" target="_blank">Store</a>
-  <a href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=9d006cf8-473f-408b-bf3f-1273a1d90eb8" class="nav-item" target="_blank">Books</a>
-</div>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;"
+    />
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-TZQ6P49R"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="banner"></div>
 
-  <div class="player-container">
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Pandemonium">Redeem Code</button>
-    </div>  
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Boombox">Redeem Code</button>
-    </div> 
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Prophet for Profit">Redeem Code</button>
-    </div> <!-- Closing div added here -->
-    
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Origins of Belief">Redeem Code</button>
-    </div> 
-    
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Vilicus">Redeem Code</button>
-    </div> 
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Hiraeth">Redeem Code</button>
-    </div> <!-- Closing div added here -->
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;"
-          src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Machiavellian">Redeem Code</button>
-    </div> 
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;" 
-          src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="2.0">Redeem Code</button>
-    </div> 
-
-    <div class="player-box">
-      <iframe style="border: 0; width: 350px; height: 470px;" 
-          src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/" seamless>
-      </iframe>
-      <button class="redeem-button" data-title="Apoplectic">Redeem Code</button>
-    </div> <!-- Closing div added here -->
-    
-</div> <!-- Closing div for .player-container -->
-<form id="hidden-redeem-form" action="https://sevaskar.bandcamp.com/yum" method="get" target="_blank" style="display: none;">
-  <input name="code" type="text" placeholder="e.g. lanz-gh9h" aria-label="code" /> 
-  <input type="submit" value="Redeem Code" />
-</form>
-  
-<!-- Footer -->
-<div class="footer">
-  <a href="https://PayPal.me/sevaskar" target="_blank">
-    <img src="https://raw.githubusercontent.com/Sevaskar/bandcamp-redeem/refs/heads/main/Screenshot_2025-03-25-10-57-59-353.jpg" alt="Support on PayPal" style="display: block; margin: 0 auto; max-width: 150px;">
-  </a>
-  <br>
-  &copy; 2025 Sevaskar. All rights reserved.
-</div>
-  
-  <!-- Overlay -->
-<div id="overlay"></div>
-
-<!-- Initial Bandcamp URL Prompt -->
-<!-- Bandcamp URL Prompt -->
-<div id="bandcamp-prompt" class="prompt-overlay">
-  <div class="prompt-box">
-    <p>Please Enter Your Bandcamp URL</p>
-    <input type="text" id="bandcamp-url" placeholder="https://bandcamp.com/username">
-    <div class="prompt-links">
-      <a href="#" onclick="submitBandcampURL()">Enter</a>
-      <a href="https://bandcamp.com/fansignup" target="_blank">Sign Up</a>
+    <div class="navbar">
+      <a href="https://sevaskar.bandcamp.com/" class="nav-item" target="_blank"
+        >Bandcamp</a
+      >
+      <a
+        href="https://open.spotify.com/artist/1XodmhYgM6rezmNJJKwDTs?si=TVs7pxIpTKOqV97C5vDegQ"
+        class="nav-item"
+        target="_blank"
+        >Spotify</a
+      >
+      <a
+        href="https://youtube.com/@sevaskar?si=svrTnQxz9Pe0Zhmd"
+        class="nav-item"
+        target="_blank"
+        >YouTube</a
+      >
+      <a
+        href="https://my-store-11471314.creator-spring.com/"
+        class="nav-item"
+        target="_blank"
+        >Store</a
+      >
+      <a
+        href="https://www.amazon.com/stores/Dale-R.-Witherington/author/B08X172LTG?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=9d006cf8-473f-408b-bf3f-1273a1d90eb8"
+        class="nav-item"
+        target="_blank"
+        >Books</a
+      >
     </div>
-  </div>
-</div>
-  <script>
-  // Show the prompt when a "Redeem Code" button is clicked
-document.querySelectorAll('.redeem-button').forEach(button => {
-  button.addEventListener('click', function() {
-    const title = this.getAttribute('data-title');
-    sessionStorage.setItem('selectedTitle', title);
-    document.getElementById('bandcamp-prompt').style.display = 'flex';
-  });
-});
 
-function submitBandcampURL() {
-  const url = document.getElementById('bandcamp-url').value.trim();
-  const title = sessionStorage.getItem('selectedTitle');
-  
-  if (url && title) {
-    // Continue with your redemption logic here
-    document.getElementById('bandcamp-prompt').style.display = 'none';
-  } else {
-    alert("Please enter your Bandcamp URL.");
-  }
-}
-</script>
-<script>
-<!-- Toast Notification -->
-<div class="toast" id="toast">Redeemed successfully!</div>
+    <div class="player-container">
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2458287885/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Pandemonium">
+          Redeem Code
+        </button>
+      </div>
 
-<!-- Loading Spinner -->
-<div id="loading-spinner">Loading...</div>
-</script>
-<!-- JavaScript -->
-<script src="redeem.js"></script>
-</body>
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=4130268599/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Boombox">Redeem Code</button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=3303775705/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Prophet for Profit">
+          Redeem Code
+        </button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2582855009/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Origins of Belief">
+          Redeem Code
+        </button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/track=2254569586/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Vilicus">Redeem Code</button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2580754490/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Hiraeth">Redeem Code</button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=4104591744/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Machiavellian">
+          Redeem Code
+        </button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=2886633887/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="2.0">Redeem Code</button>
+      </div>
+
+      <div class="player-box">
+        <iframe
+          style="border: 0; width: 350px; height: 470px"
+          src="https://bandcamp.com/EmbeddedPlayer/album=3391838132/size=large/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+          seamless
+        ></iframe>
+        <button class="redeem-button" data-title="Apoplectic">
+          Redeem Code
+        </button>
+      </div>
+    </div>
+    <!-- Hidden form for code redemption -->
+    <form
+      id="hidden-redeem-form"
+      action="https://sevaskar.bandcamp.com/yum"
+      method="get"
+      target="_blank"
+      style="display: none"
+    >
+      <input
+        name="code"
+        type="text"
+        placeholder="e.g. lanz-gh9h"
+        aria-label="code"
+      />
+      <input type="submit" value="Redeem Code" />
+    </form>
+
+    <!-- Footer -->
+    <div class="footer">
+      <a href="https://PayPal.me/sevaskar" target="_blank">
+        <img
+          src="https://raw.githubusercontent.com/Sevaskar/bandcamp-redeem/refs/heads/main/Screenshot_2025-03-25-10-57-59-353.jpg"
+          alt="Support on PayPal"
+          style="display: block; margin: 0 auto; max-width: 150px"
+        />
+      </a>
+      <br />
+      &copy; 2025 Sevaskar. All rights reserved.
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay"></div>
+
+    <!-- Bandcamp URL Prompt -->
+    <div id="bandcamp-prompt" class="prompt-overlay">
+      <div class="prompt-box">
+        <p>Please Enter Your Bandcamp URL</p>
+        <input
+          type="text"
+          id="bandcamp-url"
+          placeholder="https://bandcamp.com/username"
+        />
+        <div class="prompt-links">
+          <a href="#" id="submit-url-btn">Enter</a>
+          <a href="https://bandcamp.com/signup" target="_blank">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Redeemed successfully!</div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner">Processing your request...</div>
+
+    <!-- JavaScript -->
+    <script src="redeem.js"></script>
+  </body>
 </html>
-
-
