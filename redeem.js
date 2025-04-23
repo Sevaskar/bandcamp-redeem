@@ -1,6 +1,6 @@
 // Configuration
 const scriptURL =
-  "https://script.google.com/macros/s/AKfycbyRtDT7sUIWGdWQsxiwP_gVR90FsUtuXQb0zAv3ybdgyVg27wzO1mr6dQAPI9AqQ8Qmqg/exec";
+  "https://script.google.com/macros/s/AKfycbwey6XSKId9EXJu8EG7PepDuetf1AQgVuBIpZyNTGTdLUIkaYOkm1S4xJvVeZVFxU6M/exec";
 
 // State management
 let selectedTitle = null;
