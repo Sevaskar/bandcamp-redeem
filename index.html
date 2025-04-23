@@ -407,5 +407,14 @@
 
     <!-- JavaScript -->
     <script src="redeem.js"></script>
+    <script>
+  document.querySelectorAll('.redeem-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const title = encodeURIComponent(button.getAttribute('data-title'));
+      const webAppURL = 'https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec';
+      window.location.href = `${webAppURL}?title=${title}`;
+    });
+  });
+    </script>
   </body>
 </html>
