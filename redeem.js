@@ -1,223 +1,104 @@
-const scriptURL =
-  "https://script.google.com/macros/s/AKfycbxya6N9tzZCzDVC6JEM7wOhuvJQ64XMk1e9cs1fK0Q/dev";
+const sheetID = "1OakaRoUNoq3dMqPY5PDRw-5ibG5rCz10TMlFD9kheVM";
+const submitBtn = document.getElementById("submit-url-btn");
+const bandcampInput = document.getElementById("bandcamp-url");
+const titlesContainer = document.getElementById("titles-container");
+const promptBox = document.getElementById("prompt-box");
 
-let bandcampURL = null;
-let selectedTitle = null;
-let redemptionHistory = {};
-
-document.addEventListener("DOMContentLoaded", function () {
-  loadRedemptionHistory();
-  setupBandcampPrompt();
-  setupRedeemButtons();
-  updateButtonStates();
-});
-
-function loadRedemptionHistory() {
-  const savedHistory = localStorage.getItem("redemptionHistory");
-  if (savedHistory) {
-    redemptionHistory = JSON.parse(savedHistory);
-  }
-}
-
-function saveRedemptionHistory() {
-  localStorage.setItem("redemptionHistory", JSON.stringify(redemptionHistory));
-}
-
-function updateButtonStates() {
-  const storedURL = localStorage.getItem("bandcampURL");
-  if (!storedURL) return;
-
-  const buttons = document.querySelectorAll(".redeem-button");
-  buttons.forEach((button) => {
-    const title = button.getAttribute("data-title");
-    if (
-      redemptionHistory[storedURL] &&
-      redemptionHistory[storedURL].includes(title)
-    ) {
-      updateButton(button, "Already Redeemed", true);
-    }
-  });
-}
-
-function setupBandcampPrompt() {
-  const submitBtn = document.getElementById("submit-url-btn");
-  if (submitBtn) {
-    submitBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      submitBandcampURL();
-    });
-  }
-
-  const input = document.getElementById("bandcamp-url");
-  if (input) {
-    input.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        submitBandcampURL();
-      }
-    });
-  }
-}
-
-function submitBandcampURL() {
-  const input = document.getElementById("bandcamp-url");
-  const url = input.value.trim();
-
-  if (!url || !url.toLowerCase().includes("bandcamp.com/")) {
-    showToast("Please enter a valid Bandcamp profile URL");
+submitBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const bandcampURL = bandcampInput.value.trim();
+  if (!bandcampURL.includes("bandcamp.com")) {
+    alert("Please enter a valid Bandcamp URL.");
     return;
   }
 
-  bandcampURL = url;
-  localStorage.setItem("bandcampURL", url);
+  promptBox.style.display = "none";
+  titlesContainer.innerHTML = "<p>Loading available titles...</p>";
+  titlesContainer.style.display = "block";
 
-  document.getElementById("bandcamp-prompt").style.display = "none";
-  const overlay = document.getElementById("overlay");
-  if (overlay) overlay.style.display = "none";
+  const titles = await fetchTitles();
+  const redemptions = await fetchRedemptions();
 
-  fetchAvailableTitles();
-}
+  const userTitles = redemptions
+    .filter(row => row[1] === bandcampURL)
+    .map(row => row[0]);
 
-function fetchAvailableTitles() {
-  if (!bandcampURL) return;
+  titlesContainer.innerHTML = "";
 
-  const titlesContainer = document.getElementById("titles-container");
-  if (!titlesContainer) return;
+  titles.forEach(([title, code, status]) => {
+    let buttonHTML = "";
 
-  titlesContainer.innerHTML = "<p>Loading titles...</p>";
+    if (userTitles.includes(title)) {
+      buttonHTML = `<span style="color: gray;">Already in Collection</span>`;
+    } else if (status) {
+      buttonHTML = `<span style="color: orange;">No Available Codes</span>`;
+    } else {
+      buttonHTML = `<a href="#" class="redeem-button" data-title="${title}" data-code="${code}">Add to Collection</a>`;
+    }
 
-  fetch(`${scriptURL}?action=getTitles&bandcamp=${encodeURIComponent(bandcampURL)}`)
-    .then((response) => response.json())
-    .then((data) => {
-      titlesContainer.innerHTML = "";
-
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach((item) => {
-          const box = document.createElement("div");
-          box.className = "player-box";
-
-          const status = item.status;
-          const title = item.title;
-          const disabled = status !== "Add To Collection";
-
-          box.innerHTML = `
-            <h3>${title}</h3>
-            <p>Status: ${status}</p>
-            <button class="redeem-button" data-title="${title}" ${
-            disabled ? "disabled" : ""
-          }>${disabled ? status : "Add To Collection"}</button>
-          `;
-
-          titlesContainer.appendChild(box);
-        });
-
-        setupRedeemButtons();
-        updateButtonStates();
-      } else {
-        titlesContainer.innerHTML = "<p>No available titles.</p>";
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching titles:", error);
-      titlesContainer.innerHTML = "<p>Error loading titles.</p>";
-    });
-}
-
-function setupRedeemButtons() {
-  document.querySelectorAll(".redeem-button").forEach((button) => {
-    button.addEventListener("click", function () {
-      if (this.disabled) return;
-
-      selectedTitle = this.getAttribute("data-title");
-
-      if (
-        redemptionHistory[bandcampURL] &&
-        redemptionHistory[bandcampURL].includes(selectedTitle)
-      ) {
-        showToast("You've already redeemed this title");
-        return;
-      }
-
-      checkRedemptionStatus(this);
-    });
+    const box = document.createElement("div");
+    box.innerHTML = `<p><strong>${title}</strong><br>${buttonHTML}</p>`;
+    titlesContainer.appendChild(box);
   });
-}
 
-function checkRedemptionStatus(button) {
-  toggleLoadingSpinner(true);
+  document.querySelectorAll(".redeem-button").forEach((btn) =>
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const title = btn.getAttribute("data-title");
+      const code = btn.getAttribute("data-code");
 
-  fetch(
-    `${scriptURL}?bandcamp=${encodeURIComponent(
-      bandcampURL
-    )}&title=${encodeURIComponent(selectedTitle)}`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "Already In Collection") {
-        updateButton(button, "In Collection", true);
-        showToast("This title is already in your collection");
-        addToRedemptionHistory(selectedTitle);
-      } else if (data.status === "No Available Codes") {
-        updateButton(button, "No Codes", true);
-        showToast("No codes available for this title");
-      } else if (data.status === "Success" && data.code) {
-        redeemCode(data.code);
-        updateButton(button, "Redeemed!", true);
-        showToast("Code redeemed successfully!");
-        addToRedemptionHistory(selectedTitle);
-      } else {
-        updateButton(button, "Try Again", false);
-        showToast("Error: " + (data.message || "Unknown error"));
-      }
+      await markCodeAsUsed(title, code);
+      await logRedemption(title, bandcampURL);
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://bandcamp.com/yum";
+      form.target = "_blank";
+
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = "code";
+      hiddenInput.value = code;
+      form.appendChild(hiddenInput);
+
+      document.body.appendChild(form);
+      form.submit();
     })
-    .catch((error) => {
-      console.error("Redemption error:", error);
-      updateButton(button, "Try Again", false);
-      showToast("Error connecting to server.");
-    })
-    .finally(() => {
-      toggleLoadingSpinner(false);
-    });
+  );
+});
+
+async function fetchTitles() {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=Codes`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  return json.table.rows.map(r => r.c.map(c => (c ? c.v : "")));
 }
 
-function redeemCode(code) {
-  const form = document.getElementById("hidden-redeem-form");
-  const input = form.querySelector('input[name="code"]');
-  if (form && input) {
-    input.value = code;
-    form.submit();
-  } else {
-    showToast("Could not submit code. Try manually.");
-  }
+async function fetchRedemptions() {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=Redemptions`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  return json.table.rows.map(r => r.c.map(c => (c ? c.v : "")));
 }
 
-function updateButton(button, text, disable) {
-  if (!button) return;
-  button.innerText = text;
-  button.disabled = disable;
-  button.classList.toggle("redeemed", disable);
+async function markCodeAsUsed(title, code) {
+  await fetch(
+    `https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec`,
+    {
+      method: "POST",
+      body: JSON.stringify({ type: "markUsed", title, code }),
+    }
+  );
 }
 
-function addToRedemptionHistory(title) {
-  if (!bandcampURL) return;
-  if (!redemptionHistory[bandcampURL]) {
-    redemptionHistory[bandcampURL] = [];
-  }
-  if (!redemptionHistory[bandcampURL].includes(title)) {
-    redemptionHistory[bandcampURL].push(title);
-    saveRedemptionHistory();
-  }
-}
-
-function toggleLoadingSpinner(show) {
-  const spinner = document.getElementById("loading-spinner");
-  if (spinner) spinner.style.display = show ? "block" : "none";
-}
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-  toast.innerText = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
+async function logRedemption(title, bandcampURL) {
+  await fetch(
+    `https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec`,
+    {
+      method: "POST",
+      body: JSON.stringify({ type: "logRedemption", title, bandcampURL }),
+    }
+  );
 }
