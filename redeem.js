@@ -85,7 +85,7 @@ async function fetchRedemptions() {
 
 async function markCodeAsUsed(title, code) {
   await fetch(
-    `https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec`,
+    `https://script.google.com/macros/s/AKfycbxya6N9tzZCzDVC6JEM7wOhuvJQ64XMk1e9cs1fK0Q/dev`,
     {
       method: "POST",
       body: JSON.stringify({ type: "markUsed", title, code }),
@@ -95,7 +95,7 @@ async function markCodeAsUsed(title, code) {
 
 async function logRedemption(title, bandcampURL) {
   await fetch(
-    `https://script.google.com/macros/s/AKfycbzJu2oR2aYGvdrmanMV5jY7fu4zzN4d_ymCLj0JmT52m0I49r3zi5-IgMnD81JwRlvp1A/exec`,
+    `https://script.google.com/macros/s/AKfycbxya6N9tzZCzDVC6JEM7wOhuvJQ64XMk1e9cs1fK0Q/dev`,
     {
       method: "POST",
       body: JSON.stringify({ type: "logRedemption", title, bandcampURL }),
