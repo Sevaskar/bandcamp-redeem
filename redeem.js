@@ -1,5 +1,5 @@
 // Configuration
-const scriptURL = "https://script.google.com/macros/s/AKfycbwVOqn9bGJZgfmVhPnVqS5wnnBCAT64yUhsrhd1vfGFne_qAe8xCDQnJC56dEFl6xbJ/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycby2rV3TvxP8EjT-oe45IvP3XwEu59vPRgvmrsYOdPqsmAF9oFu727CnwosIG6MRglMV/exec";
 
 // State management
 let bandcampURL = null;
